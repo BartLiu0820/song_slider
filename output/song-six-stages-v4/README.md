@@ -17,8 +17,8 @@
 
 ```bash
 git clone https://github.com/BartLiu0820/song_slider.git
-cd song_slider
-./deploy.sh
+cd song_slider/output/song-six-stages-v4
+bash deploy.sh
 ```
 
 脚本自动选择 Docker Compose（推荐）或本机 Caddy，部署后访问 `http://<服务器IP>/`。

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # 滑动变祖器 一键部署
-# 用法：git clone <repo> && cd song_slider && ./deploy.sh
+# 用法：git clone <repo> && cd song_slider/output/song-six-stages-v4 && bash deploy.sh
 set -euo pipefail
 cd "$(dirname "$0")"
 
