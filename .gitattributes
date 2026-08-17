@@ -1,0 +1,7 @@
+# 保证部署脚本和配置在任何平台 checkout 后都是 LF 行尾
+*.sh   text eol=lf
+Caddyfile text eol=lf
+*.yml  text eol=lf
+# 二进制媒体不做行尾转换
+*.mp4  binary
+*.m4a  binary
