@@ -1,0 +1,10 @@
+services:
+  web:
+    image: caddy:2-alpine
+    container_name: song-slider
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./:/srv:ro

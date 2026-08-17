@@ -1,0 +1,21 @@
+# 滑动变祖器 · 静态站点
+# Caddy 的 file_server 自带 Range 请求支持（视频拖动定位必需），无需额外配置
+
+:80 {
+	root * /srv
+	file_server
+	encode zstd gzip
+
+	# 媒体文件允许缓存 1 小时；HTML 不缓存，方便发版
+	@media path *.mp4 *.m4a
+	header @media Cache-Control "public, max-age=3600"
+	@html path *.html /
+	header @html Cache-Control "no-cache"
+}
+
+# 有域名时改用下面的形式，Caddy 自动签发 HTTPS 证书：
+# slider.example.com {
+# 	root * /srv
+# 	file_server
+# 	encode zstd gzip
+# }
