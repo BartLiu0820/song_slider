@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#e8e9e5">
+<meta name="description" content="拖动滑杆，观察宋系强度从小宋进化到宋祖。">
+<title>滑动变阻器</title>
+<style>
+:root{color:#171816;font-synthesis:none;text-rendering:optimizeLegibility;background:#e8e9e5;font-family:PingFang SC,Microsoft YaHei,sans-serif}
+*{box-sizing:border-box}
+html,body{min-width:320px;min-height:100%;margin:0}
+body{background:#e8e9e5;min-height:100vh}
+button,input{font:inherit}
+button,input,label{-webkit-tap-highlight-color:transparent}
+
+.experience{--strength:0;--stage-progress:0;--strength-pct:0%;--ink-pct:0%;--ink:color-mix(in srgb, #171816, #f4f1e8 var(--ink-pct));--muted:color-mix(in srgb, #4a4d48, #c9c6bd var(--ink-pct));--accent:#b52b24;--gold:#c19a49;--thumb-bg:color-mix(in srgb, #e8e9e5, #1a1715 var(--strength-pct));isolation:isolate;min-height:100svh;color:var(--ink);background:radial-gradient(circle at 50% 46%,#ffffffa6 0 18%,#0000 52%),#e8e9e5;grid-template-rows:auto minmax(0,1fr) auto auto;padding:30px clamp(22px,4vw,62px) 20px;transition:color .42s;display:grid;position:relative;overflow:hidden}
+.experience:before{z-index:-2;content:"";opacity:calc(var(--strength) * .94);background:radial-gradient(circle at 50% 45%,#3b2c24 0,#1d1918 34%,#111 74%),#111;transition:opacity .14s linear;position:absolute;inset:0}
+.experience:after{z-index:5;pointer-events:none;content:"";mix-blend-mode:soft-light;opacity:.28;background-image:repeating-linear-gradient(0deg,#ffffff04 0 1px,#0000 1px 4px),radial-gradient(circle at 22% 18%,#ffffff14 0 1px,#0000 1.5px);background-size:auto,7px 7px;position:absolute;inset:0}
+.experience[data-stage="5"]{--accent:#c19a49}
+
+.masthead{z-index:10;justify-content:space-between;align-items:flex-start;gap:32px;display:flex;position:relative}
+.eyebrow{color:var(--muted);letter-spacing:.22em;margin:0 0 5px;font-family:SFMono-Regular,Consolas,monospace;font-size:10px;transition:color .36s}
+h1{letter-spacing:-.09em;margin:0;font-family:Songti SC,STSong,SimSun,serif;font-size:clamp(34px,4.5vw,64px);font-weight:800;line-height:.95}
+.level-meter{text-align:right;border-top:1px solid;min-width:118px;padding-top:3px;font-family:SFMono-Regular,Consolas,monospace;display:grid}
+.level-meter span{color:var(--muted);letter-spacing:.16em;font-size:10px}
+.level-output{font-variant-numeric:tabular-nums;letter-spacing:-.04em;margin-top:4px;font-size:clamp(16px,2vw,23px)}
+
+.portrait-zone{z-index:1;flex-direction:column;justify-content:center;align-items:center;min-height:0;padding-top:4px;display:flex;position:relative}
+.stage-ghost{z-index:-1;color:currentColor;letter-spacing:-.16em;text-align:center;white-space:nowrap;width:100%;opacity:calc(.035 + var(--strength) * .025);transform:translate(-50%, -50%) scale(calc(.95 + var(--strength) * .08));transform-origin:50%;margin:0;font-family:Songti SC,STSong,SimSun,serif;font-size:clamp(150px,27vw,420px);font-weight:900;line-height:.7;transition:opacity .18s;position:absolute;top:44%;left:50%}
+.portrait-shell{aspect-ratio:1;filter:drop-shadow(0 28px 38px #1214121f);width:min(49vh,550px,76vw);max-width:100%;position:relative}
+.portrait-shell:before{z-index:3;border:1px solid color-mix(in srgb, currentColor 16%, transparent);content:"";pointer-events:none;position:absolute;inset:0}
+.portrait-shell:after{z-index:3;content:"";opacity:.42;pointer-events:none;background:linear-gradient(90deg,currentColor 0 12px,#0000 12px calc(100% - 12px),currentColor calc(100% - 12px));height:1px;position:absolute;top:50%;left:-13px;right:-13px}
+.portrait-canvas{z-index:1;background:radial-gradient(circle at 50% 38%,#f7f7f5,#cfd1cf 70%);width:100%;height:100%;display:block;position:relative}
+.evolution-video{pointer-events:none;opacity:0;width:1px;height:1px;position:fixed;top:0;left:-9999px}
+.imperial-halo{z-index:0;opacity:0;transform:rotate(calc(var(--strength) * 28deg)) scale(.92);background:radial-gradient(circle,#0000 54%,#c19a4926 54.4% 55.4%,#0000 55.8%),conic-gradient(#0000,#c19a4938,#0000 18% 32%,#c19a492b,#0000 52% 74%,#c19a4933,#0000);border:1px solid #c19a498c;border-radius:50%;transition:opacity .5s,transform .7s;position:absolute;inset:-9%}
+.experience[data-stage="5"] .imperial-halo{opacity:.8;transform:rotate(calc(var(--strength) * 28deg)) scale(1)}
+.scan-grid{z-index:2;pointer-events:none;mix-blend-mode:screen;opacity:calc(.15 - var(--strength) * .08);background:linear-gradient(90deg,#0000 49.88%,#ffffff26 50%,#0000 50.12%),linear-gradient(#0000 49.88%,#ffffff1c 50%,#0000 50.12%);position:absolute;inset:0}
+.frame-corner{z-index:4;opacity:.72;border-color:currentColor;width:19px;height:19px;position:absolute}
+.frame-corner--tl{border-top:2px solid;border-left:2px solid;top:-7px;left:-7px}
+.frame-corner--tr{border-top:2px solid;border-right:2px solid;top:-7px;right:-7px}
+.frame-corner--bl{border-bottom:2px solid;border-left:2px solid;bottom:-7px;left:-7px}
+.frame-corner--br{border-bottom:2px solid;border-right:2px solid;bottom:-7px;right:-7px}
+.load-state{z-index:6;color:#f4f1e8;letter-spacing:.08em;background:#171816e0;place-items:center;font-family:SFMono-Regular,Consolas,monospace;font-size:12px;display:grid;position:absolute;inset:0}
+.load-state[hidden]{display:none}
+.load-state.is-error{color:#fff1ef;background:#7e1e19eb}
+
+.stage-readout{grid-template-columns:1fr auto 1fr;align-items:baseline;width:min(49vh,550px,76vw);margin-top:12px;display:grid}
+.stage-readout>span{color:var(--muted);letter-spacing:.13em;text-transform:uppercase;font-family:SFMono-Regular,Consolas,monospace;font-size:9px}
+.stage-index{text-align:right}
+.stage-name{color:currentColor;letter-spacing:-.08em;text-align:center;min-width:3.5em;text-shadow:0 0 calc(var(--strength) * 24px) #c19a4975;margin:0;font-family:Songti SC,STSong,SimSun,serif;font-size:clamp(38px,5.2vh,58px);font-weight:900;line-height:.9}
+.experience[data-stage="5"] .stage-name{color:#d5b56e}
+
+.control-panel{--rail-inset:13px;z-index:10;width:min(760px,100%);margin:6px auto 0;position:relative}
+.range-wrap{height:48px;position:relative}
+.tick-track{top:12px;right:var(--rail-inset);left:var(--rail-inset);pointer-events:none;justify-content:space-between;align-items:center;height:24px;display:flex;position:absolute}
+.tick{opacity:.2;background:currentColor;justify-self:center;width:1px;height:7px;transition:height .12s,opacity .12s,background .12s;display:block}
+.tick:nth-child(6n+1){opacity:.5;height:18px}
+.tick.is-active{background:var(--accent);opacity:.95;height:13px}
+.tick.is-active:nth-child(6n+1){height:24px}
+.strength-slider{cursor:ew-resize;appearance:none;-webkit-appearance:none;touch-action:pan-y;background:0 0;width:100%;height:48px;margin:0;position:absolute;inset:0}
+.strength-slider:disabled{cursor:wait}
+.strength-slider::-webkit-slider-runnable-track{background:color-mix(in srgb, currentColor 25%, transparent);height:1px}
+.strength-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;background:radial-gradient(circle, var(--accent) 0 3px, transparent 3.5px), var(--thumb-bg);border:2px solid;border-radius:50%;width:26px;height:26px;margin-top:-13px;box-shadow:0 5px 18px #00000038}
+.strength-slider::-moz-range-track{background:color-mix(in srgb, currentColor 25%, transparent);height:1px}
+.strength-slider::-moz-range-thumb{background:var(--accent);border:2px solid;border-radius:50%;width:22px;height:22px;box-shadow:0 5px 18px #00000038}
+.strength-slider:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.stage-markers{padding:0 var(--rail-inset);justify-content:space-between;margin:-2px 0 0;list-style:none;display:flex}
+.stage-marker{width:0;color:var(--muted);letter-spacing:.06em;text-align:center;white-space:nowrap;font-size:11px;transition:color .14s,transform .14s;transform:translate(-50%)}
+.stage-marker.is-passed{color:color-mix(in srgb, var(--accent) 70%, currentColor)}
+.stage-marker.is-current{color:currentColor;font-weight:700;transform:translate(-50%,-2px)}
+.drag-hint{color:var(--muted);letter-spacing:.12em;text-align:center;margin:10px 0 0;font-size:10px}
+.drag-hint span{margin:0 6px;display:inline-block}
+
+.footer-note{z-index:10;border-top:1px solid color-mix(in srgb, currentColor 18%, transparent);color:var(--muted);letter-spacing:.12em;grid-template-columns:1fr auto 1fr;align-items:center;margin-top:10px;padding-top:10px;font-family:SFMono-Regular,Consolas,monospace;font-size:8px;display:grid;position:relative}
+.footer-note>span:first-child{justify-self:start}
+.footer-note>span:last-child{justify-self:end}
+
+/* ---- 音乐节奏闪动（--beat 0~1，由 BGM 能量包络驱动） ---- */
+.experience{--beat:0}
+.stage-ghost{opacity:calc(.035 + var(--strength) * .025 + var(--beat) * .04)}
+.stage-name{text-shadow:0 0 calc(var(--strength) * 24px + var(--beat) * 30px) #c19a4975,0 0 calc(var(--beat) * 70px) #c19a4960}
+/* 人像随节拍呼吸 + 金色光晕（正常混合，浅色背景下也可见） */
+.portrait-shell{transform:scale(calc(1 + var(--beat) * .022))}
+.beat-ring{z-index:0;pointer-events:none;border:2px solid #c19a49;border-radius:50%;opacity:calc(var(--beat) * .5);transform:scale(calc(.96 + var(--beat) * .1));position:absolute;inset:-4%}
+.frame-corner{opacity:calc(.72 + var(--beat) * .28);transform:scale(calc(1 + var(--beat) * .35))}
+.frame-corner--tl{transform-origin:top left}
+.frame-corner--tr{transform-origin:top right}
+.frame-corner--bl{transform-origin:bottom left}
+.frame-corner--br{transform-origin:bottom right}
+.tick.is-active{height:calc(13px + var(--beat) * 6px)}
+.tick.is-active:nth-child(6n+1){height:calc(24px + var(--beat) * 8px)}
+.strength-slider::-webkit-slider-thumb{box-shadow:0 5px 18px #00000038,0 0 calc(var(--beat) * 18px) var(--accent)}
+.experience[data-stage="5"] .imperial-halo{opacity:calc(.8 + var(--beat) * .2)}
+
+/* ---- 声音控制 ---- */
+.sound-control{z-index:60;bottom:42px;right:18px;align-items:center;gap:10px;display:flex;position:fixed}
+.sound-toggle{border:1px solid color-mix(in srgb, currentColor 28%, transparent);color:var(--muted);cursor:pointer;background:color-mix(in srgb, currentColor 6%, transparent);border-radius:50%;width:32px;height:32px;font-size:14px;line-height:1;transition:color .3s,border-color .12s;display:grid;place-items:center;position:relative}
+.sound-toggle:hover{color:var(--accent)}
+.sound-toggle.is-muted{opacity:.45}
+.sound-toggle.is-muted:after{content:"";width:20px;height:1.5px;background:currentColor;position:absolute;transform:rotate(-45deg)}
+.sound-toggle.is-pending{animation:sound-pending 1.2s ease-in-out infinite}
+@keyframes sound-pending{0%,100%{box-shadow:0 0 0 0 #c19a4900}50%{box-shadow:0 0 0 6px #c19a4933}}
+.sound-volume{cursor:pointer;appearance:none;-webkit-appearance:none;background:color-mix(in srgb, currentColor 22%, transparent);border-radius:2px;width:88px;height:4px}
+.sound-volume::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;background:var(--accent);border-radius:50%;width:12px;height:12px}
+.sound-volume::-moz-range-thumb{background:var(--accent);border:0;border-radius:50%;width:12px;height:12px}
+
+.eyebrow,.level-meter span,.stage-readout>span,.stage-marker,.drag-hint,.footer-note{transition:color .3s}
+
+@media (width<=700px){
+.experience{grid-template-rows:auto minmax(0,1fr) auto;padding:20px 16px 16px}
+.eyebrow{max-width:190px;font-size:8px;line-height:1.4}
+h1{font-size:clamp(34px,11vw,48px)}
+.level-meter{min-width:84px}
+.level-meter span{font-size:8px}
+.portrait-shell,.stage-readout{width:min(78vw,50vh,430px)}
+.portrait-zone{justify-content:center;padding-top:8px}
+.stage-readout>span{font-size:8px}
+.stage-name{font-size:clamp(36px,10vw,48px)}
+.control-panel{margin-top:8px}
+.stage-marker{letter-spacing:0;font-size:9px}
+.footer-note{grid-template-columns:1fr;justify-items:center;display:grid}
+.footer-note>span:not(:first-child){display:none}
+}
+
+@media (height<=760px) and (width>=701px){
+.experience{padding-top:20px}
+.portrait-shell,.stage-readout{width:min(43vh,440px,70vw)}
+.stage-name{font-size:36px}
+.drag-hint,.footer-note{display:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+*,:before,:after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}
+.imperial-halo{transform:none!important}
+}
+</style>
+</head>
+<body>
+<main>
+  <div class="experience" data-stage="0" id="experience">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">SONG INTENSITY CALIBRATOR</p>
+        <h1>滑动变祖器</h1>
+      </div>
+      <div class="level-meter" aria-live="polite">
+        <span>宋系强度</span>
+        <output class="level-output" for="strength-slider" id="levelOutput">00 / 30</output>
+      </div>
+    </header>
+
+    <section class="portrait-zone" aria-labelledby="current-stage-label">
+      <p class="stage-ghost" aria-hidden="true" id="stageGhost">小宋</p>
+      <div class="portrait-shell">
+        <div class="imperial-halo" aria-hidden="true"></div>
+        <div class="beat-ring" aria-hidden="true"></div>
+        <canvas class="portrait-canvas" id="canvas" role="img" aria-label="当前形态：小宋"></canvas>
+        <div class="scan-grid" aria-hidden="true"></div>
+        <span class="frame-corner frame-corner--tl" aria-hidden="true"></span>
+        <span class="frame-corner frame-corner--tr" aria-hidden="true"></span>
+        <span class="frame-corner frame-corner--bl" aria-hidden="true"></span>
+        <span class="frame-corner frame-corner--br" aria-hidden="true"></span>
+        <div class="load-state" role="status" id="loadState">正在加载…</div>
+      </div>
+
+      <div class="stage-readout">
+        <span id="current-stage-label">当前状态</span>
+        <p class="stage-name" aria-live="polite" id="stageName">小宋</p>
+        <span class="stage-index" id="stageIndex">阶段 01 / 06</span>
+      </div>
+    </section>
+
+    <section class="control-panel" aria-label="宋系强度控制">
+      <div class="range-wrap">
+        <div class="tick-track" id="tickTrack"></div>
+        <input
+          id="strength-slider"
+          class="strength-slider"
+          type="range"
+          min="0"
+          max="30"
+          step="0.01"
+          value="0"
+          aria-label="宋系强度"
+          disabled
+        />
+      </div>
+      <ol class="stage-markers" id="stageMarkers"></ol>
+      <p class="drag-hint"><span aria-hidden="true">←</span> 拖动以增强宋系浓度 <span aria-hidden="true">→</span></p>
+    </section>
+
+    <footer class="footer-note">
+      <span>31 级连续进化</span>
+      <span></span>
+      <span>正脸识别协议：已启用</span>
+    </footer>
+
+    <div class="sound-control">
+      <button class="sound-toggle is-muted is-pending" id="soundToggle" type="button" aria-label="音乐开关">♪</button>
+      <input type="range" class="sound-volume" id="soundVolume" min="0" max="100" value="70" aria-label="音量">
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  var STAGES = ["小宋", "宋工", "宋王", "宋皇", "宋神", "宋祖"];
+  var MAX_LEVEL = 30;
+  var LEVELS_PER_STAGE = 6;
+  var FPS = 30;
+
+  var experience = document.getElementById("experience");
+  var slider = document.getElementById("strength-slider");
+  var levelOutput = document.getElementById("levelOutput");
+  var stageGhost = document.getElementById("stageGhost");
+  var stageName = document.getElementById("stageName");
+  var stageIndex = document.getElementById("stageIndex");
+  var canvas = document.getElementById("canvas");
+  var loadState = document.getElementById("loadState");
+  var tickTrack = document.getElementById("tickTrack");
+  var stageMarkers = document.getElementById("stageMarkers");
+
+  // 刻度：0~30 共 31 根
+  var ticks = [];
+  for (var i = 0; i <= MAX_LEVEL; i++) {
+    var tick = document.createElement("i");
+    tick.className = "tick";
+    tick.setAttribute("aria-hidden", "true");
+    tickTrack.appendChild(tick);
+    ticks.push(tick);
+  }
+
+  // 阶段标记
+  var markers = STAGES.map(function (name, i) {
+    var li = document.createElement("li");
+    li.className = "stage-marker";
+    li.textContent = name;
+    li.addEventListener("click", function () {
+      slider.value = String(Math.min(MAX_LEVEL, i * LEVELS_PER_STAGE + LEVELS_PER_STAGE / 2));
+      apply();
+    });
+    stageMarkers.appendChild(li);
+    return li;
+  });
+
+  function clampLevel(v) { return Math.min(MAX_LEVEL, Math.max(0, v)); }
+
+  function resolve(value) {
+    var level = Math.round(clampLevel(value));
+    var idx = Math.floor(level / LEVELS_PER_STAGE);
+    var isLast = idx === STAGES.length - 1;
+    return {
+      level: level,
+      stage: STAGES[idx],
+      stageIndex: idx,
+      localProgress: isLast ? 0 : (level - idx * LEVELS_PER_STAGE) / LEVELS_PER_STAGE,
+      strength: level / MAX_LEVEL
+    };
+  }
+
+  // 阶段节点 → 视频时间（秒）：各阶段参考图在视频中最清晰稳定的位置，
+  // 由 node_times.json 的分析得出，避免节点落在过渡中段导致模糊。
+  // 换视频后需重新分析更新。
+  var NODE_TIMES = [0.0, 1.133, 2.0, 3.467, 4.5, 6.0];
+
+  function levelToTime(value) {
+    var seg = clampLevel(value) / LEVELS_PER_STAGE;      // 0..5
+    var k = Math.min(STAGES.length - 2, Math.floor(seg));
+    var frac = seg - k;
+    return NODE_TIMES[k] + (NODE_TIMES[k + 1] - NODE_TIMES[k]) * frac;
+  }
+
+  // ---- 视频 → canvas ----
+  // 当前为完整六阶段视频（shot_01 (1)_adjusted 重编码、密集关键帧版）
+  // 更换视频后需重新编码：ffmpeg -i 新视频.mp4 -c:v libx264 -preset fast -crf 18 -g 5 -keyint_min 5 -sc_threshold 0 -pix_fmt yuv420p -an evolution.mp4
+  var VIDEO_SRC = "evolution.mp4";
+  var video = document.createElement("video");
+  video.className = "evolution-video";
+  video.src = VIDEO_SRC;
+  video.preload = "auto";
+  video.muted = true;
+  video.playsInline = true;
+  video.tabIndex = -1;
+  video.setAttribute("aria-hidden", "true");
+  document.body.appendChild(video);
+
+  var ctx = canvas.getContext("2d");
+  var ready = false;
+  var targetTime = 0;   // 滑杆最新目标时间
+  var seekBusy = false; // 是否有未完成的 seek
+
+  function fitCanvas() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = Math.round(canvas.clientWidth * dpr);
+    var h = Math.round(canvas.clientHeight * dpr);
+    if (w > 0 && h > 0 && (canvas.width !== w || canvas.height !== h)) {
+      canvas.width = w;
+      canvas.height = h;
+    }
+  }
+
+  function draw() {
+    if (video.readyState < 2 || !ctx) return false;
+    fitCanvas();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    return true;
+  }
+
+  function clampTime(time) {
+    var t = Math.min(Math.max(0, time), Math.max(0, video.duration - 1 / FPS));
+    // 服务器不支持 Range 请求时 seekable 只有 [0,0]，钳制进去避免 seek 死循环
+    if (video.seekable.length > 0) {
+      t = Math.min(t, video.seekable.end(video.seekable.length - 1));
+    }
+    return t;
+  }
+
+  // 关键：同一时间只允许一个进行中的 seek。
+  // 拖动中每次 seek 都完整走完 → seeked → 画一帧，再追最新目标，
+  // 画面更新频率 = 解码速度，不会卡在上一次被中止的 seek 上。
+  function pumpSeek() {
+    if (seekBusy || !ready || !isFinite(video.duration)) return;
+    var t = clampTime(targetTime);
+    if (Math.abs(video.currentTime - t) < 0.004) { draw(); return; }
+    seekBusy = true;
+    try { video.currentTime = t; } catch (e) { seekBusy = false; }
+  }
+
+  function seekTo(time) {
+    targetTime = time;
+    pumpSeek();
+  }
+
+  video.addEventListener("seeked", function () {
+    seekBusy = false;
+    draw();
+    pumpSeek(); // 拖动期间积累了新目标就继续追
+  });
+
+  function onReady() {
+    if (ready) return;
+    ready = true;
+    slider.disabled = false;
+    loadState.hidden = true;
+    apply();
+  }
+
+  video.addEventListener("loadeddata", onReady);
+  video.addEventListener("canplay", onReady);
+  video.addEventListener("error", function () {
+    loadState.textContent = "连续人像视频加载失败";
+    loadState.classList.add("is-error");
+    loadState.hidden = false;
+  });
+  window.setTimeout(function () {
+    if (!ready) loadState.textContent = "连续人像视频加载超时";
+  }, 15000);
+
+  window.addEventListener("resize", function () { if (ready) draw(); });
+
+  // ---- 滑杆 → 全部状态 ----
+  function apply() {
+    var value = Number(slider.value);
+    var s = resolve(value);
+
+    levelOutput.textContent = String(s.level).padStart(2, "0") + " / " + MAX_LEVEL;
+    stageName.textContent = s.stage;
+    stageGhost.textContent = s.stage;
+    stageIndex.textContent = "阶段 " + String(s.stageIndex + 1).padStart(2, "0") + " / 06";
+    canvas.setAttribute("aria-label", "当前形态：" + s.stage);
+    slider.setAttribute("aria-valuetext", s.stage + "，" + s.level + " 级，共 30 级");
+    experience.dataset.stage = String(s.stageIndex);
+
+    experience.style.setProperty("--strength", String(s.strength));
+    experience.style.setProperty("--strength-pct", (s.strength * 100) + "%");
+    experience.style.setProperty("--ink-pct", (s.strength >= 0.75 ? 100 : 0) + "%");
+    experience.style.setProperty("--stage-progress", String(s.localProgress));
+
+    ticks.forEach(function (t, i) { t.classList.toggle("is-active", i <= s.level); });
+    markers.forEach(function (m, i) {
+      m.classList.toggle("is-current", i === s.stageIndex);
+      m.classList.toggle("is-passed", i < s.stageIndex);
+    });
+
+    if (ready && isFinite(video.duration) && video.duration > 0) {
+      seekTo(levelToTime(value));
+    }
+  }
+
+
+  // ---- 背景音乐 + 节奏闪动 ----
+  // BGM_ENERGY：bgm.m4a 的 RMS 能量包络（每秒 10 点），驱动 --beat 闪动。
+  // 更换 bgm 后需重新生成（见 bgm_energy.json）。
+  var BGM_ENERGY = [0.07, 0.26, 0.46, 0.37, 0.27, 0.84, 0.82, 0.76, 0.77, 0.83, 0.73, 0.76, 0.79, 0.53, 0.34, 0.29, 0.41, 0.86, 0.66, 0.49, 0.47, 0.46, 0.85, 0.8, 0.54, 0.49, 0.86, 0.22, 0.42, 0.49, 0.18, 0.44, 0.74, 0.88, 0.62, 0.61, 0.65, 0.62, 0.64, 0.79, 0.57, 0.18, 0.49, 0.39, 0.75, 0.77, 0.57, 0.46, 0.49, 0.72, 0.92, 0.53, 0.15, 0.79, 0.49, 0.48, 0.76, 0.81, 0.7, 0.55, 0.94, 0.71, 0.8, 0.75, 0.74, 0.77, 0.77, 0.79, 0.45, 0.26, 0.39, 0.37, 1.0, 0.63, 0.45, 0.36, 0.26, 0.99, 0.45, 0.39, 0.81, 0.61, 0.54, 0.5, 0.5, 0.38, 0.1, 0.98, 0.77, 0.71, 0.63, 0.72, 0.74, 0.73, 0.5, 0.24, 0.17, 0.18, 0.2, 0.45, 0.55, 0.54, 0.59, 0.54, 1.0, 0.72, 0.62, 0.64, 0.57, 0.73, 0.71, 0.76, 0.63, 0.54, 0.83, 0.9, 0.86, 0.85, 0.86, 0.82, 0.78, 0.85, 0.55, 0.37, 0.24, 0.55, 0.92, 0.81, 0.42, 0.13, 0.13, 0.82, 0.88, 0.62, 0.41, 0.84, 0.53, 0.55, 0.52, 0.49, 0.46, 0.59, 0.95, 0.72, 0.66, 0.76, 0.67, 0.71, 0.81, 0.6, 0.29, 0.52, 0.38, 0.79, 0.92, 0.61, 0.56, 0.58, 0.67, 0.96, 0.57, 0.36, 0.81, 0.39, 0.11, 0.72, 0.82, 0.71, 0.56, 0.98, 0.72, 0.85, 0.82, 0.8, 0.85, 0.82, 0.84, 0.28, 0.5, 0.55, 0.49, 1.0, 0.55, 0.2, 0.11, 0.39, 1.0, 0.7, 0.63, 0.71, 0.63, 0.5, 0.5, 0.51, 0.39, 0.19, 0.98, 0.94, 0.86, 0.77, 0.75, 0.81, 0.79, 0.84, 0.41, 0.17, 0.17, 0.17, 1.0, 0.72, 0.6, 0.47, 0.52, 0.99, 0.84, 0.54, 0.48, 0.86, 0.53, 0.52, 0.94, 0.63, 0.56, 0.84, 0.94, 0.88, 0.8, 0.86, 0.8, 0.78, 0.84, 0.58, 0.32, 0.16, 0.55, 0.91, 0.89, 0.57, 0.42, 0.36, 0.74, 0.93, 0.51, 0.43, 0.78, 0.35, 0.13, 0.88, 0.84, 0.27, 0.47, 1.0, 0.82, 0.71, 0.78, 0.74, 0.76, 0.8, 0.74, 0.51, 0.52, 0.41, 0.62, 1.0, 0.62, 0.36, 0.58, 0.46, 1.0, 0.48, 0.53, 0.66, 0.66, 0.56, 0.41, 0.6, 0.34, 0.63, 1.0, 0.81, 0.86, 0.91, 0.89, 0.84, 0.83, 0.88, 0.39, 0.2, 0.48, 0.44, 1.0, 0.56, 0.46, 0.39, 0.33, 1.0, 0.62, 0.35, 0.71, 0.65, 0.32, 0.29, 0.2, 0.13, 0.08, 0.98, 0.95, 0.8, 0.81, 0.81, 0.84, 0.83, 0.63, 0.14, 0.13, 0.13, 0.15, 0.56, 0.44, 0.69, 0.53, 0.52, 0.85, 0.86, 0.73, 0.66, 0.72, 0.6, 0.55, 0.71, 0.62, 0.6, 0.81, 0.88, 0.81, 0.83, 0.84, 0.85, 0.88, 0.9, 0.69, 0.32, 0.17, 0.38, 0.8, 0.95, 0.59, 0.43, 0.38, 0.64, 0.83, 0.46, 0.37, 0.86, 0.53, 0.15, 0.4, 0.47, 0.45, 0.38, 1.0, 0.76, 0.73, 0.77, 0.8, 0.75, 0.77, 0.79, 0.4, 0.17, 0.44, 0.52, 1.0, 0.51, 0.44, 0.34, 0.28, 1.0, 0.51, 0.23, 0.8, 0.51, 0.09, 0.51, 1.0, 0.51, 0.14, 0.94, 0.74, 0.89, 0.92, 0.88, 0.89, 0.93, 0.84, 0.51, 0.48, 0.35, 0.17, 1.0, 0.64, 0.42, 0.38, 0.33, 1.0, 0.77, 0.43, 0.61, 0.7, 0.26, 0.23, 0.16, 0.09, 0.1, 0.68, 0.92, 0.84, 0.85, 0.87, 0.85, 0.83, 0.73, 0.42, 0.27, 0.19, 0.38, 0.16, 0.41, 0.51, 0.39, 0.41, 0.87, 0.88, 0.55, 0.21, 0.87, 0.46, 0.29, 0.25, 0.44, 0.44, 0.65, 1.0, 0.82, 0.84, 0.8, 0.76, 0.78, 0.87, 0.74, 0.25, 0.18, 0.46, 0.72, 0.97, 0.59, 0.4, 0.41, 0.57, 1.0, 0.52, 0.13, 0.84, 0.38, 0.37, 0.57, 0.92, 0.89, 0.93, 1.0, 0.72, 0.72, 0.73, 0.71, 0.71, 0.68, 0.83, 0.41, 0.24, 0.09, 0.45, 1.0, 0.51, 0.18, 0.06, 0.14, 1.0, 0.5, 0.27, 0.86, 0.67, 0.11, 0.36, 1.0, 0.79, 0.69, 0.98, 0.79, 0.86, 0.87, 0.82, 0.84, 0.92, 0.91, 0.34, 0.42, 0.58, 0.46, 1.0, 0.7, 0.51, 0.42, 0.39, 0.98, 0.8, 0.47, 0.59, 0.85, 0.43, 0.47, 0.85, 0.9, 0.87, 0.96, 1.0, 0.81, 0.83, 0.83, 0.85, 0.86, 0.93, 0.59, 0.43, 0.16, 0.37, 0.87, 0.86, 0.58, 0.44, 0.33, 0.76, 1.0, 0.59, 0.26, 0.86, 0.53, 0.26, 0.76, 0.96, 0.85, 0.73, 0.93, 0.88, 0.87, 1.0, 0.91, 0.83, 0.83, 0.76, 0.42, 0.41, 0.39, 0.58, 0.83, 0.27, 0.11, 0.84, 0.47, 1.0, 0.51, 0.14, 0.86, 0.47, 0.1, 0.15, 0.49, 0.41, 0.24, 1.0, 0.69, 0.47, 0.42, 0.42, 0.48, 0.47, 0.58, 0.35, 0.26, 0.31, 0.41, 1.0, 0.56, 0.57, 0.45, 0.38, 1.0, 0.53, 0.53, 0.52, 0.44, 0.44, 0.48, 0.39, 0.35, 0.22, 0.88, 0.8, 0.46, 0.4, 0.54, 0.37, 0.38, 0.57, 0.32, 0.26, 0.38, 0.35, 0.96, 0.76, 0.48, 0.38, 0.31, 0.91, 0.82, 0.43, 0.47, 0.49, 0.13, 0.07, 1.0, 0.75, 0.43, 0.75, 0.96, 0.48, 0.26, 0.26, 0.34, 0.27, 0.41, 0.31, 0.11, 0.12, 0.44, 0.83, 0.89, 0.45, 0.41, 0.44, 0.67, 0.87, 0.48, 0.42, 0.52, 0.17, 0.37, 0.89, 0.85, 0.35, 0.61, 1.0, 0.61, 0.51, 0.44, 0.41, 0.41, 0.4, 0.39, 0.39, 0.34, 0.33, 0.35, 0.6, 0.43, 0.32, 0.45, 0.31, 0.3, 0.57, 0.46, 0.6, 0.25, 0.61, 0.57, 0.7, 0.41, 0.26, 1.0, 0.93, 0.98, 0.91, 0.87, 0.86, 0.81, 0.86, 0.48, 0.21, 0.38, 0.54, 1.0, 0.62, 0.29, 0.12, 0.12, 1.0, 0.74, 0.55, 0.62, 0.74, 0.47, 0.55, 0.55, 0.48, 0.47, 0.89, 0.94, 0.74, 0.7, 0.76, 0.7, 0.79, 0.95, 0.5, 0.48, 0.44, 0.53, 0.89, 0.84, 0.53, 0.53, 0.5, 0.89, 0.93, 0.48, 0.3, 0.89, 0.31, 0.1, 0.94, 0.84, 0.66, 0.71, 1.0, 0.77, 0.84, 0.85, 0.84, 0.88, 0.91, 0.67, 0.13, 0.5, 0.53, 0.76, 1.0, 0.47, 0.13, 0.1, 0.62, 1.0, 0.63, 0.44, 0.83, 0.5, 0.53, 0.44, 0.45, 0.32, 0.2, 1.0, 0.88, 0.87, 0.8, 0.85, 0.86, 0.87, 0.86, 0.36, 0.14, 0.16, 0.23, 1.0, 0.65, 0.51, 0.46, 0.48, 1.0, 0.65, 0.42, 0.7, 0.66, 0.43, 0.48, 0.98, 0.6, 0.55, 0.97, 0.88, 0.86, 0.83, 0.8, 0.81, 0.83, 0.9, 0.48, 0.22, 0.4, 0.52, 1.0, 0.7, 0.54, 0.36, 0.23, 0.98, 0.86, 0.45, 0.56, 0.78, 0.24, 0.07, 1.0, 0.59, 0.24, 0.77, 0.95, 0.79, 0.74, 0.75, 0.77, 0.75, 0.87, 0.65, 0.49, 0.52, 0.29, 0.92, 0.98, 0.47, 0.2, 0.52, 0.8, 0.99, 0.41, 0.59, 0.86, 0.56, 0.4, 0.68, 0.63, 0.49, 0.58, 0.96, 0.8, 0.86, 0.86, 0.88, 0.88, 0.98, 0.77, 0.29, 0.16, 0.42, 0.61, 1.0, 0.56, 0.42, 0.36, 0.41, 1.0, 0.5, 0.41, 0.79, 0.51, 0.36, 0.7, 0.97, 0.43, 0.1, 1.0, 0.87, 0.91, 0.88, 0.87, 0.87, 0.87, 0.53, 0.13, 0.1, 0.09, 0.09, 0.51, 0.44, 0.53, 0.54, 0.38, 1.0, 0.6, 0.72, 0.68, 0.64, 0.58, 0.4, 0.75, 0.64, 0.63, 0.95, 0.84, 0.86, 0.84, 0.89, 0.88, 0.91, 0.92, 0.62, 0.29, 0.22, 0.4, 1.0, 0.76, 0.49, 0.38, 0.29, 0.88, 0.85, 0.38, 0.47, 0.88, 0.45, 0.12, 1.0, 0.73, 0.46, 0.71, 0.92, 0.82, 0.75, 0.79, 0.81, 0.72, 0.84, 0.69, 0.36, 0.13, 0.49, 0.83, 0.92, 0.5, 0.48, 0.39, 0.73, 0.94, 0.45, 0.12, 0.88, 0.36, 0.07, 0.86, 0.92];
+  var ENERGY_RATE = 10;
+
+  var audio = new Audio("bgm.m4a");
+  audio.loop = true;
+  audio.preload = "auto";
+
+  var soundToggle = document.getElementById("soundToggle");
+  var soundVolume = document.getElementById("soundVolume");
+
+  var savedVol = parseFloat(localStorage.getItem("song-vol") || "0.7");
+  if (!isFinite(savedVol)) savedVol = 0.7;
+  audio.volume = Math.min(1, Math.max(0, savedVol));
+  soundVolume.value = String(Math.round(audio.volume * 100));
+  audio.muted = localStorage.getItem("song-muted") === "1";
+  soundToggle.classList.toggle("is-muted", audio.muted);
+
+  function tryPlay() {
+    var p = audio.play();
+    if (p && p.catch) {
+      p.then(function () { soundToggle.classList.remove("is-pending"); })
+       .catch(function () { soundToggle.classList.add("is-pending"); });
+    }
+  }
+  // 浏览器自动播放限制：首次交互时启动
+  var gesture = function () { tryPlay(); };
+  window.addEventListener("pointerdown", gesture, { once: true });
+  window.addEventListener("keydown", gesture, { once: true });
+  tryPlay();
+
+  soundToggle.addEventListener("click", function () {
+    audio.muted = !audio.muted;
+    localStorage.setItem("song-muted", audio.muted ? "1" : "0");
+    soundToggle.classList.toggle("is-muted", audio.muted);
+    if (!audio.muted && audio.paused) tryPlay();
+  });
+
+  soundVolume.addEventListener("input", function () {
+    audio.volume = Number(soundVolume.value) / 100;
+    localStorage.setItem("song-vol", String(audio.volume));
+    if (audio.volume > 0 && audio.muted) {
+      audio.muted = false;
+      localStorage.setItem("song-muted", "0");
+      soundToggle.classList.remove("is-muted");
+      if (audio.paused) tryPlay();
+    }
+  });
+
+  // 节奏闪动：包络采样点间线性插值 + 快攻慢释，保证 60fps 连续
+  var beat = 0;
+  (function beatLoop() {
+    var target = 0;
+    if (!audio.paused && !audio.muted && BGM_ENERGY.length) {
+      var pos = audio.currentTime * ENERGY_RATE;
+      var i = Math.floor(pos);
+      var frac = pos - i;
+      var a = BGM_ENERGY[i % BGM_ENERGY.length];
+      var b = BGM_ENERGY[(i + 1) % BGM_ENERGY.length];
+      target = (a + (b - a) * frac) * (0.35 + 0.65 * audio.volume);
+    }
+    beat += (target - beat) * (target > beat ? 0.3 : 0.08);
+    experience.style.setProperty("--beat", beat.toFixed(4));
+    requestAnimationFrame(beatLoop);
+  })();
+
+  slider.addEventListener("input", apply);
+  apply();
+})();
+</script>
+</body>
+</html>
