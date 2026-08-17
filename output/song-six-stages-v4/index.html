@@ -275,7 +275,8 @@ h1{font-size:clamp(34px,11vw,48px)}
 
   // ---- 视频 → canvas ----
   // 当前为完整六阶段视频（shot_01 (1)_adjusted 重编码、密集关键帧版）
-  // 更换视频后需重新编码：ffmpeg -i 新视频.mp4 -c:v libx264 -preset fast -crf 18 -g 5 -keyint_min 5 -sc_threshold 0 -pix_fmt yuv420p -an evolution.mp4
+  // 更换视频后需重新编码（必须带 +faststart，否则 iPhone Safari 要先下载整个文件才能解码，移动端会加载超时）：
+  // ffmpeg -i 新视频.mp4 -c:v libx264 -preset fast -crf 18 -g 5 -keyint_min 5 -sc_threshold 0 -pix_fmt yuv420p -movflags +faststart -an evolution.mp4
   var VIDEO_SRC = "evolution.mp4";
   var video = document.createElement("video");
   video.className = "evolution-video";
