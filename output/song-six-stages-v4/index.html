@@ -287,6 +287,14 @@ h1{font-size:clamp(34px,11vw,48px)}
   video.tabIndex = -1;
   video.setAttribute("aria-hidden", "true");
   document.body.appendChild(video);
+  video.load();
+
+  // iOS Safari 常忽略 preload，在用户手势前完全不下载视频，
+  // 导致 loadeddata/canplay 永不触发、页面显示“加载超时”。
+  // 静音视频的 play() 被自动播放策略允许，用它强制开始下载与解码。
+  var kick = null;
+  try { kick = video.play(); } catch (e) { kick = null; }
+  if (kick && kick.catch) kick.catch(function () { /* 被拒（如低电量模式）时走静态图兜底 */ });
 
   var ctx = canvas.getContext("2d");
   var ready = false;
@@ -347,23 +355,79 @@ h1{font-size:clamp(34px,11vw,48px)}
   function onReady() {
     if (ready) return;
     ready = true;
+    video.pause();
     slider.disabled = false;
     loadState.hidden = true;
     apply();
   }
 
+  // ---- 静态图兜底：视频加载超时/失败时，用 6 张阶段图交叉渐变 ----
+  // 保证移动端（尤其 iOS 禁止预载的场景）页面始终可用；
+  // 若视频随后加载成功，onReady 会自动切回连续视频模式。
+  var FALLBACK_SRCS = [
+    "frames/small-01.jpg", "frames/small-02.jpg", "frames/small-03.jpg",
+    "frames/small-04.jpg", "frames/small-05.jpg", "frames/small-06.jpg"
+  ];
+  var fallbackActive = false;
+  var fallbackImgs = null;
+  var fallbackShown = false;
+
+  function imgReady(im) { return im && im.complete && im.naturalWidth > 0; }
+
+  function renderFallback() {
+    if (!ctx) return;
+    fitCanvas();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    var pos = clampLevel(Number(slider.value)) / LEVELS_PER_STAGE; // 0..5
+    var i = Math.min(STAGES.length - 2, Math.floor(pos));
+    var frac = pos - i;
+    var a = fallbackImgs[i], b = fallbackImgs[i + 1];
+    if (imgReady(a)) ctx.drawImage(a, 0, 0, canvas.width, canvas.height);
+    if (frac > 0 && imgReady(b)) {
+      ctx.globalAlpha = frac;
+      ctx.drawImage(b, 0, 0, canvas.width, canvas.height);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  function startFallback() {
+    if (fallbackActive || ready) return;
+    fallbackActive = true;
+    fallbackImgs = FALLBACK_SRCS.map(function (src) {
+      var im = new Image();
+      im.onload = function () {
+        if (ready) return;
+        if (!fallbackShown) {
+          fallbackShown = true;
+          slider.disabled = false;
+          loadState.hidden = true;
+        }
+        renderFallback();
+      };
+      im.onerror = function () {
+        if (!fallbackShown && !ready) {
+          loadState.textContent = "连续人像视频加载失败";
+          loadState.classList.add("is-error");
+          loadState.hidden = false;
+        }
+      };
+      im.src = src;
+      return im;
+    });
+    loadState.textContent = "视频加载较慢，切换静态图模式…";
+  }
+
   video.addEventListener("loadeddata", onReady);
   video.addEventListener("canplay", onReady);
-  video.addEventListener("error", function () {
-    loadState.textContent = "连续人像视频加载失败";
-    loadState.classList.add("is-error");
-    loadState.hidden = false;
-  });
+  video.addEventListener("error", startFallback);
   window.setTimeout(function () {
-    if (!ready) loadState.textContent = "连续人像视频加载超时";
+    if (!ready) startFallback();
   }, 15000);
 
-  window.addEventListener("resize", function () { if (ready) draw(); });
+  window.addEventListener("resize", function () {
+    if (ready) draw();
+    else if (fallbackShown) renderFallback();
+  });
 
   // ---- 滑杆 → 全部状态 ----
   function apply() {
@@ -391,6 +455,8 @@ h1{font-size:clamp(34px,11vw,48px)}
 
     if (ready && isFinite(video.duration) && video.duration > 0) {
       seekTo(levelToTime(value));
+    } else if (fallbackShown) {
+      renderFallback();
     }
   }
 
