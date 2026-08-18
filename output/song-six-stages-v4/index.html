@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#e8e9e5">
 <meta name="description" content="拖动滑杆，观察宋系强度从小宋进化到宋祖。">
+<link rel="preload" href="frames/preview-01.jpg" as="image" fetchpriority="high">
 <title>滑动变阻器</title>
 <style>
 :root{color:#171816;font-synthesis:none;text-rendering:optimizeLegibility;background:#e8e9e5;font-family:PingFang SC,Microsoft YaHei,sans-serif}
@@ -28,7 +29,7 @@ h1{letter-spacing:-.09em;margin:0;font-family:Songti SC,STSong,SimSun,serif;font
 
 .portrait-zone{z-index:1;flex-direction:column;justify-content:center;align-items:center;min-height:0;padding-top:4px;display:flex;position:relative}
 .stage-ghost{z-index:-1;color:currentColor;letter-spacing:-.16em;text-align:center;white-space:nowrap;width:100%;opacity:calc(.035 + var(--strength) * .025);transform:translate(-50%, -50%) scale(calc(.95 + var(--strength) * .08));transform-origin:50%;margin:0;font-family:Songti SC,STSong,SimSun,serif;font-size:clamp(150px,27vw,420px);font-weight:900;line-height:.7;transition:opacity .18s;position:absolute;top:44%;left:50%}
-.portrait-shell{aspect-ratio:1;filter:drop-shadow(0 28px 38px #1214121f);background:radial-gradient(circle at 50% 38%,#f7f7f5,#cfd1cf 70%);width:min(49vh,550px,76vw);max-width:100%;position:relative}
+.portrait-shell{aspect-ratio:1;filter:drop-shadow(0 28px 38px #1214121f);background:radial-gradient(circle at 50% 38%,#f7f7f580,#cfd1cf80 70%),url("frames/preview-01.jpg") center/cover no-repeat,#cfd1cf;width:min(49vh,550px,76vw);max-width:100%;position:relative}
 .portrait-shell:before{z-index:3;border:1px solid color-mix(in srgb, currentColor 16%, transparent);content:"";pointer-events:none;position:absolute;inset:0}
 .portrait-shell:after{z-index:3;content:"";opacity:.42;pointer-events:none;background:linear-gradient(90deg,currentColor 0 12px,#0000 12px calc(100% - 12px),currentColor calc(100% - 12px));height:1px;position:absolute;top:50%;left:-13px;right:-13px}
 .portrait-canvas{z-index:1;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 38%,#f7f7f5,#cfd1cf 70%);width:100%;height:100%;transition:opacity .16s;display:block;position:absolute;inset:0}
@@ -42,9 +43,16 @@ h1{letter-spacing:-.09em;margin:0;font-family:Songti SC,STSong,SimSun,serif;font
 .frame-corner--tr{border-top:2px solid;border-right:2px solid;top:-7px;right:-7px}
 .frame-corner--bl{border-bottom:2px solid;border-left:2px solid;bottom:-7px;left:-7px}
 .frame-corner--br{border-bottom:2px solid;border-right:2px solid;bottom:-7px;right:-7px}
-.load-state{z-index:6;color:#f4f1e8;letter-spacing:.08em;background:#171816e0;place-items:center;font-family:SFMono-Regular,Consolas,monospace;font-size:12px;display:grid;position:absolute;inset:0}
+.load-state{z-index:6;color:#f4f1e8;background:#171816b8;place-items:center;padding:20px;font-family:SFMono-Regular,Consolas,monospace;font-size:11px;display:grid;position:absolute;inset:0;transition:background .28s,opacity .2s}
 .load-state[hidden]{display:none}
 .load-state.is-error{color:#fff1ef;background:#7e1e19eb}
+.load-state.is-background{pointer-events:none;background:linear-gradient(#0000 60%,#171816a6);place-items:end center;padding:12px}
+.load-card{backdrop-filter:blur(10px);background:#171816c9;border:1px solid #ffffff24;width:min(280px,100%);padding:12px 14px}
+.load-state.is-background .load-card{background:#171816b8;padding:9px 11px}
+.load-label{letter-spacing:.14em;margin:0 0 9px;font-size:10px}
+.load-track{background:#ffffff24;width:100%;height:2px;overflow:hidden}
+.load-bar{background:linear-gradient(90deg,#b52b24,#d5b56e);width:0;height:100%;transition:width .24s ease-out;display:block}
+.load-meta{color:#f4f1e8b8;letter-spacing:.06em;justify-content:space-between;gap:12px;margin-top:7px;font-size:9px;display:flex}
 
 .stage-readout{grid-template-columns:1fr auto 1fr;align-items:baseline;width:min(49vh,550px,76vw);margin-top:12px;display:grid}
 .stage-readout>span{color:var(--muted);letter-spacing:.13em;text-transform:uppercase;font-family:SFMono-Regular,Consolas,monospace;font-size:9px}
@@ -162,7 +170,15 @@ h1{font-size:clamp(34px,11vw,48px)}
         <span class="frame-corner frame-corner--tr" aria-hidden="true"></span>
         <span class="frame-corner frame-corner--bl" aria-hidden="true"></span>
         <span class="frame-corner frame-corner--br" aria-hidden="true"></span>
-        <div class="load-state" role="status" id="loadState">正在加载…</div>
+        <div class="load-state" role="status" id="loadState">
+          <div class="load-card">
+            <p class="load-label" id="loadLabel">首屏准备中</p>
+            <div class="load-track" id="loadProgress" role="progressbar" aria-labelledby="loadLabel" aria-valuemin="0" aria-valuemax="100" aria-valuenow="6">
+              <span class="load-bar" id="loadBar"></span>
+            </div>
+            <div class="load-meta"><span id="loadDetail">正在载入轻量预览</span><span id="loadPercent" aria-hidden="true">6%</span></div>
+          </div>
+        </div>
       </div>
 
       <div class="stage-readout">
@@ -222,8 +238,24 @@ h1{font-size:clamp(34px,11vw,48px)}
   var portraitShell = document.querySelector(".portrait-shell");
   var canvas = document.getElementById("canvas");
   var loadState = document.getElementById("loadState");
+  var loadLabel = document.getElementById("loadLabel");
+  var loadDetail = document.getElementById("loadDetail");
+  var loadPercent = document.getElementById("loadPercent");
+  var loadProgress = document.getElementById("loadProgress");
+  var loadBar = document.getElementById("loadBar");
   var tickTrack = document.getElementById("tickTrack");
   var stageMarkers = document.getElementById("stageMarkers");
+
+  var displayedProgress = 6;
+  function setLoadProgress(percent, label, detail) {
+    displayedProgress = Math.max(displayedProgress, Math.min(100, Math.round(percent)));
+    loadBar.style.width = displayedProgress + "%";
+    loadProgress.setAttribute("aria-valuenow", String(displayedProgress));
+    loadPercent.textContent = displayedProgress + "%";
+    if (label) loadLabel.textContent = label;
+    if (detail) loadDetail.textContent = detail;
+  }
+  setLoadProgress(6);
 
   // 刻度：0~30 共 31 根
   var ticks = [];
@@ -280,6 +312,7 @@ h1{font-size:clamp(34px,11vw,48px)}
   // 更换视频后需重新编码（必须带 +faststart，否则 iPhone Safari 要先下载整个文件才能解码，移动端会加载超时）：
   // ffmpeg -i 新视频.mp4 -c:v libx264 -preset fast -crf 18 -g 5 -keyint_min 5 -sc_threshold 0 -pix_fmt yuv420p -movflags +faststart -an evolution.mp4
   var VIDEO_SRC = "evolution.mp4";
+  var PREVIEW_SRC = "frames/preview-01.jpg";
   var video = document.createElement("video");
   video.className = "evolution-video";
   video.preload = "auto";
@@ -293,6 +326,7 @@ h1{font-size:clamp(34px,11vw,48px)}
   video.setAttribute("webkit-playsinline", "");
   video.setAttribute("autoplay", "");
   video.setAttribute("aria-hidden", "true");
+  video.poster = PREVIEW_SRC;
   // 视频作为视口内的真实媒体层。iOS Safari/WKWebView 对离屏、
   // 1x1 或完全透明视频的自动播放和解码策略不一致，不用它作为预加载容器。
   portraitShell.insertBefore(video, canvas);
@@ -375,8 +409,9 @@ h1{font-size:clamp(34px,11vw,48px)}
     video.pause();
     portraitShell.classList.remove("is-fallback");
     slider.disabled = false;
-    loadState.hidden = true;
+    setLoadProgress(100, "连续动画已就绪", "可流畅拖动 31 级形态");
     apply();
+    window.setTimeout(function () { loadState.hidden = true; }, 220);
   }
 
   // ---- 静态图兜底：视频加载超时/失败时，用 6 张阶段图交叉渐变 ----
@@ -387,8 +422,9 @@ h1{font-size:clamp(34px,11vw,48px)}
     "frames/small-04.jpg", "frames/small-05.jpg", "frames/small-06.jpg"
   ];
   var fallbackActive = false;
-  var fallbackImgs = null;
+  var fallbackImgs = new Array(FALLBACK_SRCS.length);
   var fallbackShown = false;
+  var fallbackLoadStarted = false;
 
   function imgReady(im) { return im && im.complete && im.naturalWidth > 0; }
 
@@ -400,49 +436,103 @@ h1{font-size:clamp(34px,11vw,48px)}
     var i = Math.min(STAGES.length - 2, Math.floor(pos));
     var frac = pos - i;
     var a = fallbackImgs[i], b = fallbackImgs[i + 1];
-    if (imgReady(a)) ctx.drawImage(a, 0, 0, canvas.width, canvas.height);
-    if (frac > 0 && imgReady(b)) {
+    var base = a;
+    if (!imgReady(base)) {
+      for (var d = 0; d < fallbackImgs.length; d++) {
+        var left = fallbackImgs[Math.max(0, i - d)];
+        var right = fallbackImgs[Math.min(fallbackImgs.length - 1, i + d)];
+        if (imgReady(left)) { base = left; break; }
+        if (imgReady(right)) { base = right; break; }
+      }
+    }
+    if (imgReady(base)) ctx.drawImage(base, 0, 0, canvas.width, canvas.height);
+    if (frac > 0 && imgReady(a) && imgReady(b)) {
       ctx.globalAlpha = frac;
       ctx.drawImage(b, 0, 0, canvas.width, canvas.height);
       ctx.globalAlpha = 1;
     }
   }
 
+  function showFallback() {
+    if (ready || fallbackShown) return;
+    fallbackShown = true;
+    portraitShell.classList.add("is-fallback");
+    slider.disabled = false;
+    loadState.classList.add("is-background");
+    setLoadProgress(18, "轻量画面已可用", "连续动画后台加载中");
+    renderFallback();
+  }
+
+  function loadFallbackFrames() {
+    if (fallbackLoadStarted || ready) return;
+    fallbackLoadStarted = true;
+    FALLBACK_SRCS.forEach(function (src, index) {
+      var im = new Image();
+      im.decoding = "async";
+      im.fetchPriority = "low";
+      im.onload = function () {
+        fallbackImgs[index] = im;
+        if (!ready) renderFallback();
+      };
+      im.src = src;
+    });
+  }
+
   function startFallback() {
     if (fallbackActive || ready) return;
     fallbackActive = true;
-    fallbackImgs = FALLBACK_SRCS.map(function (src) {
+    var preview = new Image();
+    preview.decoding = "async";
+    preview.fetchPriority = "high";
+    preview.onload = function () {
+      fallbackImgs[0] = preview;
+      showFallback();
+      if (window.requestIdleCallback) requestIdleCallback(loadFallbackFrames, { timeout: 1200 });
+      else window.setTimeout(loadFallbackFrames, 300);
+    };
+    preview.onerror = function () {
       var im = new Image();
-      im.onload = function () {
-        if (ready) return;
-        if (!fallbackShown) {
-          fallbackShown = true;
-          portraitShell.classList.add("is-fallback");
-          slider.disabled = false;
-          loadState.hidden = true;
-        }
-        renderFallback();
-      };
+      im.onload = function () { fallbackImgs[0] = im; showFallback(); loadFallbackFrames(); };
       im.onerror = function () {
         if (!fallbackShown && !ready) {
-          loadState.textContent = "连续人像视频加载失败";
+          loadLabel.textContent = "人像资源加载失败";
+          loadDetail.textContent = "请检查网络后重试";
           loadState.classList.add("is-error");
           loadState.hidden = false;
         }
       };
-      im.src = src;
-      return im;
-    });
-    loadState.textContent = "视频加载较慢，切换静态图模式…";
+      im.src = FALLBACK_SRCS[0];
+    };
+    preview.src = PREVIEW_SRC;
   }
 
+  video.addEventListener("loadstart", function () {
+    setLoadProgress(10, "首屏准备中", "正在连接媒体资源");
+  });
+  video.addEventListener("loadedmetadata", function () {
+    setLoadProgress(24, fallbackShown ? "轻量画面已可用" : "首屏准备中", "已获取连续动画信息");
+  });
+  video.addEventListener("progress", function () {
+    if (!isFinite(video.duration) || video.duration <= 0 || !video.buffered.length) return;
+    var bufferedEnd = video.buffered.end(video.buffered.length - 1);
+    var percent = 24 + Math.min(70, bufferedEnd / video.duration * 70);
+    setLoadProgress(percent, fallbackShown ? "轻量画面已可用" : "连续动画加载中", "后台缓冲连续形变");
+  });
   video.addEventListener("loadeddata", onReady);
   video.addEventListener("canplay", onReady);
-  video.addEventListener("error", startFallback);
+  video.addEventListener("error", function () {
+    startFallback();
+    if (fallbackShown) {
+      setLoadProgress(100, "省流模式已就绪", "连续动画暂时不可用");
+      window.setTimeout(function () { if (!ready) loadState.hidden = true; }, 1600);
+    }
+  });
   // 监听器安装后再设置 src，避免极快缓存命中时错过 ready 事件。
   video.src = VIDEO_SRC;
   video.load();
   startVideoDecode();
+  // 轻量首帧立即可用，完整视频仅作后台渐进增强。
+  startFallback();
 
   // 移动端自动播放被拒时，利用首次真实交互继续下载/解码。
   function retryVideoOnGesture() {
@@ -452,8 +542,14 @@ h1{font-size:clamp(34px,11vw,48px)}
   window.addEventListener("touchstart", retryVideoOnGesture, { passive: true });
   window.addEventListener("keydown", retryVideoOnGesture);
   window.setTimeout(function () {
-    if (!ready) startFallback();
+    if (!ready) setLoadProgress(90, "轻量画面已可用", "网络较慢，继续后台加载动画");
   }, 15000);
+  window.setTimeout(function () {
+    if (!ready && fallbackShown) {
+      setLoadProgress(100, "省流模式已就绪", "网络恢复后会自动升级动画");
+      window.setTimeout(function () { if (!ready) loadState.hidden = true; }, 1600);
+    }
+  }, 30000);
 
   window.addEventListener("resize", function () {
     if (ready) draw();
@@ -498,9 +594,9 @@ h1{font-size:clamp(34px,11vw,48px)}
   var BGM_ENERGY = [0.07, 0.26, 0.46, 0.37, 0.27, 0.84, 0.82, 0.76, 0.77, 0.83, 0.73, 0.76, 0.79, 0.53, 0.34, 0.29, 0.41, 0.86, 0.66, 0.49, 0.47, 0.46, 0.85, 0.8, 0.54, 0.49, 0.86, 0.22, 0.42, 0.49, 0.18, 0.44, 0.74, 0.88, 0.62, 0.61, 0.65, 0.62, 0.64, 0.79, 0.57, 0.18, 0.49, 0.39, 0.75, 0.77, 0.57, 0.46, 0.49, 0.72, 0.92, 0.53, 0.15, 0.79, 0.49, 0.48, 0.76, 0.81, 0.7, 0.55, 0.94, 0.71, 0.8, 0.75, 0.74, 0.77, 0.77, 0.79, 0.45, 0.26, 0.39, 0.37, 1.0, 0.63, 0.45, 0.36, 0.26, 0.99, 0.45, 0.39, 0.81, 0.61, 0.54, 0.5, 0.5, 0.38, 0.1, 0.98, 0.77, 0.71, 0.63, 0.72, 0.74, 0.73, 0.5, 0.24, 0.17, 0.18, 0.2, 0.45, 0.55, 0.54, 0.59, 0.54, 1.0, 0.72, 0.62, 0.64, 0.57, 0.73, 0.71, 0.76, 0.63, 0.54, 0.83, 0.9, 0.86, 0.85, 0.86, 0.82, 0.78, 0.85, 0.55, 0.37, 0.24, 0.55, 0.92, 0.81, 0.42, 0.13, 0.13, 0.82, 0.88, 0.62, 0.41, 0.84, 0.53, 0.55, 0.52, 0.49, 0.46, 0.59, 0.95, 0.72, 0.66, 0.76, 0.67, 0.71, 0.81, 0.6, 0.29, 0.52, 0.38, 0.79, 0.92, 0.61, 0.56, 0.58, 0.67, 0.96, 0.57, 0.36, 0.81, 0.39, 0.11, 0.72, 0.82, 0.71, 0.56, 0.98, 0.72, 0.85, 0.82, 0.8, 0.85, 0.82, 0.84, 0.28, 0.5, 0.55, 0.49, 1.0, 0.55, 0.2, 0.11, 0.39, 1.0, 0.7, 0.63, 0.71, 0.63, 0.5, 0.5, 0.51, 0.39, 0.19, 0.98, 0.94, 0.86, 0.77, 0.75, 0.81, 0.79, 0.84, 0.41, 0.17, 0.17, 0.17, 1.0, 0.72, 0.6, 0.47, 0.52, 0.99, 0.84, 0.54, 0.48, 0.86, 0.53, 0.52, 0.94, 0.63, 0.56, 0.84, 0.94, 0.88, 0.8, 0.86, 0.8, 0.78, 0.84, 0.58, 0.32, 0.16, 0.55, 0.91, 0.89, 0.57, 0.42, 0.36, 0.74, 0.93, 0.51, 0.43, 0.78, 0.35, 0.13, 0.88, 0.84, 0.27, 0.47, 1.0, 0.82, 0.71, 0.78, 0.74, 0.76, 0.8, 0.74, 0.51, 0.52, 0.41, 0.62, 1.0, 0.62, 0.36, 0.58, 0.46, 1.0, 0.48, 0.53, 0.66, 0.66, 0.56, 0.41, 0.6, 0.34, 0.63, 1.0, 0.81, 0.86, 0.91, 0.89, 0.84, 0.83, 0.88, 0.39, 0.2, 0.48, 0.44, 1.0, 0.56, 0.46, 0.39, 0.33, 1.0, 0.62, 0.35, 0.71, 0.65, 0.32, 0.29, 0.2, 0.13, 0.08, 0.98, 0.95, 0.8, 0.81, 0.81, 0.84, 0.83, 0.63, 0.14, 0.13, 0.13, 0.15, 0.56, 0.44, 0.69, 0.53, 0.52, 0.85, 0.86, 0.73, 0.66, 0.72, 0.6, 0.55, 0.71, 0.62, 0.6, 0.81, 0.88, 0.81, 0.83, 0.84, 0.85, 0.88, 0.9, 0.69, 0.32, 0.17, 0.38, 0.8, 0.95, 0.59, 0.43, 0.38, 0.64, 0.83, 0.46, 0.37, 0.86, 0.53, 0.15, 0.4, 0.47, 0.45, 0.38, 1.0, 0.76, 0.73, 0.77, 0.8, 0.75, 0.77, 0.79, 0.4, 0.17, 0.44, 0.52, 1.0, 0.51, 0.44, 0.34, 0.28, 1.0, 0.51, 0.23, 0.8, 0.51, 0.09, 0.51, 1.0, 0.51, 0.14, 0.94, 0.74, 0.89, 0.92, 0.88, 0.89, 0.93, 0.84, 0.51, 0.48, 0.35, 0.17, 1.0, 0.64, 0.42, 0.38, 0.33, 1.0, 0.77, 0.43, 0.61, 0.7, 0.26, 0.23, 0.16, 0.09, 0.1, 0.68, 0.92, 0.84, 0.85, 0.87, 0.85, 0.83, 0.73, 0.42, 0.27, 0.19, 0.38, 0.16, 0.41, 0.51, 0.39, 0.41, 0.87, 0.88, 0.55, 0.21, 0.87, 0.46, 0.29, 0.25, 0.44, 0.44, 0.65, 1.0, 0.82, 0.84, 0.8, 0.76, 0.78, 0.87, 0.74, 0.25, 0.18, 0.46, 0.72, 0.97, 0.59, 0.4, 0.41, 0.57, 1.0, 0.52, 0.13, 0.84, 0.38, 0.37, 0.57, 0.92, 0.89, 0.93, 1.0, 0.72, 0.72, 0.73, 0.71, 0.71, 0.68, 0.83, 0.41, 0.24, 0.09, 0.45, 1.0, 0.51, 0.18, 0.06, 0.14, 1.0, 0.5, 0.27, 0.86, 0.67, 0.11, 0.36, 1.0, 0.79, 0.69, 0.98, 0.79, 0.86, 0.87, 0.82, 0.84, 0.92, 0.91, 0.34, 0.42, 0.58, 0.46, 1.0, 0.7, 0.51, 0.42, 0.39, 0.98, 0.8, 0.47, 0.59, 0.85, 0.43, 0.47, 0.85, 0.9, 0.87, 0.96, 1.0, 0.81, 0.83, 0.83, 0.85, 0.86, 0.93, 0.59, 0.43, 0.16, 0.37, 0.87, 0.86, 0.58, 0.44, 0.33, 0.76, 1.0, 0.59, 0.26, 0.86, 0.53, 0.26, 0.76, 0.96, 0.85, 0.73, 0.93, 0.88, 0.87, 1.0, 0.91, 0.83, 0.83, 0.76, 0.42, 0.41, 0.39, 0.58, 0.83, 0.27, 0.11, 0.84, 0.47, 1.0, 0.51, 0.14, 0.86, 0.47, 0.1, 0.15, 0.49, 0.41, 0.24, 1.0, 0.69, 0.47, 0.42, 0.42, 0.48, 0.47, 0.58, 0.35, 0.26, 0.31, 0.41, 1.0, 0.56, 0.57, 0.45, 0.38, 1.0, 0.53, 0.53, 0.52, 0.44, 0.44, 0.48, 0.39, 0.35, 0.22, 0.88, 0.8, 0.46, 0.4, 0.54, 0.37, 0.38, 0.57, 0.32, 0.26, 0.38, 0.35, 0.96, 0.76, 0.48, 0.38, 0.31, 0.91, 0.82, 0.43, 0.47, 0.49, 0.13, 0.07, 1.0, 0.75, 0.43, 0.75, 0.96, 0.48, 0.26, 0.26, 0.34, 0.27, 0.41, 0.31, 0.11, 0.12, 0.44, 0.83, 0.89, 0.45, 0.41, 0.44, 0.67, 0.87, 0.48, 0.42, 0.52, 0.17, 0.37, 0.89, 0.85, 0.35, 0.61, 1.0, 0.61, 0.51, 0.44, 0.41, 0.41, 0.4, 0.39, 0.39, 0.34, 0.33, 0.35, 0.6, 0.43, 0.32, 0.45, 0.31, 0.3, 0.57, 0.46, 0.6, 0.25, 0.61, 0.57, 0.7, 0.41, 0.26, 1.0, 0.93, 0.98, 0.91, 0.87, 0.86, 0.81, 0.86, 0.48, 0.21, 0.38, 0.54, 1.0, 0.62, 0.29, 0.12, 0.12, 1.0, 0.74, 0.55, 0.62, 0.74, 0.47, 0.55, 0.55, 0.48, 0.47, 0.89, 0.94, 0.74, 0.7, 0.76, 0.7, 0.79, 0.95, 0.5, 0.48, 0.44, 0.53, 0.89, 0.84, 0.53, 0.53, 0.5, 0.89, 0.93, 0.48, 0.3, 0.89, 0.31, 0.1, 0.94, 0.84, 0.66, 0.71, 1.0, 0.77, 0.84, 0.85, 0.84, 0.88, 0.91, 0.67, 0.13, 0.5, 0.53, 0.76, 1.0, 0.47, 0.13, 0.1, 0.62, 1.0, 0.63, 0.44, 0.83, 0.5, 0.53, 0.44, 0.45, 0.32, 0.2, 1.0, 0.88, 0.87, 0.8, 0.85, 0.86, 0.87, 0.86, 0.36, 0.14, 0.16, 0.23, 1.0, 0.65, 0.51, 0.46, 0.48, 1.0, 0.65, 0.42, 0.7, 0.66, 0.43, 0.48, 0.98, 0.6, 0.55, 0.97, 0.88, 0.86, 0.83, 0.8, 0.81, 0.83, 0.9, 0.48, 0.22, 0.4, 0.52, 1.0, 0.7, 0.54, 0.36, 0.23, 0.98, 0.86, 0.45, 0.56, 0.78, 0.24, 0.07, 1.0, 0.59, 0.24, 0.77, 0.95, 0.79, 0.74, 0.75, 0.77, 0.75, 0.87, 0.65, 0.49, 0.52, 0.29, 0.92, 0.98, 0.47, 0.2, 0.52, 0.8, 0.99, 0.41, 0.59, 0.86, 0.56, 0.4, 0.68, 0.63, 0.49, 0.58, 0.96, 0.8, 0.86, 0.86, 0.88, 0.88, 0.98, 0.77, 0.29, 0.16, 0.42, 0.61, 1.0, 0.56, 0.42, 0.36, 0.41, 1.0, 0.5, 0.41, 0.79, 0.51, 0.36, 0.7, 0.97, 0.43, 0.1, 1.0, 0.87, 0.91, 0.88, 0.87, 0.87, 0.87, 0.53, 0.13, 0.1, 0.09, 0.09, 0.51, 0.44, 0.53, 0.54, 0.38, 1.0, 0.6, 0.72, 0.68, 0.64, 0.58, 0.4, 0.75, 0.64, 0.63, 0.95, 0.84, 0.86, 0.84, 0.89, 0.88, 0.91, 0.92, 0.62, 0.29, 0.22, 0.4, 1.0, 0.76, 0.49, 0.38, 0.29, 0.88, 0.85, 0.38, 0.47, 0.88, 0.45, 0.12, 1.0, 0.73, 0.46, 0.71, 0.92, 0.82, 0.75, 0.79, 0.81, 0.72, 0.84, 0.69, 0.36, 0.13, 0.49, 0.83, 0.92, 0.5, 0.48, 0.39, 0.73, 0.94, 0.45, 0.12, 0.88, 0.36, 0.07, 0.86, 0.92];
   var ENERGY_RATE = 10;
 
-  var audio = new Audio("bgm.m4a");
+  var audio = new Audio();
   audio.loop = true;
-  audio.preload = "auto";
+  audio.preload = "none";
 
   var soundToggle = document.getElementById("soundToggle");
   var soundVolume = document.getElementById("soundVolume");
@@ -513,6 +609,7 @@ h1{font-size:clamp(34px,11vw,48px)}
   soundToggle.classList.toggle("is-muted", audio.muted);
 
   function tryPlay() {
+    if (!audio.src) audio.src = "bgm.m4a";
     var p = audio.play();
     if (p && p.catch) {
       p.then(function () { soundToggle.classList.remove("is-pending"); })
@@ -523,7 +620,6 @@ h1{font-size:clamp(34px,11vw,48px)}
   var gesture = function () { tryPlay(); };
   window.addEventListener("pointerdown", gesture, { once: true });
   window.addEventListener("keydown", gesture, { once: true });
-  tryPlay();
 
   soundToggle.addEventListener("click", function () {
     audio.muted = !audio.muted;
