@@ -28,11 +28,12 @@ h1{letter-spacing:-.09em;margin:0;font-family:Songti SC,STSong,SimSun,serif;font
 
 .portrait-zone{z-index:1;flex-direction:column;justify-content:center;align-items:center;min-height:0;padding-top:4px;display:flex;position:relative}
 .stage-ghost{z-index:-1;color:currentColor;letter-spacing:-.16em;text-align:center;white-space:nowrap;width:100%;opacity:calc(.035 + var(--strength) * .025);transform:translate(-50%, -50%) scale(calc(.95 + var(--strength) * .08));transform-origin:50%;margin:0;font-family:Songti SC,STSong,SimSun,serif;font-size:clamp(150px,27vw,420px);font-weight:900;line-height:.7;transition:opacity .18s;position:absolute;top:44%;left:50%}
-.portrait-shell{aspect-ratio:1;filter:drop-shadow(0 28px 38px #1214121f);width:min(49vh,550px,76vw);max-width:100%;position:relative}
+.portrait-shell{aspect-ratio:1;filter:drop-shadow(0 28px 38px #1214121f);background:radial-gradient(circle at 50% 38%,#f7f7f5,#cfd1cf 70%);width:min(49vh,550px,76vw);max-width:100%;position:relative}
 .portrait-shell:before{z-index:3;border:1px solid color-mix(in srgb, currentColor 16%, transparent);content:"";pointer-events:none;position:absolute;inset:0}
 .portrait-shell:after{z-index:3;content:"";opacity:.42;pointer-events:none;background:linear-gradient(90deg,currentColor 0 12px,#0000 12px calc(100% - 12px),currentColor calc(100% - 12px));height:1px;position:absolute;top:50%;left:-13px;right:-13px}
-.portrait-canvas{z-index:1;background:radial-gradient(circle at 50% 38%,#f7f7f5,#cfd1cf 70%);width:100%;height:100%;display:block;position:relative}
-.evolution-video{pointer-events:none;opacity:0;width:1px;height:1px;position:fixed;top:0;left:-9999px}
+.portrait-canvas{z-index:1;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 38%,#f7f7f5,#cfd1cf 70%);width:100%;height:100%;transition:opacity .16s;display:block;position:absolute;inset:0}
+.evolution-video{z-index:1;pointer-events:none;background:radial-gradient(circle at 50% 38%,#f7f7f5,#cfd1cf 70%);object-fit:cover;width:100%;height:100%;display:block;position:absolute;inset:0}
+.portrait-shell.is-fallback .portrait-canvas{opacity:1}
 .imperial-halo{z-index:0;opacity:0;transform:rotate(calc(var(--strength) * 28deg)) scale(.92);background:radial-gradient(circle,#0000 54%,#c19a4926 54.4% 55.4%,#0000 55.8%),conic-gradient(#0000,#c19a4938,#0000 18% 32%,#c19a492b,#0000 52% 74%,#c19a4933,#0000);border:1px solid #c19a498c;border-radius:50%;transition:opacity .5s,transform .7s;position:absolute;inset:-9%}
 .experience[data-stage="5"] .imperial-halo{opacity:.8;transform:rotate(calc(var(--strength) * 28deg)) scale(1)}
 .scan-grid{z-index:2;pointer-events:none;mix-blend-mode:screen;opacity:calc(.15 - var(--strength) * .08);background:linear-gradient(90deg,#0000 49.88%,#ffffff26 50%,#0000 50.12%),linear-gradient(#0000 49.88%,#ffffff1c 50%,#0000 50.12%);position:absolute;inset:0}
@@ -218,6 +219,7 @@ h1{font-size:clamp(34px,11vw,48px)}
   var stageGhost = document.getElementById("stageGhost");
   var stageName = document.getElementById("stageName");
   var stageIndex = document.getElementById("stageIndex");
+  var portraitShell = document.querySelector(".portrait-shell");
   var canvas = document.getElementById("canvas");
   var loadState = document.getElementById("loadState");
   var tickTrack = document.getElementById("tickTrack");
@@ -280,26 +282,41 @@ h1{font-size:clamp(34px,11vw,48px)}
   var VIDEO_SRC = "evolution.mp4";
   var video = document.createElement("video");
   video.className = "evolution-video";
-  video.src = VIDEO_SRC;
   video.preload = "auto";
   video.muted = true;
+  video.defaultMuted = true;
   video.playsInline = true;
+  video.autoplay = true;
   video.tabIndex = -1;
+  video.setAttribute("muted", "");
+  video.setAttribute("playsinline", "");
+  video.setAttribute("webkit-playsinline", "");
+  video.setAttribute("autoplay", "");
   video.setAttribute("aria-hidden", "true");
-  document.body.appendChild(video);
-  video.load();
-
-  // iOS Safari 常忽略 preload，在用户手势前完全不下载视频，
-  // 导致 loadeddata/canplay 永不触发、页面显示“加载超时”。
-  // 静音视频的 play() 被自动播放策略允许，用它强制开始下载与解码。
-  var kick = null;
-  try { kick = video.play(); } catch (e) { kick = null; }
-  if (kick && kick.catch) kick.catch(function () { /* 被拒（如低电量模式）时走静态图兜底 */ });
+  // 视频作为视口内的真实媒体层。iOS Safari/WKWebView 对离屏、
+  // 1x1 或完全透明视频的自动播放和解码策略不一致，不用它作为预加载容器。
+  portraitShell.insertBefore(video, canvas);
 
   var ctx = canvas.getContext("2d");
   var ready = false;
   var targetTime = 0;   // 滑杆最新目标时间
   var seekBusy = false; // 是否有未完成的 seek
+  var startPromise = null;
+
+  function startVideoDecode() {
+    if (ready || startPromise) return;
+    try { startPromise = video.play(); } catch (e) { startPromise = null; }
+    if (startPromise && startPromise.then) {
+      startPromise.then(function () {
+        startPromise = null;
+      }).catch(function () {
+        // 低电量模式/内置浏览器可能拒绝无手势播放；首次触摸时会重试。
+        startPromise = null;
+      });
+    } else {
+      startPromise = null;
+    }
+  }
 
   function fitCanvas() {
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -356,6 +373,7 @@ h1{font-size:clamp(34px,11vw,48px)}
     if (ready) return;
     ready = true;
     video.pause();
+    portraitShell.classList.remove("is-fallback");
     slider.disabled = false;
     loadState.hidden = true;
     apply();
@@ -399,6 +417,7 @@ h1{font-size:clamp(34px,11vw,48px)}
         if (ready) return;
         if (!fallbackShown) {
           fallbackShown = true;
+          portraitShell.classList.add("is-fallback");
           slider.disabled = false;
           loadState.hidden = true;
         }
@@ -420,6 +439,18 @@ h1{font-size:clamp(34px,11vw,48px)}
   video.addEventListener("loadeddata", onReady);
   video.addEventListener("canplay", onReady);
   video.addEventListener("error", startFallback);
+  // 监听器安装后再设置 src，避免极快缓存命中时错过 ready 事件。
+  video.src = VIDEO_SRC;
+  video.load();
+  startVideoDecode();
+
+  // 移动端自动播放被拒时，利用首次真实交互继续下载/解码。
+  function retryVideoOnGesture() {
+    if (!ready) startVideoDecode();
+  }
+  window.addEventListener("pointerdown", retryVideoOnGesture, { passive: true });
+  window.addEventListener("touchstart", retryVideoOnGesture, { passive: true });
+  window.addEventListener("keydown", retryVideoOnGesture);
   window.setTimeout(function () {
     if (!ready) startFallback();
   }, 15000);
