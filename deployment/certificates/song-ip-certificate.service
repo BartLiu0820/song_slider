@@ -1,0 +1,11 @@
+[Unit]
+Description=Renew the temporary IP HTTPS certificate
+After=network-online.target docker.service song-deploy-agent.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/song-deploy/certbot-venv/bin/certbot renew --cert-name song-ip --config-dir /etc/letsencrypt/song-ip --work-dir /var/lib/song-acme/ip-work --logs-dir /var/log/song-acme/ip --quiet
+UMask=0077
+TimeoutStartSec=300
+

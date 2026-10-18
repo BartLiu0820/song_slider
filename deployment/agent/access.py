@@ -89,6 +89,14 @@ def check():
     original_auth = request.headers.get('Authorization', '')
     uri=request.headers.get('X-Forwarded-Uri','/').split('?')[0]
     peer=request.headers.get('X-Forwarded-For','').split(',')[0].strip()
+    if request.headers.get('X-Forwarded-Proto') == 'http' and publication.acme_request(host, uri):
+        return '',200,{'Authorization':''}
+    if host == publication.TEMP_IP:
+        if not publication.ip_enabled():return 'Temporary IP access is not enabled yet.',503
+        if request.headers.get('X-Forwarded-Proto') != 'https':
+            # Do not preserve a caller-supplied host or port in the redirect.
+            return '',308,{'Location':'https://'+publication.TEMP_IP+'/', 'Cache-Control':'no-store'}
+        return '',200,{'Authorization':'', 'Cache-Control':'no-store'}
     if host.endswith('.localhost') and peer not in ['127.0.0.1','::1','172.21.0.1']:
         return 'Local preview requires an SSH tunnel',403
     if host == publication.PUBLIC_HOST or host.endswith(publication.PREVIEW_SUFFIX):

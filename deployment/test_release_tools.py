@@ -30,6 +30,11 @@ class ToolTests(unittest.TestCase):
         self.assertEqual(app['service'],'http-1-'+'b'*24+'@docker')
         self.assertEqual(app['tls'],{'certResolver':'letsencrypt'})
 
+    def test_imported_dns_certificate_avoids_http_certificate_requests(self):
+        route=admin.routes(True,[{'id':'a'*24,'slug':'example','application_uuid':'b'*24}],True)
+        self.assertNotIn('certResolver',json.dumps(route))
+        self.assertEqual(route['http']['routers']['song-workbench-https']['tls'],{})
+
     def shim(self,args,fail=False):
         with tempfile.TemporaryDirectory() as folder:
             root=Path(folder);docker=root/'docker';log=root/'calls';wrapper=root/'wrapper'

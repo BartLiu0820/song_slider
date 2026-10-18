@@ -1,4 +1,5 @@
 let publicEnabled=false, connectionWarning=false;
+const ipEntry=location.hostname==='47.116.108.184';
 let csrf='', jobs=[], accounts=[], signature='', timer, refreshing=false, editing=false;
 const $=s=>document.querySelector(s);
 const labels={queued:'排队中',analyzing:'识别中',ready:'待部署',needs_configuration:'待配置',deploying:'部署中',deployed:'运行中',failed:'未完成',cancelled:'已取消'};
@@ -30,7 +31,7 @@ function render(){
   const grid=el('div',null,'project-grid');
   for(const job of jobs){const card=link('', '#/projects/'+job.id,'project-card');const top=el('div',null,'section-head');top.append(el('span',job.slug.slice(0,2).toUpperCase(),'project-icon'),tag(job));const repo=job.repository.replace('https://github.com/','');card.append(top,el('h2',job.slug),el('p',repo,'repo'));const bottom=el('div',null,'card-bottom');bottom.append(el('span',job.access?.mode==='restricted'?'指定账号 · '+job.access.accounts.length+' 人':'公开'),el('span','查看详情 →'));card.append(bottom);grid.append(card);}
   if(!jobs.length)grid.append(el('div','还没有部署。添加一个 Git 仓库，开始第一个项目。','empty'));
-  root.append(grid,el('p',publicEnabled?'公网 HTTPS 已启用 · 项目权限独立设置':'当前通过本机 SSH 通道预览 · 公网访问待域名备案','footnote'));
+  root.append(grid,el('p',ipEntry?'临时 IP 后台 · 项目预览仍需本机 SSH 通道':publicEnabled?'公网 HTTPS 已启用 · 项目权限独立设置':'当前通过本机 SSH 通道预览 · 公网访问待域名备案','footnote'));
 }
 function renderNew(root){
   root.append(link('← 我的部署','#/','back'),titleBlock('添加新部署','填写仓库地址，让 AI 识别部署方式。'));
@@ -48,7 +49,7 @@ function renderDetail(root,job){
   if(job.error)overview.append(el('p',job.error,'warn'));
   if(job.plan?.summary)overview.append(el('p',job.plan.summary));
   const actions=el('div',null,'actions');
-  if(job.status==='deployed'||job.deployed_commit){const a=link('打开项目 ↗',job.preview_url||'http://'+job.slug+'.localhost:19180','primary button');a.target='_blank';a.rel='noopener';actions.append(a);}
+  if(job.status==='deployed'||job.deployed_commit){const a=link(ipEntry?'通过 SSH 预览 ↗':'打开项目 ↗',job.preview_url||'http://'+job.slug+'.localhost:19180','primary button');a.target='_blank';a.rel='noopener';actions.append(a);if(ipEntry)actions.append(el('p','先在电脑运行本地启动脚本，再打开预览。','hint'));}
   if(['ready','failed','cancelled'].includes(job.status)&&job.plan?.ready){actions.append(button(job.application_uuid?'重新部署':'开始部署',async e=>{e.target.disabled=true;try{await api('/jobs/'+job.id+'/deploy',{});await refresh(true);message('');}catch(err){message(err.message);e.target.disabled=false;}},'primary'));}
   if(!['queued','analyzing','deploying'].includes(job.status)){actions.append(button(job.application_uuid?'检查最新版本':'重新识别',async e=>{e.target.disabled=true;try{await api('/jobs/'+job.id+'/refresh',{});await refresh(true);message('正在识别最新提交，现有应用继续运行。');}catch(err){message(err.message);e.target.disabled=false;}}));}
   overview.append(actions);if(job.application_uuid)overview.append(el('p','公网地址：'+'https://'+job.slug+'.preview.greatsong.online'+(publicEnabled?'':'（待备案）'),'hint address'));root.append(overview);

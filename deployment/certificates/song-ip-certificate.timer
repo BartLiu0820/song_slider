@@ -1,0 +1,10 @@
+[Unit]
+Description=Check temporary IP certificate renewal twice daily
+
+[Timer]
+OnCalendar=*-*-* 00,12:15:00
+RandomizedDelaySec=900
+Persistent=true
+
+[Install]
+WantedBy=timers.target

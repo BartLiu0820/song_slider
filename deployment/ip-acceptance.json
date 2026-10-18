@@ -1,0 +1,26 @@
+{
+  "checked_at": "2026-10-18T10:42:44.183172+00:00",
+  "origin": "https://47.116.108.184",
+  "checks": [
+    "Anonymous admin API denied",
+    "Administrator login over verified HTTPS",
+    "Secure HttpOnly session cookie",
+    "Project list available",
+    "CSRF protection enforced",
+    "Logout invalidates access"
+  ],
+  "project_count": 3,
+  "domain_public_enabled": false,
+  "preview_access": "SSH tunnel",
+  "certificate": {
+    "issuer": "Let’s Encrypt YE2",
+    "ip_san": "47.116.108.184",
+    "expires_at": "2026-10-25T01:42:58Z",
+    "trusted": true
+  },
+  "renewal_timer": "song-ip-certificate.timer",
+  "domain_certificate": "pending DNS TXT validation",
+  "offline_tests": 39,
+  "preview_access_checks": 12,
+  "renewal_dry_run": "passed, including certificate installation hook"
+}

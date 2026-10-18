@@ -2,6 +2,8 @@
 
 ## 本机使用
 
+临时 IP 后台已启用：<https://47.116.108.184/>，使用相同管理员账号。IP 入口使用受信任的 Let's Encrypt 证书，自动续期；可以操作项目、触发识别和部署、查看日志及设置权限。项目预览仍需下面的 SSH 通道，页面会明确标注。域名公网发布开关与 IP 入口独立。
+
 1. 双击 `open-workbench.command`，建立 SSH 通道并打开工作台。
 2. 工作台：<http://127.0.0.1:19100>；底层部署引擎：<http://127.0.0.1:18000>。
 3. 账号 `admin@greatsong.online`。密码保存在本机 `~/.config/song-deploy/admin-credentials.json`，不要把该文件提交到 Git。
@@ -29,7 +31,7 @@
 
 `deploy.greatsong.online` 和 `*.preview.greatsong.online` DNS 已解析到服务器。
 但公网实测被阿里云返回的 `Non-compliance ICP Filing` 页面拦截；用户确认域名尚未备案。
-因此公网入口与 HTTPS 证书未验收。工作台监听本机回环与 Docker 网桥的 9100 端口，公网域名入口已指向工作台；发布开关关闭时拒绝公网登录，通过 SSH 继续使用。
+因此域名公网入口尚未验收。工作台监听本机回环与 Docker 网桥的 9100 端口，公网域名入口已指向工作台；域名发布开关关闭时拒绝该域名的公网登录。临时 IP HTTPS 后台已独立启用并完成登录验收，也可通过 SSH 使用。
 展示页顶部“管理”固定指向 `https://deploy.greatsong.online`，发布或回退不会改成访客的本机地址。备案放行并完成公网启用前，通过本地启动脚本使用 SSH 工作台。
 
 HTTPS 反代、Secure Cookie 和应用 HTTPS 配置已准备。备案放行后运行 `python3 deployment/activate_public.py`，脚本依次验证公网来源、可信证书、后台登录及预览权限，通过后开放入口。尚未放行时自动停止，不申请新证书；`--check` 只检测，`--rollback` 恢复本机模式。

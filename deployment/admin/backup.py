@@ -15,10 +15,11 @@ try:
     with (target/'coolify.sql').open('wb') as out:
         subprocess.run(['docker','exec','coolify-db','pg_dump','-U','coolify','-d','coolify','--no-owner'],stdout=out,check=True)
     with tarfile.open(target/'configuration.tar.gz','w:gz') as archive:
-        for path in ['/etc/song-deploy','/var/lib/song-deploy','/opt/song-deploy/agent','/opt/song-deploy/admin',
+        for path in ['/etc/song-deploy','/etc/letsencrypt','/var/lib/song-deploy','/opt/song-deploy/agent','/opt/song-deploy/admin',
                      '/home/admin/deploy-validation/helper-build','/data/coolify/source','/data/coolify/ssh','/data/coolify/proxy',
                      '/etc/systemd/system/song-deploy-agent.service','/etc/systemd/system/song-deploy-access.service',
                      '/etc/systemd/system/song-deploy-git.service',
+                     '/etc/systemd/system/song-ip-certificate.service','/etc/systemd/system/song-ip-certificate.timer',
                      '/home/admin/song_slider/output/song-six-stages-v4/docker-compose.yml',
                      '/home/admin/song_slider/output/song-six-stages-v4/Caddyfile',
                      '/home/admin/song_slider/output/song-six-stages-v4/index.html']:

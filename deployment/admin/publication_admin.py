@@ -37,7 +37,8 @@ def applications():
     return result
 
 
-def routes(tls, jobs):
+def routes(tls, jobs, dns_certificate=False):
+    certificate = {} if dns_certificate else {'certResolver':'letsencrypt'}
     routers={'song-workbench-http':{'rule':f'Host(`{HOST}`)','entryPoints':['http'],
              'priority':50000,'service':'song-workbench'}}
     routers['song-preview-probe']={'rule':r'HostRegexp(`^[a-z0-9-]+\.preview\.greatsong\.online$`) && Path(`'+READY+'`)','entryPoints':['http'],'priority':60000,'service':'song-workbench'}
@@ -45,19 +46,19 @@ def routes(tls, jobs):
     if tls:
         routers['song-preview-probe-tls']={**routers['song-preview-probe'],'entryPoints':['https'],'tls':{}}
         routers['song-workbench-https']={**routers['song-workbench-http'],'entryPoints':['https'],
-                                       'tls':{'certResolver':'letsencrypt'}}
+                                       'tls':certificate}
     for job in jobs:
         host=job['slug']+'.preview.greatsong.online';key='song-'+job['id']
         probe={'rule':f'Host(`{host}`) && Path(`{READY}`)','entryPoints':['http'],
                'priority':60000,'service':'song-workbench'}
         routers[key+'-probe']=probe
         if tls:
-            routers[key+'-probe-tls']={**probe,'entryPoints':['https'],'tls':{'certResolver':'letsencrypt'}}
+            routers[key+'-probe-tls']={**probe,'entryPoints':['https'],'tls':certificate}
             # Coolify's second domain is the persistent local-preview service. Its
             # name remains stable when the first domain switches from HTTP to HTTPS.
             routers[key+'-tls']={'rule':f'Host(`{host}`)','entryPoints':['https'],
                 'priority':50000,'service':'http-1-'+job['application_uuid']+'@docker',
-                'tls':{'certResolver':'letsencrypt'}}
+                'tls':certificate}
     return {'http':{'routers':routers,'services':services}}
 
 
@@ -66,9 +67,9 @@ def main():
     args=parser.parse_args();state=read_state();jobs=applications()
     if args.action=='prepare':
         if not STATE.exists():atomic(STATE,state)
-        atomic(ROUTES,routes(state['tls_prepared'],jobs))
+        atomic(ROUTES,routes(state['tls_prepared'],jobs,state.get('dns_certificate',False)))
     elif args.action=='stage-tls':
-        state['tls_prepared']=True;atomic(STATE,state);atomic(ROUTES,routes(True,jobs))
+        state['tls_prepared']=True;atomic(STATE,state);atomic(ROUTES,routes(True,jobs,state.get('dns_certificate',False)))
     elif args.action=='enable':
         if not state['tls_prepared']:raise SystemExit('Stage and verify trusted TLS certificates first')
         state.update(enabled=True,enabled_at=int(time.time()));atomic(STATE,state)

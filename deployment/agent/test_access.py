@@ -38,6 +38,9 @@ class AccessTests(unittest.TestCase):
         for path in ['/','/styles/style.css','/api/data','/socket']:
             self.assertEqual(self.get(path=path).status_code,401)
 
+    def test_https_acme_path_does_not_bypass_private_project(self):
+        self.assertEqual(self.get(host='example.preview.greatsong.online',path='/.well-known/acme-challenge/token').status_code,401)
+
     def test_account_scope_and_domain_aliases(self):
         self.assertEqual(self.get('outsider','testing-password-456').status_code,401)
         self.assertEqual(self.get('allowed','wrong').status_code,401)
@@ -56,7 +59,7 @@ class AccessTests(unittest.TestCase):
 
     def test_unknown_hosts_fail_closed(self):
         self.assertEqual(self.get(host='unknown.preview.greatsong.online').status_code,403)
-        self.assertEqual(self.get(host='47.116.108.184').status_code,403)
+        self.assertEqual(self.get(host='203.0.113.99').status_code,403)
 
     def test_revoke_is_immediate_even_when_cached(self):
         self.assertEqual(self.get('allowed').status_code,200)

@@ -38,7 +38,7 @@ app.config.update(SECRET_KEY=CONFIG['session_secret'], MAX_CONTENT_LENGTH=32768,
     SESSION_COOKIE_NAME='song_deploy_session', PERMANENT_SESSION_LIFETIME=28800)
 class HostSession(SecureCookieSessionInterface):
     def get_cookie_secure(self, app):
-        return request.host.split(':')[0].lower() == publication.PUBLIC_HOST
+        return request.host.split(':')[0].lower() in [publication.PUBLIC_HOST, publication.TEMP_IP]
 app.session_interface = HostSession()
 
 # Only the Docker bridge proxy may supply forwarding headers. Local SSH traffic
@@ -327,10 +327,13 @@ def deploy(job):
 @app.before_request
 def guard():
     host=request.host.split(':')[0].lower()
-    if host not in ['127.0.0.1','localhost',publication.PUBLIC_HOST]:
+    if host not in ['127.0.0.1','localhost',publication.PUBLIC_HOST,publication.TEMP_IP]:
         if request.path != publication.READY_PATH or not host.endswith(publication.PREVIEW_SUFFIX):
             return jsonify(error='未知入口'),400
-    if request.path == publication.READY_PATH: return None
+    if request.path == publication.READY_PATH or publication.acme_request(host, request.path): return None
+    if host == publication.TEMP_IP:
+        if not publication.ip_enabled():return jsonify(error='临时 IP 入口尚未启用'),503
+        if not request.is_secure:return jsonify(error='请使用 HTTPS 登录工作台'),403
     if host == publication.PUBLIC_HOST:
         if not publication.enabled():return jsonify(error='公网发布尚未启用，请使用本机工作台'),503
         if not request.is_secure:return jsonify(error='请使用 HTTPS 登录工作台'),403
@@ -360,6 +363,12 @@ def missing(e): return jsonify(error='任务不存在'),404
 
 @app.get(publication.READY_PATH)
 def readiness():return jsonify(service='song-deploy',proof=publication.state()['proof'])
+
+
+@app.get('/.well-known/acme-challenge/<token>')
+def acme_challenge(token):
+    if request.host.split(':')[0] != publication.TEMP_IP or not publication.acme_request(publication.TEMP_IP, request.path):return '',404
+    return send_from_directory('/var/lib/song-acme-http/.well-known/acme-challenge', token)
 
 
 @app.get('/')
