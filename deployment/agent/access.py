@@ -10,6 +10,7 @@ import secrets
 import threading
 import time
 from flask import Flask, request
+import publication
 
 ROOT = Path(os.environ.get('SONG_STATE', '/var/lib/song-deploy'))
 DIRECTORY = ROOT / 'security'
@@ -86,6 +87,17 @@ def delete_account(username):
 def check():
     host = request.headers.get('X-Forwarded-Host', '').lower().split(':')[0].rstrip('.')
     original_auth = request.headers.get('Authorization', '')
+    uri=request.headers.get('X-Forwarded-Uri','/').split('?')[0]
+    peer=request.headers.get('X-Forwarded-For','').split(',')[0].strip()
+    if host.endswith('.localhost') and peer not in ['127.0.0.1','::1','172.21.0.1']:
+        return 'Local preview requires an SSH tunnel',403
+    if host == publication.PUBLIC_HOST or host.endswith(publication.PREVIEW_SUFFIX):
+        if uri == publication.READY_PATH:return '',200,{'Authorization':''}
+        if not publication.enabled():return 'Public publishing is not enabled yet.',503
+        if request.headers.get('X-Forwarded-Proto') != 'https':
+            # Redirect before requesting credentials; never challenge over public HTTP.
+            return '',308,{'Location':'https://'+host+(request.headers.get('X-Forwarded-Uri','/') if request.headers.get('X-Forwarded-Uri','/').startswith('/') else '/'), 'Cache-Control':'no-store'}
+
     def allow(public=False):
         # ForwardAuth replaces the original Authorization header. Preserve app tokens
         # on public routes, but never send a private preview password to the app.

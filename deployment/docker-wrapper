@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+# Coolify 4.4.6 only accepts nginx:alpine as its static-server image. Fetch the
+# official image through Amazon ECR, then supply the exact local tag it expects.
+# All other Docker operations retain the original CLI and argument boundaries.
+if [ "$#" -eq 2 ] && [ "$1" = pull ] && [ "$2" = nginx:alpine ]; then
+  /usr/bin/docker pull public.ecr.aws/docker/library/nginx:alpine
+  /usr/bin/docker tag public.ecr.aws/docker/library/nginx:alpine nginx:alpine
+  exit 0
+fi
+exec /usr/bin/docker "$@"

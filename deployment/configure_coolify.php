@@ -7,7 +7,7 @@ $settings = App\Models\InstanceSettings::findOrFail(0);
 $settings->fill([
     'instance_name' => 'Song Deploy',
     'instance_timezone' => 'Asia/Shanghai',
-    'fqdn' => 'https://deploy.greatsong.online',
+    'fqdn' => null, // Workbench owns deploy.greatsong.online; engine stays on SSH
     'is_registration_enabled' => false,
     'is_api_enabled' => true,
     'is_auto_update_enabled' => false,
@@ -34,6 +34,6 @@ $result = ['configured' => true, 'server_uuid' => $server->uuid,
     'registration_enabled' => $settings->is_registration_enabled];
 if (getenv('ISSUE_TOKEN') === '1') {
     $result['token'] = $user->createToken('Song deployment integration',
-        ['read', 'write', 'deploy'], now()->addDays(90))->plainTextToken;
+        ['read', 'read:sensitive', 'write', 'deploy'], now()->addDays(90))->plainTextToken;
 }
 echo json_encode($result);

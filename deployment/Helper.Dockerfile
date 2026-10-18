@@ -7,3 +7,4 @@ RUN git config --system http.curloptResolve github.com:443:140.82.114.3 \
     && git config --system http.lowSpeedLimit 100 \
     && git config --system http.lowSpeedTime 60
 COPY --chmod=0755 git-wrapper /usr/local/bin/git
+COPY --chmod=0755 docker-wrapper /usr/local/bin/docker

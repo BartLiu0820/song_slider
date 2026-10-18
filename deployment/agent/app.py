@@ -22,6 +22,10 @@ import urllib.parse
 import urllib.request
 
 import access
+import publication
+import ipaddress
+from flask.sessions import SecureCookieSessionInterface
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 from flask import Flask, jsonify, request, send_from_directory, session
 
@@ -32,6 +36,21 @@ app = Flask(__name__)
 app.config.update(SECRET_KEY=CONFIG['session_secret'], MAX_CONTENT_LENGTH=32768,
     SESSION_COOKIE_HTTPONLY=True, SESSION_COOKIE_SAMESITE='Strict',
     SESSION_COOKIE_NAME='song_deploy_session', PERMANENT_SESSION_LIFETIME=28800)
+class HostSession(SecureCookieSessionInterface):
+    def get_cookie_secure(self, app):
+        return request.host.split(':')[0].lower() == publication.PUBLIC_HOST
+app.session_interface = HostSession()
+
+# Only the Docker bridge proxy may supply forwarding headers. Local SSH traffic
+# keeps its own peer address and cannot spoof public HTTPS through headers.
+_wsgi = app.wsgi_app
+_proxy_wsgi = ProxyFix(_wsgi, x_for=1, x_proto=1, x_host=0, x_port=0)
+def trusted_proxy(environ, start_response):
+    try: trusted = ipaddress.ip_address(environ.get('REMOTE_ADDR','')) in ipaddress.ip_network('172.21.0.0/16')
+    except ValueError: trusted = False
+    return (_proxy_wsgi if trusted else _wsgi)(environ, start_response)
+app.wsgi_app = trusted_proxy
+
 pool = ThreadPoolExecutor(max_workers=1)
 lock = threading.RLock()
 failures = {}
@@ -163,7 +182,7 @@ def stage_snapshot(job):
     expected=job.get('tree_sha') or call_json(api+'/git/commits/'+job['commit'])['tree']['sha']
     job['tree_sha']=expected
     repos=STATE/'repos';repos.mkdir(exist_ok=True)
-    target=repos/(job['id']+'.git')
+    target=repos/(job['id']+'-'+job['commit'][:12]+'.git')
     if not target.exists():
         url='https://codeload.github.com/'+job['repository'].removeprefix('https://github.com/')+'/tar.gz/'+job['commit']
         with tempfile.TemporaryDirectory(prefix='snapshot-',dir=STATE) as tmp:
@@ -264,10 +283,11 @@ def deploy(job):
                 'git_repository':source,'git_branch':'main',
                 'git_commit_sha':source_commit,'build_pack':p['build_pack'],
                 'base_directory':p['base_directory'],'publish_directory':p['publish_directory'],
-                'ports_exposes':str(p['port']),'domains':'http://'+job['slug']+'.preview.greatsong.online,http://'+job['slug']+'.localhost',
+                'ports_exposes':str(p['port']),'domains':publication.domains(job['slug']),
                 'health_check_enabled':True,'health_check_path':'/',
                 'health_check_host':'127.0.0.1','health_check_port':p['port'],
                 'limits_memory':'256m','limits_cpus':'0.5','is_auto_deploy_enabled':False,
+                'static_image':'nginx:alpine',
                 'is_git_shallow_clone_enabled':False,
                 'instant_deploy':False}
             for key in ['dockerfile_location','install_command','build_command','start_command']:
@@ -287,7 +307,16 @@ def deploy(job):
             coolify('PATCH','/applications/'+job['application_uuid'],{
                 'git_repository':source,'git_branch':'main','git_commit_sha':source_commit,
                 'is_git_shallow_clone_enabled':False,
-                'health_check_host':'127.0.0.1','health_check_port':p['port']})
+                'health_check_host':'127.0.0.1','health_check_port':p['port'],
+                'build_pack':p['build_pack'],'base_directory':p['base_directory'],
+                'publish_directory':p['publish_directory'],'ports_exposes':str(p['port']),
+                'domains':publication.domains(job['slug']),
+                'static_image':'nginx:alpine',
+                'dockerfile_location':p.get('dockerfile_location','/Dockerfile'),
+                'dockerfile_target_build':p.get('dockerfile_target_build') or None,
+                'install_command':p.get('install_command') or None,
+                'build_command':p.get('build_command') or None,
+                'start_command':p.get('start_command') or None})
         result=coolify('POST','/deploy',{'uuid':job['application_uuid']})
         job['deployment_uuid']=result['deployments'][0]['deployment_uuid']
         job['status']='deploying';save(job)
@@ -297,6 +326,14 @@ def deploy(job):
 
 @app.before_request
 def guard():
+    host=request.host.split(':')[0].lower()
+    if host not in ['127.0.0.1','localhost',publication.PUBLIC_HOST]:
+        if request.path != publication.READY_PATH or not host.endswith(publication.PREVIEW_SUFFIX):
+            return jsonify(error='未知入口'),400
+    if request.path == publication.READY_PATH: return None
+    if host == publication.PUBLIC_HOST:
+        if not publication.enabled():return jsonify(error='公网发布尚未启用，请使用本机工作台'),503
+        if not request.is_secure:return jsonify(error='请使用 HTTPS 登录工作台'),403
     if request.path.startswith('/api/') and request.path!='/api/login':
         if not session.get('authenticated'):return jsonify(error='请先登录'),401
         if request.method!='GET' and not hmac.compare_digest(
@@ -319,6 +356,10 @@ def invalid(e): return jsonify(error=str(e)),400
 
 @app.errorhandler(FileNotFoundError)
 def missing(e): return jsonify(error='任务不存在'),404
+
+
+@app.get(publication.READY_PATH)
+def readiness():return jsonify(service='song-deploy',proof=publication.state()['proof'])
 
 
 @app.get('/')
@@ -349,7 +390,7 @@ def login():
 
 
 @app.get('/api/me')
-def me():return jsonify(email=CONFIG['email'],csrf=session['csrf'],model=CONFIG.get('model'))
+def me():return jsonify(email=CONFIG['email'],csrf=session['csrf'],model=CONFIG.get('model'),public_enabled=publication.enabled())
 
 
 @app.post('/api/logout')
@@ -359,17 +400,19 @@ def logout():session.clear();return jsonify(ok=True)
 @app.get('/api/jobs')
 def jobs():
     result=[]
-    for path in sorted(STATE.glob('*.json'),key=lambda p:p.stat().st_mtime,reverse=True)[:30]:
+    for path in sorted(STATE.glob('*.json'),key=lambda p:p.stat().st_mtime,reverse=True):
         job=json.loads(path.read_text())
         if job.get('status')=='deploying' and job.get('deployment_uuid'):
             try:
                 state=coolify('GET','/deployments/'+job['deployment_uuid'])['status']
                 if state in ['finished','failed','cancelled','cancelled-by-user']:
                     job['status']='deployed' if state=='finished' else ('cancelled' if state.startswith('cancelled') else state)
-                    if state=='failed':job['error']='构建未成功，请在部署引擎查看日志。'
+                    if state=='finished':job['deployed_commit']=job.get('commit')
+                    if state=='failed':job['error']='构建未成功，可展开部署详情查看日志。'
                     save(job)
             except Exception:pass
         job['access']=access.policy(job['id'])
+        job['preview_url']=('https://'+job['slug']+publication.PREVIEW_SUFFIX if request.host.split(':')[0]==publication.PUBLIC_HOST else 'http://'+job['slug']+'.localhost:19180')
         result.append(job)
     return jsonify(result)
 
@@ -407,6 +450,41 @@ def deploy_job(job_id):
         job.pop('error',None);job.pop('deployment_uuid',None)
         job['status']='deploying';save(job);pool.submit(deploy,job)
     return jsonify(job),202
+
+
+@app.post('/api/jobs/<job_id>/refresh')
+def refresh_source(job_id):
+    with lock:
+        job=load(job_id)
+        if job['status'] in ['queued','analyzing','deploying']:
+            return jsonify(error='任务正在执行，请完成后再更新'),409
+        if any(json.loads(p.read_text())['status'] in ['queued','analyzing'] for p in STATE.glob('*.json')):
+            return jsonify(error='正在识别其他项目，请稍后再试'),409
+        if job['status']=='deployed':job['deployed_commit']=job.get('commit')
+        # Keep application identity, URL and independently stored permissions.
+        # A failed analysis never leaves an old plan looking deployable as new code.
+        for key in ['plan','commit','tree_sha','snapshot_commit','archive_sha256','source_transport','error','deployment_uuid']:
+            job.pop(key,None)
+        job['status']='queued';save(job);pool.submit(analyze,job)
+    return jsonify(job),202
+
+
+@app.get('/api/jobs/<job_id>/logs')
+def deployment_logs(job_id):
+    job=load(job_id)
+    if not job.get('deployment_uuid'):return jsonify(logs='尚无构建日志')
+    result=coolify('GET','/deployments/'+job['deployment_uuid'])
+    logs=result.get('logs') or []
+    if isinstance(logs,str):
+        try:logs=json.loads(logs)
+        except json.JSONDecodeError:logs=[{'output':logs}]
+    text='\n'.join(str(item.get('output','')) if isinstance(item,dict) else str(item) for item in logs[-200:])[-24000:]
+    # Engine secrets must never escape through a verbose upstream response.
+    for key in ['coolify_token','session_secret']:
+        if CONFIG.get(key):text=text.replace(CONFIG[key],'[REDACTED]')
+    text=re.sub(r'(?im)(authorization[=:]\s*)[^\r\n]+',r'\1[REDACTED]',text)
+    text=re.sub(r'(?i)(authorization[=:]\s*|(?:api[_-]?key|token|password|secret)[=:]\s*)[^\s]+',r'\1[REDACTED]',text)
+    return jsonify(logs=text or '暂时没有构建日志')
 
 
 @app.get('/api/accounts')

@@ -34,7 +34,7 @@ try:
  checks['asset_blocked']=preview('/images/firefox-icon.png')[0]==401
  checks['unlisted_account_blocked']=preview(user=users[1])[0]==401
  checks['listed_account_allowed']=preview(user=users[0])[0]==200
- checks['public_domain_alias_protected']=preview(host=job['slug']+'.preview.greatsong.online')[0]==401
+ checks['public_domain_alias_protected']=preview(host=job['slug']+'.preview.greatsong.online')[0]==503
  checks['forwarded_host_spoof_blocked']=preview(extra={'X-Forwarded-Host':'greatsong.online','X-Forwarded-Proto':'https'})[0]==401
  conn=http.client.HTTPConnection('127.0.0.1',19180,timeout=15)
  conn.request('GET','/',headers={'Host':'greatsong.online'})

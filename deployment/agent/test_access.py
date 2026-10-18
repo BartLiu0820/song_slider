@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 TEMP = tempfile.TemporaryDirectory()
 os.environ['SONG_STATE'] = TEMP.name
@@ -22,11 +23,14 @@ class AccessTests(unittest.TestCase):
 
     def setUp(self):
         access.failures.clear()
+        self.public_patch=patch.object(access.publication,'enabled',return_value=True)
+        self.public_patch.start()
+        self.addCleanup(self.public_patch.stop)
         self.client=access.auth_app.test_client()
         access.set_policy(self.job['id'],{'mode':'restricted','accounts':['allowed']})
 
     def get(self,user=None,password='testing-password-123',host='example.localhost:19180',path='/'):
-        headers={'X-Forwarded-Host':host,'X-Forwarded-Uri':path,'X-Forwarded-For':'127.0.0.1'}
+        headers={'X-Forwarded-Host':host,'X-Forwarded-Uri':path,'X-Forwarded-For':'127.0.0.1','X-Forwarded-Proto':'https'}
         if user:headers['Authorization']='Basic '+base64.b64encode((user+':'+password).encode()).decode()
         return self.client.get('/check',headers=headers)
 
@@ -47,7 +51,7 @@ class AccessTests(unittest.TestCase):
         self.assertEqual(self.get().status_code,200)
         for host in ['greatsong.online','www.greatsong.online','deploy.greatsong.online']:
             self.assertEqual(self.get(host=host).status_code,200)
-        r=self.client.get('/check',headers={'X-Forwarded-Host':'example.localhost','Authorization':'Bearer app-token'})
+        r=self.client.get('/check',headers={'X-Forwarded-Host':'example.localhost','X-Forwarded-For':'127.0.0.1','Authorization':'Bearer app-token'})
         self.assertEqual(r.headers['Authorization'],'Bearer app-token')
 
     def test_unknown_hosts_fail_closed(self):
@@ -74,5 +78,18 @@ class AccessTests(unittest.TestCase):
     def test_bruteforce_limited(self):
         for _ in range(12):self.assertEqual(self.get('allowed','wrong').status_code,401)
         self.assertEqual(self.get('allowed','wrong').status_code,429)
+
+    def test_public_pending_and_http_never_challenge_password(self):
+        with patch.object(access.publication,'enabled',return_value=False):
+            self.assertEqual(self.get(host='example.preview.greatsong.online').status_code,503)
+        response=self.client.get('/check',headers={'X-Forwarded-Host':'example.preview.greatsong.online',
+            'X-Forwarded-Proto':'http','X-Forwarded-Uri':'/test?q=1'})
+        self.assertEqual(response.status_code,308)
+        self.assertEqual(response.headers['Location'],'https://example.preview.greatsong.online/test?q=1')
+        self.assertNotIn('WWW-Authenticate',response.headers)
+
+    def test_local_alias_cannot_be_used_from_public_network(self):
+        self.assertEqual(self.client.get('/check',headers={'X-Forwarded-Host':'example.localhost',
+            'X-Forwarded-For':'203.0.113.4'}).status_code,403)
 
 if __name__=='__main__':unittest.main()

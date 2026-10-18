@@ -1,3 +1,4 @@
+let publicEnabled=false, connectionWarning=false;
 let csrf='', jobs=[], accounts=[], signature='', timer, refreshing=false, editing=false;
 const $=s=>document.querySelector(s);
 const labels={queued:'排队中',analyzing:'识别中',ready:'待部署',needs_configuration:'待配置',deploying:'部署中',deployed:'运行中',failed:'未完成',cancelled:'已取消'};
@@ -29,7 +30,7 @@ function render(){
   const grid=el('div',null,'project-grid');
   for(const job of jobs){const card=link('', '#/projects/'+job.id,'project-card');const top=el('div',null,'section-head');top.append(el('span',job.slug.slice(0,2).toUpperCase(),'project-icon'),tag(job));const repo=job.repository.replace('https://github.com/','');card.append(top,el('h2',job.slug),el('p',repo,'repo'));const bottom=el('div',null,'card-bottom');bottom.append(el('span',job.access?.mode==='restricted'?'指定账号 · '+job.access.accounts.length+' 人':'公开'),el('span','查看详情 →'));card.append(bottom);grid.append(card);}
   if(!jobs.length)grid.append(el('div','还没有部署。添加一个 Git 仓库，开始第一个项目。','empty'));
-  root.append(grid,el('p','当前通过本机 SSH 通道预览 · 公网访问待域名备案','footnote'));
+  root.append(grid,el('p',publicEnabled?'公网 HTTPS 已启用 · 项目权限独立设置':'当前通过本机 SSH 通道预览 · 公网访问待域名备案','footnote'));
 }
 function renderNew(root){
   root.append(link('← 我的部署','#/','back'),titleBlock('添加新部署','填写仓库地址，让 AI 识别部署方式。'));
@@ -47,22 +48,25 @@ function renderDetail(root,job){
   if(job.error)overview.append(el('p',job.error,'warn'));
   if(job.plan?.summary)overview.append(el('p',job.plan.summary));
   const actions=el('div',null,'actions');
-  if(job.status==='deployed'){const a=link('打开项目 ↗','http://'+job.slug+'.localhost:19180','primary button');a.target='_blank';a.rel='noopener';actions.append(a);}
+  if(job.status==='deployed'||job.deployed_commit){const a=link('打开项目 ↗',job.preview_url||'http://'+job.slug+'.localhost:19180','primary button');a.target='_blank';a.rel='noopener';actions.append(a);}
   if(['ready','failed','cancelled'].includes(job.status)&&job.plan?.ready){actions.append(button(job.application_uuid?'重新部署':'开始部署',async e=>{e.target.disabled=true;try{await api('/jobs/'+job.id+'/deploy',{});await refresh(true);message('');}catch(err){message(err.message);e.target.disabled=false;}},'primary'));}
-  overview.append(actions);if(job.application_uuid)overview.append(el('p','公网地址：'+job.slug+'.preview.greatsong.online（待备案）','hint address'));root.append(overview);
+  if(!['queued','analyzing','deploying'].includes(job.status)){actions.append(button(job.application_uuid?'检查最新版本':'重新识别',async e=>{e.target.disabled=true;try{await api('/jobs/'+job.id+'/refresh',{});await refresh(true);message('正在识别最新提交，现有应用继续运行。');}catch(err){message(err.message);e.target.disabled=false;}}));}
+  overview.append(actions);if(job.application_uuid)overview.append(el('p','公网地址：'+'https://'+job.slug+'.preview.greatsong.online'+(publicEnabled?'':'（待备案）'),'hint address'));root.append(overview);
   const accessPanel=el('form',null,'panel');accessPanel.append(el('h2','访问权限'));const editor=accessEditor(job.access);accessPanel.append(editor);const save=el('button','保存权限','primary');save.type='submit';accessPanel.append(save);accessPanel.onsubmit=async e=>{e.preventDefault();save.disabled=true;try{job.access=await api('/jobs/'+job.id+'/access',editor.value());signature='';editing=false;message('访问权限已保存，立即生效。');}catch(err){message(err.message);}finally{save.disabled=false;}};root.append(accessPanel);
   const details=el('details',null,'panel technical');details.append(el('summary','部署详情'));
   details.append(el('p','分支：'+(job.branch||'自动识别')+' · 目录：'+job.directory,'meta'));if(job.commit)details.append(el('p','提交：'+job.commit,'meta'));
   if(job.plan){const p=job.plan;details.append(el('pre',`构建方式  ${p.build_pack}\n应用目录  ${p.base_directory}\n服务端口  ${p.port}\n发布目录  ${p.publish_directory}`));for(const k of ['install_command','build_command','start_command'])if(p[k])details.append(el('pre',k+'\n'+p[k]));for(const note of [...(p.missing_env||[]).map(x=>'待配置变量：'+x),...(p.databases||[]).map(x=>'数据库 / 持久化：'+x),...(p.notes||[])])details.append(el('p',note,'hint'));}
-  if(job.application_uuid){const a=link('在部署引擎查看日志 ↗','http://127.0.0.1:18000');a.target='_blank';a.rel='noopener';details.append(a);}root.append(details);
+  if(job.deployed_commit)details.append(el('p','最近成功部署：'+job.deployed_commit.slice(0,12),'meta'));
+  if(job.deployment_uuid){const logs=el('pre');logs.hidden=true;details.append(button('查看构建日志',async e=>{e.target.disabled=true;try{logs.textContent=(await api('/jobs/'+job.id+'/logs')).logs;logs.hidden=false;}catch(err){message(err.message);}finally{e.target.disabled=false;}}),logs);}
+  if(job.application_uuid&&location.hostname==='127.0.0.1'){const a=link('在部署引擎查看 ↗','http://127.0.0.1:18000');a.target='_blank';a.rel='noopener';details.append(a);}root.append(details);
 }
 async function openAccounts(){await reloadAccounts();$('#account-dialog').showModal();}
 async function reloadAccounts(){accounts=await api('/accounts');const list=$('#account-list');list.replaceChildren();for(const name of accounts){const row=el('div',null,'account-row');row.append(el('span',name),button('删除',async()=>{if(!confirm('删除账号 '+name+'？其项目访问权限也会撤销。'))return;try{await api('/accounts/'+encodeURIComponent(name)+'/delete',{});await reloadAccounts();}catch(e){$('#account-message').textContent=e.message;}},'quiet'));list.append(row);}}
 $('#account-form').onsubmit=async e=>{e.preventDefault();const b=e.target.querySelector('button');b.disabled=true;try{await api('/accounts',Object.fromEntries(new FormData(e.target)));e.target.reset();await reloadAccounts();$('#account-message').textContent='账号已创建。关闭后勾选账号并保存权限。';}catch(err){$('#account-message').textContent=err.message;}finally{b.disabled=false;}};
 $('#close-accounts').onclick=()=>$('#account-dialog').close();
 $('#account-dialog').addEventListener('close',()=>{for(const editor of document.querySelectorAll('.access-editor')){const replacement=accessEditor(editor.value());editor.replaceChildren(...replacement.childNodes);editor.value=replacement.value;}});
-async function refresh(force=false){if(refreshing)return;refreshing=true;try{const next=await api('/jobs');const value=JSON.stringify(next);jobs=next;if(force||value!==signature){if(force||(!editing&&!document.activeElement?.matches('input,select')&&!$('#account-dialog').open&&(location.hash!=='#/new'))){signature=value;render();}}}finally{refreshing=false;}}
-async function enter(){const me=await api('/me');csrf=me.csrf;accounts=await api('/accounts');$('#login-panel').hidden=true;$('#workspace').hidden=false;$('#logout').hidden=false;$('#identity').textContent=me.email;await refresh(true);clearInterval(timer);timer=setInterval(()=>refresh().catch(e=>message(e.message)),6000);}
+async function refresh(force=false){if(refreshing)return;refreshing=true;try{const next=await api('/jobs');if(connectionWarning){connectionWarning=false;message('');}const value=JSON.stringify(next);jobs=next;if(force||value!==signature){if(force||(!editing&&!document.activeElement?.matches('input,select')&&!$('#account-dialog').open&&(location.hash!=='#/new'))){signature=value;render();}}}finally{refreshing=false;}}
+async function enter(){const me=await api('/me');csrf=me.csrf;publicEnabled=me.public_enabled;accounts=await api('/accounts');$('#login-panel').hidden=true;$('#workspace').hidden=false;$('#logout').hidden=false;$('#identity').textContent=me.email;await refresh(true);clearInterval(timer);timer=setInterval(()=>refresh().catch(()=>{connectionWarning=true;message('连接暂时中断，正在重试。');}),6000);}
 $('#login-form').onsubmit=async e=>{e.preventDefault();const b=e.target.querySelector('button');b.disabled=true;try{await api('/login',Object.fromEntries(new FormData(e.target)));e.target.reset();message('');await enter();}catch(err){message(err.message);}finally{b.disabled=false;}};
 $('#logout').onclick=async()=>{await api('/logout',{});location.reload();};
 window.addEventListener('hashchange',()=>{editing=false;message('');if(csrf)render();});

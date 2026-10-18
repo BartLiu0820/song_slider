@@ -9,6 +9,63 @@
   },
   "jobs": [
     {
+      "access": {
+        "accounts": [],
+        "mode": "public"
+      },
+      "application_uuid": "ilcb64fflultzilhmr0fsjjg",
+      "archive_sha256": "55a1678b2aaf44b9ed013ab99f956799f82ab7a7fa8ba6dbd63ff8833c47d801",
+      "branch": "main",
+      "commit": "6c7a360ddb4a0d75be06044bf8a914f260ff10c7",
+      "created_at": 1792310277,
+      "deployed_commit": "6c7a360ddb4a0d75be06044bf8a914f260ff10c7",
+      "deployment_uuid": "7googxoqdwluv9lsagedj9om",
+      "directory": "/",
+      "id": "3e05c69cc9bd17f2f180217d",
+      "model": "deepseek-flash",
+      "plan": {
+        "base_directory": "/",
+        "build_command": "",
+        "build_pack": "static",
+        "databases": [],
+        "dockerfile_location": "",
+        "dockerfile_target_build": "",
+        "install_command": "",
+        "missing_env": [],
+        "notes": [
+          "仓库仅含 index.html、styles/style.css 与 images/firefox-icon.png，无 Dockerfile、无 package.json 等构建配置。",
+          "根目录 index.html 可直接作为静态站点入口发布，无需执行任何脚本或安装依赖。",
+          "README 中的在线示例链接指向 GitHub Pages，与本部署无关。"
+        ],
+        "port": 80,
+        "publish_directory": "/",
+        "ready": true,
+        "start_command": "",
+        "summary": "MDN 的纯静态单页 HTML 教学示例站点，根目录含 index.html、styles 与 images，无构建脚本或依赖清单，适合直接静态发布。"
+      },
+      "preview_url": "http://ai-static-example.localhost:19180",
+      "repository": "https://github.com/mdn/beginner-html-site-styled",
+      "slug": "ai-static-example",
+      "snapshot_commit": "f27600f67afa71364f0b2a36b34245f1a1c91808",
+      "source_transport": "github-archive-verified-tree",
+      "status": "deployed",
+      "tree_sha": "3810bc24c6161cb9b7b1eb723dd14d50695e08bc",
+      "usage": {
+        "completion_tokens": 167,
+        "prompt_cache_hit_tokens": 384,
+        "prompt_cache_miss_tokens": 138,
+        "prompt_tokens": 522,
+        "prompt_tokens_details": {
+          "cached_tokens": 384
+        },
+        "total_tokens": 689
+      }
+    },
+    {
+      "access": {
+        "accounts": [],
+        "mode": "public"
+      },
       "application_uuid": "3zahu9r8pfibj0t9tw7lx2gu",
       "archive_sha256": "a6af3a155b771d197481d52f1b372ad3eb30e30a70a56ffc04c55b0f6b750bc4",
       "branch": "master",
@@ -39,6 +96,7 @@
         "start_command": "",
         "summary": "Flask 示例应用，位于 /flask/app，已有 Dockerfile（builder 阶段安装依赖并运行 app.py），应用监听 8000 端口，无数据库和外部密钥依赖。"
       },
+      "preview_url": "http://ai-flask-example.localhost:19180",
       "repository": "https://github.com/docker/awesome-compose",
       "slug": "ai-flask-example",
       "snapshot_commit": "daf2e464fd6b0589bd9dc346bf79cc9d6553c53f",
@@ -57,54 +115,10 @@
       }
     },
     {
-      "application_uuid": "ilcb64fflultzilhmr0fsjjg",
-      "archive_sha256": "55a1678b2aaf44b9ed013ab99f956799f82ab7a7fa8ba6dbd63ff8833c47d801",
-      "branch": "main",
-      "commit": "6c7a360ddb4a0d75be06044bf8a914f260ff10c7",
-      "created_at": 1792310277,
-      "deployment_uuid": "qli96addwmz8qk2vcj9vdshj",
-      "directory": "/",
-      "id": "3e05c69cc9bd17f2f180217d",
-      "model": "deepseek-flash",
-      "plan": {
-        "base_directory": "/",
-        "build_command": "",
-        "build_pack": "static",
-        "databases": [],
-        "dockerfile_location": "",
-        "dockerfile_target_build": "",
-        "install_command": "",
-        "missing_env": [],
-        "notes": [
-          "仓库中无 Dockerfile、package.json 或任何构建配置，属于纯静态内容。",
-          "根目录 index.html 可直接作为发布入口，styles/style.css 与 images/ 为相对路径静态资源。",
-          "无需安装依赖或执行构建命令，也不要运行仓库中的脚本。",
-          "无数据库、持久卷或外部密钥需求，可直接部署。"
-        ],
-        "port": 80,
-        "publish_directory": "/",
-        "ready": true,
-        "start_command": "",
-        "summary": "MDN 的纯静态单页 HTML 教学示例站点，根目录包含 index.html、styles 和 images，无构建步骤与后端依赖。"
+      "access": {
+        "accounts": [],
+        "mode": "public"
       },
-      "repository": "https://github.com/mdn/beginner-html-site-styled",
-      "slug": "ai-static-example",
-      "snapshot_commit": "f27600f67afa71364f0b2a36b34245f1a1c91808",
-      "source_transport": "github-archive-verified-tree",
-      "status": "deployed",
-      "tree_sha": "3810bc24c6161cb9b7b1eb723dd14d50695e08bc",
-      "usage": {
-        "completion_tokens": 169,
-        "prompt_cache_hit_tokens": 128,
-        "prompt_cache_miss_tokens": 394,
-        "prompt_tokens": 522,
-        "prompt_tokens_details": {
-          "cached_tokens": 128
-        },
-        "total_tokens": 691
-      }
-    },
-    {
       "branch": "3.1.2",
       "commit": "2c1b30d0503cfb064f1cb252e6614a06915a362a",
       "created_at": 1792310020,
@@ -137,6 +151,7 @@
         "start_command": "flask --app flaskr run --host 0.0.0.0 --port 5000",
         "summary": "Flask 官方教程示例 Flaskr 博客应用，位于 examples/tutorial，是 Python/Flask 项目，无 Dockerfile，使用 nixpacks 构建。应用使用 SQLite 数据库文件，需先执行 init-db 初始化。"
       },
+      "preview_url": "http://ai-flaskr-database.localhost:19180",
       "repository": "https://github.com/pallets/flask",
       "slug": "ai-flaskr-database",
       "status": "needs_configuration",
@@ -154,16 +169,16 @@
   ],
   "deployments": [
     {
+      "deployment_uuid": "7googxoqdwluv9lsagedj9om",
+      "status": "finished",
+      "created_at": "2026-10-18T09:58:24.000000Z",
+      "updated_at": "2026-10-18T09:58:51.000000Z"
+    },
+    {
       "deployment_uuid": "di3nk43rkstprowsenzmqpkr",
       "status": "finished",
       "created_at": "2026-10-18T08:13:18.000000Z",
       "updated_at": "2026-10-18T08:13:41.000000Z"
-    },
-    {
-      "deployment_uuid": "qli96addwmz8qk2vcj9vdshj",
-      "status": "finished",
-      "created_at": "2026-10-18T08:11:34.000000Z",
-      "updated_at": "2026-10-18T08:13:19.000000Z"
     }
   ]
 }

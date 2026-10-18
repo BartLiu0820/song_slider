@@ -1,0 +1,11 @@
+{
+  "offline_tests": 34,
+  "real_access_checks": 12,
+  "update_same_application": true,
+  "update_status": "deployed",
+  "build_logs_available": true,
+  "public_enabled": false,
+  "backup_restored_tables": 76,
+  "public_preflight": "blocked_http_403",
+  "certificates_verified": false
+}

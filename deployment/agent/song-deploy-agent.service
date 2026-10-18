@@ -7,7 +7,7 @@ Wants=network-online.target
 User=song-deploy
 Group=song-deploy
 WorkingDirectory=/opt/song-deploy/agent
-ExecStart=/opt/song-deploy/venv/bin/gunicorn --bind 127.0.0.1:9100 --workers 1 --threads 4 --timeout 240 app:app
+ExecStart=/opt/song-deploy/venv/bin/gunicorn --bind 127.0.0.1:9100 --bind 172.21.0.1:9100 --workers 1 --threads 4 --timeout 240 app:app
 Restart=on-failure
 RestartSec=5
 Environment=PYTHONDONTWRITEBYTECODE=1
