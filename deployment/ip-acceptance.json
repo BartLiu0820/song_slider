@@ -19,7 +19,7 @@
     "trusted": true
   },
   "renewal_timer": "song-ip-certificate.timer",
-  "domain_certificate": "pending DNS TXT validation",
+  "domain_certificate": "issued and installed; origin TLS verified; see certificates/acceptance.json",
   "offline_tests": 39,
   "preview_access_checks": 12,
   "renewal_dry_run": "passed, including certificate installation hook"

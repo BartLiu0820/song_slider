@@ -1,0 +1,39 @@
+{
+  "checked_at": "2026-10-18T10:51:42.275200+00:00",
+  "origin_certificate_verified": true,
+  "issuer": "Let’s Encrypt YE2",
+  "domains": [
+    "deploy.greatsong.online",
+    "*.preview.greatsong.online"
+  ],
+  "expires_at": "2027-01-16T09:52:36Z",
+  "external_tests": [
+    {
+      "host": "deploy.greatsong.online",
+      "connection_exit": 35,
+      "http_and_tls_status": "000 1",
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to deploy.greatsong.online:443"
+    },
+    {
+      "host": "ai-static-example.preview.greatsong.online",
+      "connection_exit": 35,
+      "http_and_tls_status": "000 1",
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to ai-static-example.preview.greatsong.online:443"
+    },
+    {
+      "host": "ai-flask-example.preview.greatsong.online",
+      "connection_exit": 35,
+      "http_and_tls_status": "000 1",
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to ai-flask-example.preview.greatsong.online:443"
+    },
+    {
+      "host": "47.116.108.184",
+      "connection_exit": 0,
+      "http_and_tls_status": "200 0",
+      "error": ""
+    }
+  ],
+  "domain_public_enabled": false,
+  "ip_enabled": true,
+  "wildcard_renewal": "manual DNS, DNS API not configured"
+}

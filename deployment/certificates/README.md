@@ -1,6 +1,6 @@
 # 正式证书与临时 IP 后台
 
-2026-10-18：临时后台为 `https://47.116.108.184/`。Certbot 5.8.0 已完成 IP 地址验证并安装 Let's Encrypt 正式证书。域名证书申请使用 DNS-01，覆盖 `deploy.greatsong.online` 和 `*.preview.greatsong.online`；等待所有者添加 TXT 记录后签发，不会打开域名公网发布开关。
+2026-10-18：临时后台为 `https://47.116.108.184/`。Certbot 5.8.0 已完成 IP 地址验证并安装 Let's Encrypt 正式证书。域名证书申请使用 DNS-01，覆盖 `deploy.greatsong.online` 和 `*.preview.greatsong.online`；两条 TXT 已在权威 DNS 验证通过，正式证书已签发并自动安装，域名公网发布开关保持关闭。域名证书到期时间为 2027-01-16 17:52:36（北京时间）。
 
 ## 入口范围
 
@@ -27,7 +27,7 @@ sudo python3 /opt/song-deploy/admin/ip_admin.py disable
 
 ## 域名 DNS 验证
 
-运行中的手动验证程序 `dns_auth.py` 把 TXT 记录写到 `/var/lib/song-acme/dns-challenges.json`，等所有权威 DNS 返回匹配值后继续。每次等待最多一小时；超时后需重新申请并提供新的验证值。
+手动验证程序 `dns_auth.py` 把 TXT 记录写到 `/var/lib/song-acme/dns-challenges.json`，等所有权威 DNS 返回匹配值后继续。每次等待最多一小时；超时后需重新申请并提供新的验证值。
 
 `/etc/letsencrypt/song-domain/renewal-hooks/deploy/10-song-install` 会在签发后自动安装证书并准备 HTTPS 路由，域名公网发布仍关闭。证书状态可查看 `/etc/letsencrypt/song-domain/live/song-domains/fullchain.pem`。
 
@@ -39,4 +39,4 @@ Certbot 账户、私钥、续期配置和相关 systemd 单元已经纳入服务
 
 ## 验证结果
 
-IP 公网 HTTPS 信任链、管理员登录、Secure/HttpOnly Cookie、CSRF、退出均通过；IP 证书续期 dry-run（包含安装钩子）成功。39 项离线检查、12 项项目访问权限验收通过。原展示页源站 HTTPS 返回 200。域名证书的当前阻塞为所有者尚未发布 TXT 验证记录。
+IP 公网 HTTPS 信任链、管理员登录、Secure/HttpOnly Cookie、CSRF、退出均通过；IP 证书续期 dry-run（包含安装钩子）成功。39 项离线检查、12 项项目访问权限验收通过。原展示页源站 HTTPS 返回 200。域名证书已安装：后台和预览源站的 TLS 信任链校验通过，业务返回预期的 503（公网发布关闭）。外部域名 TLS 连接仍被中断，公网域名尚未验收；直接 IP 的外部 HTTPS 为 200，证书校验通过。
