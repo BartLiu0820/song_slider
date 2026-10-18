@@ -30,19 +30,12 @@ def probe(host,scheme,proof):
     except (OSError,ValueError) as e:return False,type(e).__name__+'（连接或可信证书未就绪）'
 
 
-def sync_local_link(public):
-    site=Path(__file__).resolve().parents[1]/'output/song-six-stages-v4/index.html'
-    old='href="http://127.0.0.1:19100" aria-label="登录本机部署工作台"'
-    new='href="https://deploy.greatsong.online" aria-label="登录部署工作台"'
-    if site.exists():site.write_text(site.read_text().replace(old if public else new,new if public else old))
-
-
 def main():
     parser=argparse.ArgumentParser();group=parser.add_mutually_exclusive_group()
     group.add_argument('--check',action='store_true');group.add_argument('--rollback',action='store_true')
     args=parser.parse_args()
     if args.rollback:
-        command('rollback');sync_local_link(False);print('已关闭公网发布，保留本机 SSH 访问。');return
+        command('rollback');print('已关闭公网发布，保留本机 SSH 访问。');return
     state=command('status');errors=[]
     for host in state['hosts']:
         ok,reason=probe(host,'http',state['proof'])
@@ -84,7 +77,6 @@ def main():
         client.open(req,timeout=15).close()
     except Exception:
         command('rollback');raise SystemExit('公网验收未通过，已恢复本机模式。请查看服务器状态后重试。')
-    sync_local_link(True)
     print('公网工作台、Secure Cookie 和项目访问权限验收通过。入口：https://deploy.greatsong.online')
 
 if __name__=='__main__':main()

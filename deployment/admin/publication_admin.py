@@ -10,7 +10,6 @@ import time
 ROOT=Path('/var/lib/song-deploy')
 STATE=ROOT/'system/publication.json'
 ROUTES=Path('/data/coolify/proxy/dynamic/song-workbench.yaml')
-SITE=Path('/home/admin/song_slider/output/song-six-stages-v4/index.html')
 HOST='deploy.greatsong.online'
 READY='/_song/ready'
 
@@ -73,13 +72,8 @@ def main():
     elif args.action=='enable':
         if not state['tls_prepared']:raise SystemExit('Stage and verify trusted TLS certificates first')
         state.update(enabled=True,enabled_at=int(time.time()));atomic(STATE,state)
-        content=SITE.read_text().replace('href="http://127.0.0.1:19100" aria-label="登录本机部署工作台"',
-            'href="https://deploy.greatsong.online" aria-label="登录部署工作台"')
-        SITE.write_text(content)
     elif args.action=='rollback':
         state.update(enabled=False,tls_prepared=False);atomic(STATE,state);atomic(ROUTES,routes(False,jobs))
-        SITE.write_text(SITE.read_text().replace('href="https://deploy.greatsong.online" aria-label="登录部署工作台"',
-            'href="http://127.0.0.1:19100" aria-label="登录本机部署工作台"'))
     print(json.dumps({**state,'hosts':[HOST]+[j['slug']+'.preview.greatsong.online' for j in jobs]},ensure_ascii=False))
 
 if __name__=='__main__':main()

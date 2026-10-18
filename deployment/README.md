@@ -30,9 +30,9 @@
 `deploy.greatsong.online` 和 `*.preview.greatsong.online` DNS 已解析到服务器。
 但公网实测被阿里云返回的 `Non-compliance ICP Filing` 页面拦截；用户确认域名尚未备案。
 因此公网入口与 HTTPS 证书未验收。工作台监听本机回环与 Docker 网桥的 9100 端口，公网域名入口已指向工作台；发布开关关闭时拒绝公网登录，通过 SSH 继续使用。
-展示页顶部“管理”也指向本机工作台，需要先建立通道。
+展示页顶部“管理”固定指向 `https://deploy.greatsong.online`，发布或回退不会改成访客的本机地址。备案放行并完成公网启用前，通过本地启动脚本使用 SSH 工作台。
 
-HTTPS 反代、Secure Cookie、主站管理入口切换和应用 HTTPS 配置已准备。备案放行后运行 `python3 deployment/activate_public.py`，脚本依次验证公网来源、可信证书、后台登录及预览权限，通过后开放入口。尚未放行时自动停止，不申请新证书；`--check` 只检测，`--rollback` 恢复本机模式。
+HTTPS 反代、Secure Cookie 和应用 HTTPS 配置已准备。备案放行后运行 `python3 deployment/activate_public.py`，脚本依次验证公网来源、可信证书、后台登录及预览权限，通过后开放入口。尚未放行时自动停止，不申请新证书；`--check` 只检测，`--rollback` 恢复本机模式。
 
 ## 服务和文件
 
