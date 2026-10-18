@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Coolify clones the branch and then fetches the pinned SHA. When that exact
+# commit is already present, checkout can use it directly without a second
+# GitHub connection. Other fetches and all clones keep their normal behavior.
+if [[ "$#" == 4 && "$1" == fetch && "$2" == --depth=1 && "$3" == origin \
+      && "$4" =~ ^[0-9a-f]{40}$ ]]; then
+  if /usr/bin/git cat-file -e "${4}^{commit}" 2>/dev/null; then
+    echo "Pinned commit ${4} is already present in the verified Git object store."
+    exit 0
+  fi
+fi
+exec /usr/bin/git "$@"

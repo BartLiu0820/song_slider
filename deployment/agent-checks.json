@@ -1,0 +1,7 @@
+{
+  "unauthenticated_blocked": true,
+  "login": true,
+  "csrf_blocked": true,
+  "internal_url_blocked": true,
+  "real_analysis_job": "16ce88ff87047bdec95ad115"
+}

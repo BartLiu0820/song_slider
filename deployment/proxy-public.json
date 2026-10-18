@@ -1,0 +1,61 @@
+{
+  "networks": {
+    "coolify": {
+      "external": true
+    }
+  },
+  "services": {
+    "traefik": {
+      "image": "public.ecr.aws/docker/library/traefik:v3.7",
+      "container_name": "coolify-proxy",
+      "restart": "unless-stopped",
+      "networks": [
+        "coolify"
+      ],
+      "ports": [
+        "80:80",
+        "443:443"
+      ],
+      "extra_hosts": [
+        "host.docker.internal:host-gateway"
+      ],
+      "volumes": [
+        "/var/run/docker.sock:/var/run/docker.sock:ro",
+        "/data/coolify/proxy:/traefik"
+      ],
+      "command": [
+        "--ping=true",
+        "--ping.entrypoint=traefik",
+        "--entrypoints.traefik.address=:8080",
+        "--entrypoints.http.address=:80",
+        "--entrypoints.https.address=:443",
+        "--providers.docker=true",
+        "--providers.docker.exposedbydefault=false",
+        "--providers.docker.network=coolify",
+        "--providers.file.directory=/traefik/dynamic",
+        "--providers.file.watch=true",
+        "--api.dashboard=false",
+        "--certificatesresolvers.letsencrypt.acme.httpchallenge=true",
+        "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http",
+        "--certificatesresolvers.letsencrypt.acme.storage=/traefik/acme.json"
+      ],
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "traefik",
+          "healthcheck",
+          "--ping"
+        ],
+        "interval": "10s",
+        "timeout": "3s",
+        "retries": 5
+      },
+      "labels": {
+        "coolify.managed": "true",
+        "coolify.proxy": "true"
+      },
+      "mem_limit": "192m",
+      "cpus": 0.5
+    }
+  }
+}

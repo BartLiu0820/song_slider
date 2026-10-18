@@ -1,0 +1,155 @@
+[
+  {
+    "application_uuid": "3zahu9r8pfibj0t9tw7lx2gu",
+    "archive_sha256": "a6af3a155b771d197481d52f1b372ad3eb30e30a70a56ffc04c55b0f6b750bc4",
+    "branch": "master",
+    "commit": "30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562",
+    "created_at": 1792309971,
+    "deployment_uuid": "di3nk43rkstprowsenzmqpkr",
+    "directory": "/flask/app",
+    "id": "16ce88ff87047bdec95ad115",
+    "model": "deepseek-flash",
+    "plan": {
+      "base_directory": "/flask/app",
+      "build_command": "",
+      "build_pack": "dockerfile",
+      "databases": [],
+      "dockerfile_location": "/Dockerfile",
+      "dockerfile_target_build": "builder",
+      "install_command": "",
+      "missing_env": [],
+      "notes": [
+        "Dockerfile 中 builder 阶段为生产阶段，dev-envs 阶段仅用于开发容器，不应选用。",
+        "应用在 app.py 中硬编码监听 0.0.0.0:8000，端口为 8000。",
+        "requirements.txt 仅依赖 flask，无数据库或持久卷需求。",
+        "compose.yaml 位于 /flask 目录，若需完整编排需另行配置，但单容器可直接部署。"
+      ],
+      "port": 8000,
+      "publish_directory": "/",
+      "ready": true,
+      "start_command": "",
+      "summary": "Flask 示例应用，位于 /flask/app，已有 Dockerfile（builder 阶段安装依赖并运行 app.py），应用监听 8000 端口，无数据库和外部密钥依赖。"
+    },
+    "repository": "https://github.com/docker/awesome-compose",
+    "slug": "ai-flask-example",
+    "snapshot_commit": "daf2e464fd6b0589bd9dc346bf79cc9d6553c53f",
+    "source_transport": "github-archive-verified-tree",
+    "status": "deployed",
+    "tree_sha": "c55aa96313b547e8623da4588f4cc343646a5dfd",
+    "usage": {
+      "completion_tokens": 209,
+      "prompt_cache_hit_tokens": 0,
+      "prompt_cache_miss_tokens": 7122,
+      "prompt_tokens": 7122,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      },
+      "total_tokens": 7331
+    }
+  },
+  {
+    "application_uuid": "ilcb64fflultzilhmr0fsjjg",
+    "archive_sha256": "55a1678b2aaf44b9ed013ab99f956799f82ab7a7fa8ba6dbd63ff8833c47d801",
+    "branch": "main",
+    "commit": "6c7a360ddb4a0d75be06044bf8a914f260ff10c7",
+    "created_at": 1792310277,
+    "deployment_uuid": "qli96addwmz8qk2vcj9vdshj",
+    "directory": "/",
+    "id": "3e05c69cc9bd17f2f180217d",
+    "model": "deepseek-flash",
+    "plan": {
+      "base_directory": "/",
+      "build_command": "",
+      "build_pack": "static",
+      "databases": [],
+      "dockerfile_location": "",
+      "dockerfile_target_build": "",
+      "install_command": "",
+      "missing_env": [],
+      "notes": [
+        "仓库中无 Dockerfile、package.json 或任何构建配置，属于纯静态内容。",
+        "根目录 index.html 可直接作为发布入口，styles/style.css 与 images/ 为相对路径静态资源。",
+        "无需安装依赖或执行构建命令，也不要运行仓库中的脚本。",
+        "无数据库、持久卷或外部密钥需求，可直接部署。"
+      ],
+      "port": 80,
+      "publish_directory": "/",
+      "ready": true,
+      "start_command": "",
+      "summary": "MDN 的纯静态单页 HTML 教学示例站点，根目录包含 index.html、styles 和 images，无构建步骤与后端依赖。"
+    },
+    "repository": "https://github.com/mdn/beginner-html-site-styled",
+    "slug": "ai-static-example",
+    "snapshot_commit": "f27600f67afa71364f0b2a36b34245f1a1c91808",
+    "source_transport": "github-archive-verified-tree",
+    "status": "deployed",
+    "tree_sha": "3810bc24c6161cb9b7b1eb723dd14d50695e08bc",
+    "usage": {
+      "completion_tokens": 169,
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 394,
+      "prompt_tokens": 522,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "total_tokens": 691
+    }
+  },
+  {
+    "branch": "3.1.2",
+    "commit": "2c1b30d0503cfb064f1cb252e6614a06915a362a",
+    "created_at": 1792310020,
+    "directory": "/examples/tutorial",
+    "id": "87eb8fc086fc4b32b80c5b0d",
+    "model": "deepseek-flash",
+    "plan": {
+      "base_directory": "/examples/tutorial",
+      "build_command": "",
+      "build_pack": "nixpacks",
+      "databases": [
+        "SQLite 数据库文件（instance/flaskr.sqlite），需持久化卷；首次部署需执行 flask --app flaskr init-db 初始化"
+      ],
+      "dockerfile_location": "",
+      "dockerfile_target_build": "",
+      "install_command": "pip install -e .",
+      "missing_env": [],
+      "notes": [
+        "仓库中无 Dockerfile，按规则使用 nixpacks。",
+        "依赖 flask 来自 PyPI；若需使用仓库内源码版本，需先 pip install -e ../..，但 nixpacks 默认仅安装本目录依赖。",
+        "启动前需初始化数据库：flask --app flaskr init-db，否则页面报错。",
+        "SQLite 文件位于 instance 目录，需挂载持久卷，否则重启后数据丢失。",
+        "生产环境建议使用 gunicorn 等 WSGI 服务器替代 flask run，但仓库未提供该配置，此处按 README 的 flask run 推断。",
+        "端口 5000 为 Flask 默认端口，可通过 --port 调整。",
+        "示例为教程用途，非生产级应用。"
+      ],
+      "port": 5000,
+      "publish_directory": "/",
+      "ready": false,
+      "start_command": "flask --app flaskr run --host 0.0.0.0 --port 5000",
+      "summary": "Flask 官方教程示例 Flaskr 博客应用，位于 examples/tutorial，是 Python/Flask 项目，无 Dockerfile，使用 nixpacks 构建。应用使用 SQLite 数据库文件，需先执行 init-db 初始化。"
+    },
+    "repository": "https://github.com/pallets/flask",
+    "slug": "ai-flaskr-database",
+    "status": "needs_configuration",
+    "usage": {
+      "completion_tokens": 346,
+      "prompt_cache_hit_tokens": 128,
+      "prompt_cache_miss_tokens": 3237,
+      "prompt_tokens": 3365,
+      "prompt_tokens_details": {
+        "cached_tokens": 128
+      },
+      "total_tokens": 3711
+    }
+  },
+  {
+    "branch": "master",
+    "created_at": 1792309913,
+    "directory": "/flask/app",
+    "error": "Git 拉取失败，请稍后重试；服务器到 GitHub 的连接可能波动。",
+    "id": "5a53edee223a22fe681da08b",
+    "repository": "https://github.com/docker/awesome-compose",
+    "slug": "ai-flask-example",
+    "status": "failed"
+  }
+]

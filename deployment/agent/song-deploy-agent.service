@@ -1,0 +1,27 @@
+[Unit]
+Description=Song deployment assistant
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+User=song-deploy
+Group=song-deploy
+WorkingDirectory=/opt/song-deploy/agent
+ExecStart=/opt/song-deploy/venv/bin/gunicorn --bind 127.0.0.1:9100 --workers 1 --threads 4 --timeout 240 app:app
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=SONG_CONFIG=/etc/song-deploy/agent.json
+Environment=SONG_STATE=/var/lib/song-deploy
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/song-deploy
+MemoryMax=512M
+CPUQuota=75%
+TasksMax=48
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,49 @@
+{
+  "http": {
+    "routers": {
+      "legacy-site-http": {
+        "rule": "Host(`greatsong.online`) || Host(`www.greatsong.online`)",
+        "entryPoints": [
+          "http"
+        ],
+        "service": "legacy-site-http"
+      }
+    },
+    "services": {
+      "legacy-site-http": {
+        "loadBalancer": {
+          "servers": [
+            {
+              "url": "http://song-slider:80"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "tcp": {
+    "routers": {
+      "legacy-site-tls": {
+        "rule": "HostSNI(`greatsong.online`) || HostSNI(`www.greatsong.online`)",
+        "entryPoints": [
+          "https"
+        ],
+        "service": "legacy-site-tls",
+        "tls": {
+          "passthrough": true
+        }
+      }
+    },
+    "services": {
+      "legacy-site-tls": {
+        "loadBalancer": {
+          "servers": [
+            {
+              "address": "song-slider:443"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "runs": [
+    {
+      "run": "20261018-071240",
+      "directory": "/home/admin/deploy-validation/20261018-071240",
+      "checks": [],
+      "timings": {
+        "static_git_clone_seconds": 2.15,
+        "first_backend_build_seconds": 40.72
+      },
+      "live_before": "23de1a3c3c30509447b0efa490ad6282c4abc559d5bdeac4578a2ab0f4910f20",
+      "static_commit": "0e43cefff6f63f0331f1d5506886741f923a4969",
+      "backend_v1_commit": "56bbb09ed7927619028b8f0d919757c07eead80d",
+      "status": "failed",
+      "error": "Command failed: sudo -n docker compose -p songproof-20261018-071240 -f\ntime=\"2026-10-18T15:13:24+08:00\" level=warning msg=\"The \\\"APP_IMAGE\\\" variable is not set. Defaulting to a blank string.\"\ntime=\"2026-10-18T15:13:24+08:00\" level=warning msg=\"The \\\"APP_IMAGE\\\" variable is not set. Defaulting to a blank string.\"\nservice \"backend\" has neither an image nor a build context specified: invalid compose project\n",
+      "cleanup_compose_exit": 1,
+      "duration_seconds": 43.63
+    },
+    {
+      "run": "20261018-071340",
+      "directory": "/home/admin/deploy-validation/20261018-071340",
+      "checks": [],
+      "timings": {
+        "static_git_clone_seconds": 2.03,
+        "first_backend_build_seconds": 0.77
+      },
+      "live_before": "23de1a3c3c30509447b0efa490ad6282c4abc559d5bdeac4578a2ab0f4910f20",
+      "static_commit": "0e43cefff6f63f0331f1d5506886741f923a4969",
+      "backend_v1_commit": "d384fa82c2cc8c19a4c5de5abd75f9f064ac052c",
+      "status": "failed",
+      "error": "Health timeout: api.proof.local",
+      "cleanup_compose_exit": 0,
+      "duration_seconds": 56.55
+    },
+    {
+      "run": "20261018-071457",
+      "directory": "/home/admin/deploy-validation/20261018-071457",
+      "checks": [
+        {
+          "name": "real_static_git_deploy",
+          "passed": true,
+          "detail": {
+            "commit": "0e43cefff6f63f0331f1d5506886741f923a4969",
+            "html_match": true,
+            "video_range": 206
+          }
+        },
+        {
+          "name": "backend_deploy",
+          "passed": true,
+          "detail": {
+            "version": "v1",
+            "port_exposed_publicly": false
+          }
+        },
+        {
+          "name": "database_persistence",
+          "passed": true,
+          "detail": {
+            "inserted_rows": 1,
+            "rows_after_container_recreation": 1
+          }
+        },
+        {
+          "name": "git_update_deploy",
+          "passed": true,
+          "detail": {
+            "version": "v2",
+            "commit": "b713b8f123c33439956eaee9b83da78d2d55ca2e"
+          }
+        },
+        {
+          "name": "failed_candidate_gate",
+          "passed": true,
+          "detail": {
+            "candidate_health": 503,
+            "active_version": "v2"
+          }
+        },
+        {
+          "name": "application_rollback",
+          "passed": true,
+          "detail": {
+            "active_version": "v1",
+            "database_rows": 1,
+            "schema_rollback_tested": false
+          }
+        },
+        {
+          "name": "existing_site_unchanged",
+          "passed": true,
+          "detail": {
+            "http": 200,
+            "html_sha256_unchanged": true
+          }
+        }
+      ],
+      "timings": {
+        "static_git_clone_seconds": 2.11,
+        "first_backend_build_seconds": 0.75,
+        "incremental_build_seconds": 0.98
+      },
+      "live_before": "23de1a3c3c30509447b0efa490ad6282c4abc559d5bdeac4578a2ab0f4910f20",
+      "static_commit": "0e43cefff6f63f0331f1d5506886741f923a4969",
+      "backend_v1_commit": "c897ed39c04dfd84561edeac193081dcdf10384d",
+      "backend_v2_commit": "b713b8f123c33439956eaee9b83da78d2d55ca2e",
+      "resource_snapshot": "{\"BlockIO\":\"0B / 0B\",\"CPUPerc\":\"0.01%\",\"Container\":\"923b23ed4375284e664faf5bb35efe8e0440bc2a53fb27f4a28931883b74f7da\",\"ID\":\"923b23ed4375\",\"MemPerc\":\"12.96%\",\"MemUsage\":\"16.59MiB / 128MiB\",\"Name\":\"songproof-20261018-071457-backend-1\",\"NetIO\":\"1.25kB / 805B\",\"PIDs\":\"1\"}\n{\"BlockIO\":\"0B / 422kB\",\"CPUPerc\":\"0.04%\",\"Container\":\"6d430f082f42d349cea5f6e15387a9f64d67dc0242feba56e3f4f1d116b8a701\",\"ID\":\"6d430f082f42\",\"MemPerc\":\"7.67%\",\"MemUsage\":\"19.63MiB / 256MiB\",\"Name\":\"songproof-20261018-071457-database-1\",\"NetIO\":\"7.05kB / 6.71kB\",\"PIDs\":\"6\"}\n{\"BlockIO\":\"0B / 0B\",\"CPUPerc\":\"0.01%\",\"Container\":\"3818bbbb6c8ad1a048eb671f0645abd4bb59a783ffe9e0ad158dd4eae798dbe2\",\"ID\":\"3818bbbb6c8a\",\"MemPerc\":\"13.96%\",\"MemUsage\":\"17.87MiB / 128MiB\",\"Name\":\"songproof-20261018-071457-dbapi-1\",\"NetIO\":\"9.78kB / 7.75kB\",\"PIDs\":\"1\"}\n{\"BlockIO\":\"0B / 16.4kB\",\"CPUPerc\":\"0.00%\",\"Container\":\"2d0c298e7e87482eab2aa4a350bb467633848e5ad197017520e84286ccd8b4d1\",\"ID\":\"2d0c298e7e87\",\"MemPerc\":\"15.46%\",\"MemUsage\":\"9.895MiB / 64MiB\",\"Name\":\"songproof-20261018-071457-router-1\",\"NetIO\":\"64.2kB / 62.9kB\",\"PIDs\":\"7\"}\n{\"BlockIO\":\"0B / 12.3kB\",\"CPUPerc\":\"0.00%\",\"Container\":\"a913ddf3739d435aeb296411a7b318146e5c0b18e5d76692f567dbf92950a757\",\"ID\":\"a913ddf3739d\",\"MemPerc\":\"15.58%\",\"MemUsage\":\"9.973MiB / 64MiB\",\"Name\":\"songproof-20261018-071457-static-1\",\"NetIO\":\"3.89kB / 41.8kB\",\"PIDs\":\"7\"}\n",
+      "host_memory": "               total        used        free      shared  buff/cache   available\nMem:            3499         811         178          17        2816        2687\nSwap:              0           0           0\n",
+      "host_disk": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/vda3        49G  5.0G   42G  11% /\n",
+      "status": "passed",
+      "cleanup_compose_exit": 0,
+      "duration_seconds": 65.9
+    },
+    {
+      "run": "20261018-071855",
+      "directory": "/home/admin/deploy-validation/real-20261018-071855",
+      "checks": [
+        {
+          "name": "build_awesome-compose",
+          "passed": true,
+          "detail": {
+            "seconds": 75.91
+          }
+        },
+        {
+          "name": "build_flask",
+          "passed": true,
+          "detail": {
+            "seconds": 92.25
+          }
+        },
+        {
+          "name": "upstream_backend_http",
+          "passed": true,
+          "detail": {
+            "http": 200,
+            "response": "Hello World!"
+          }
+        },
+        {
+          "name": "upstream_database_home",
+          "passed": true,
+          "detail": {
+            "http": 200
+          }
+        },
+        {
+          "name": "upstream_register_login_create",
+          "passed": true,
+          "detail": {
+            "registered": true,
+            "logged_in": true,
+            "post_visible": true
+          }
+        },
+        {
+          "name": "upstream_sqlite_persistence",
+          "passed": true,
+          "detail": {
+            "post_survived_recreation": true,
+            "login_session_preserved": true
+          }
+        },
+        {
+          "name": "existing_site_unchanged",
+          "passed": true,
+          "detail": {
+            "http": 200,
+            "html_sha256_unchanged": true
+          }
+        }
+      ],
+      "repositories": {
+        "awesome-compose": {
+          "commit": "30f4b7f6a6c3b0c0ecf4d4efb0de203c48d11562",
+          "subdirectory": "flask/app",
+          "source_modified": false
+        },
+        "flask": {
+          "commit": "2c1b30d0503cfb064f1cb252e6614a06915a362a",
+          "subdirectory": "examples/tutorial",
+          "source_modified": false
+        }
+      },
+      "timings": {
+        "awesome-compose_build_seconds": 75.91,
+        "flask_build_seconds": 92.25
+      },
+      "live_before_sha256": "23de1a3c3c30509447b0efa490ad6282c4abc559d5bdeac4578a2ab0f4910f20",
+      "resource_snapshot": "{\"BlockIO\":\"0B / 0B\",\"CPUPerc\":\"0.01%\",\"Container\":\"4b7660b8589fd1700ee88aa65b6a8c54d625905e7e901bcecf2b7d1fabf2a1f2\",\"ID\":\"4b7660b8589f\",\"MemPerc\":\"23.93%\",\"MemUsage\":\"30.64MiB / 128MiB\",\"Name\":\"songreal-20261018-071855-backend-1\",\"NetIO\":\"1.72kB / 737B\",\"PIDs\":\"2\"}\n{\"BlockIO\":\"0B / 0B\",\"CPUPerc\":\"0.01%\",\"Container\":\"9d2963881b5fe090c188b1db34f4fa192cbb09129013649d2f6a22f66acfee86\",\"ID\":\"9d2963881b5f\",\"MemPerc\":\"23.78%\",\"MemUsage\":\"30.44MiB / 128MiB\",\"Name\":\"songreal-20261018-071855-databaseapp-1\",\"NetIO\":\"1.33kB / 1.56kB\",\"PIDs\":\"2\"}\n{\"BlockIO\":\"0B / 16.4kB\",\"CPUPerc\":\"0.02%\",\"Container\":\"50b02e2b0bde4912450a436160c0d7e37ac0324b1c88be1975021da23589cbd3\",\"ID\":\"50b02e2b0bde\",\"MemPerc\":\"15.69%\",\"MemUsage\":\"10.04MiB / 64MiB\",\"Name\":\"songreal-20261018-071855-router-1\",\"NetIO\":\"16.9kB / 16kB\",\"PIDs\":\"8\"}\n",
+      "dependencies": "blinker==1.9.0\nclick==8.5.0\nFlask==3.1.2\nflaskr @ file:///app\ngunicorn==23.0.0\nitsdangerous==2.2.0\nJinja2==3.1.6\nMarkupSafe==3.0.4\npackaging==26.3\nWerkzeug==3.1.9\n",
+      "host_memory": "               total        used        free      shared  buff/cache   available\nMem:            3499         783         162           3        2845        2715\nSwap:              0           0           0\n",
+      "status": "passed",
+      "cleanup_exit": 0,
+      "duration_seconds": 181.44
+    }
+  ],
+  "remaining_containers": "song-slider\tUp 2 months\t0.0.0.0:80->80/tcp, [::]:80->80/tcp, 0.0.0.0:443->443/tcp, [::]:443->443/tcp, 0.0.0.0:443->443/udp, [::]:443->443/udp, 2019/tcp\n"
+}

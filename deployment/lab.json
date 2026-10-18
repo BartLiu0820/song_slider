@@ -1,0 +1,13 @@
+{
+  "project": {
+    "uuid": "rv3qlpzjjq23adpjwcgdfngt"
+  },
+  "static": {
+    "uuid": "tpefhzzcmurxx0esk5oyd7qa",
+    "domains": "http://demo-static.preview.greatsong.online"
+  },
+  "backend": {
+    "uuid": "gqmjme4tjng16in82e3v9c0n",
+    "domains": "http://demo-backend.preview.greatsong.online"
+  }
+}

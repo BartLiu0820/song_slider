@@ -1,0 +1,54 @@
+{
+  "job": {
+    "application_uuid": "c2snjberuwvrycveti9ykhjb",
+    "archive_sha256": "55a1678b2aaf44b9ed013ab99f956799f82ab7a7fa8ba6dbd63ff8833c47d801",
+    "branch": "main",
+    "commit": "6c7a360ddb4a0d75be06044bf8a914f260ff10c7",
+    "created_at": 1792311404,
+    "deployment_uuid": "hhjtwgr9bjhigwjek7tofewz",
+    "directory": "/",
+    "id": "88a0465540925003700c77b6",
+    "model": "deepseek-flash",
+    "plan": {
+      "base_directory": "/",
+      "build_command": "",
+      "build_pack": "static",
+      "databases": [],
+      "dockerfile_location": "",
+      "dockerfile_target_build": "",
+      "install_command": "",
+      "missing_env": [],
+      "notes": [
+        "仓库仅含 index.html、styles/style.css 与 images/firefox-icon.png，无 Dockerfile、无 package.json 等构建配置。",
+        "README 说明这是供学习 HTML/CSS 的单页示例，可直接以静态站点方式托管。",
+        "未发现任何需要配置的环境变量、数据库或持久卷。",
+        "不要执行仓库中的任何脚本；静态内容无需构建步骤。"
+      ],
+      "port": 80,
+      "publish_directory": "/",
+      "ready": true,
+      "start_command": "",
+      "summary": "MDN 初学者示例：纯静态单页网站，根目录含 index.html、styles 与 images，无构建脚本或依赖清单，适合直接静态发布。"
+    },
+    "repository": "https://github.com/mdn/beginner-html-site-styled",
+    "slug": "acceptance-clean",
+    "snapshot_commit": "f27600f67afa71364f0b2a36b34245f1a1c91808",
+    "source_transport": "github-archive-verified-tree",
+    "status": "deployed",
+    "tree_sha": "3810bc24c6161cb9b7b1eb723dd14d50695e08bc",
+    "usage": {
+      "completion_tokens": 179,
+      "prompt_cache_hit_tokens": 384,
+      "prompt_cache_miss_tokens": 138,
+      "prompt_tokens": 522,
+      "prompt_tokens_details": {
+        "cached_tokens": 384
+      },
+      "total_tokens": 701
+    }
+  },
+  "new_resource_from_scratch": true,
+  "http_200": true,
+  "engine_status": "running:healthy",
+  "cleaned_up": true
+}

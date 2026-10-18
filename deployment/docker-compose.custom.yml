@@ -1,0 +1,20 @@
+services:
+  coolify:
+    environment:
+      HELPER_IMAGE: song-deploy/coolify-helper
+    ports: !override
+      - "127.0.0.1:8000:8080"
+      - "127.0.0.1:6001:6001"
+      - "127.0.0.1:6002:6002"
+    mem_limit: 1280m
+    cpus: 1.0
+  postgres:
+    image: public.ecr.aws/docker/library/postgres:15-alpine
+    mem_limit: 256m
+    cpus: 0.5
+  redis:
+    image: public.ecr.aws/docker/library/redis:7-alpine
+    mem_limit: 128m
+    cpus: 0.25
+    healthcheck:
+      test: ["CMD-SHELL", "REDISCLI_AUTH=\"$${REDIS_PASSWORD}\" redis-cli ping | grep -q PONG"]
