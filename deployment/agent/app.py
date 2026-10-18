@@ -21,6 +21,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+import access
+
 from flask import Flask, jsonify, request, send_from_directory, session
 
 CONFIG = json.loads(Path(os.environ.get('SONG_CONFIG', '/etc/song-deploy/agent.json')).read_text())
@@ -367,6 +369,7 @@ def jobs():
                     if state=='failed':job['error']='构建未成功，请在部署引擎查看日志。'
                     save(job)
             except Exception:pass
+        job['access']=access.policy(job['id'])
         result.append(job)
     return jsonify(result)
 
@@ -384,12 +387,13 @@ def create_job():
     directory=project_path(data.get('directory','/'))
     with lock:
         existing=[json.loads(p.read_text()) for p in STATE.glob('*.json')]
-        if any(j['slug']==slug and j['status']!='failed' for j in existing):
+        if any(j['slug']==slug for j in existing):
             raise ValueError('项目名已存在，请换一个名称')
         if any(j['status'] in ['queued','analyzing'] for j in existing):
             return jsonify(error='正在分析另一个项目，请稍后再试'),409
         job={'id':secrets.token_hex(12),'repository':repository,'branch':branch,
              'slug':slug,'directory':directory,'status':'queued','created_at':int(time.time())}
+        access.set_policy(job['id'], data.get('access', {'mode':'public','accounts':[]}))
         save(job);pool.submit(analyze,job)
     return jsonify(job),202
 
@@ -403,6 +407,28 @@ def deploy_job(job_id):
         job.pop('error',None);job.pop('deployment_uuid',None)
         job['status']='deploying';save(job);pool.submit(deploy,job)
     return jsonify(job),202
+
+
+@app.get('/api/accounts')
+def accounts():return jsonify(sorted(access.read_security()['accounts']))
+
+
+@app.post('/api/accounts')
+def add_account():
+    data=request.get_json() or {}
+    return jsonify(username=access.create_account(data.get('username'),data.get('password'))),201
+
+
+@app.post('/api/accounts/<username>/delete')
+def remove_account(username):
+    access.delete_account(username)
+    return jsonify(ok=True)
+
+
+@app.post('/api/jobs/<job_id>/access')
+def update_access(job_id):
+    load(job_id)
+    return jsonify(access.set_policy(job_id,request.get_json()))
 
 
 @app.get('/preview/<job_id>/')

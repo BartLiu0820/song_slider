@@ -1,0 +1,18 @@
+{
+  "http": {
+    "middlewares": {
+      "song-access": {
+        "forwardAuth": {
+          "address": "http://172.21.0.1:9101/check",
+          "trustForwardHeader": false,
+          "authRequestHeaders": [
+            "Authorization"
+          ],
+          "authResponseHeaders": [
+            "Authorization"
+          ]
+        }
+      }
+    }
+  }
+}

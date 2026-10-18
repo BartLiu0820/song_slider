@@ -1,0 +1,14 @@
+{
+  "policy_requires_csrf": true,
+  "anonymous_blocked": true,
+  "asset_blocked": true,
+  "unlisted_account_blocked": true,
+  "listed_account_allowed": true,
+  "public_domain_alias_protected": true,
+  "forwarded_host_spoof_blocked": true,
+  "root_showcase_unchanged": true,
+  "viewer_cannot_login_admin": true,
+  "revoked_account_blocked": true,
+  "delete_last_user_not_public": true,
+  "switch_to_public": true
+}

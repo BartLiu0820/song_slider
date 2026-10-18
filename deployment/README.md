@@ -71,3 +71,21 @@ Coolify API token 本轮签发时设置了 90 天有效期。到期需在 Coolif
 - 本轮数据库和配置备份位于 `/var/backups/song-deploy/20261018`，仅 root 可读。
 
 实现依据：[Coolify 4.4.6 源码](https://github.com/coollabsio/coolify/tree/v4.4.6)、[DeepSeek 官方 API](https://api-docs.deepseek.com/)。
+
+## 简化首页与项目访问权限（2026-10-18 更新）
+
+登录后只显示项目卡片；右上角「添加新部署」进入独立表单。点击卡片查看状态、打开项目、设置访问权限，构建参数和日志入口收在「部署详情」中。
+
+在项目详情选择「指定账号访问」，点击「管理访问账号」创建账号，关闭弹窗后勾选账号并保存。访问账号与后台管理员分离，仅能访问获授权的预览项目。浏览器访问受限项目时弹出账号密码框；删除账号会立即撤销权限。删除最后一个账号后项目仍保持受限，不会自动公开。当前示例保持公开，临时验收账号已删除。
+
+权限由 `song-deploy-access.service` 在 `172.21.0.1:9101` 提供校验，通过 Traefik HTTP/HTTPS 入口的 `song-access@file` 中间件覆盖整个请求路径，包括静态资源、API 和 WebSocket 握手。工作台创建的新项目自动受入口校验覆盖。未登记的域名拒绝通过；现有主站和 Coolify 管理入口保留原认证行为。限制项目的 Basic 凭据在代理转发前移除，公开项目保留自身 Authorization 请求头。实现参考 [Traefik ForwardAuth](https://doc.traefik.io/traefik/reference/routing-configuration/http/middlewares/forwardauth/)。
+
+账号盐及密码哈希、项目允许列表保存在 `/var/lib/song-deploy/security/access.json`，文件权限 0600。独立鉴权服务只读状态，不能读取 `/etc/song-deploy` 中的模型或部署引擎密钥。它故障时入口拒绝请求，不降级为公开。工作台更新任务状态不会覆盖权限。后台仅管理员可访问，不向访客开放部署 API。
+
+当前私有预览仅通过 SSH 加密通道使用；公网可用后，应先启用 HTTPS 再分享受限项目，不能通过公网明文 HTTP 传输密码。浏览器 Basic 登录由浏览器缓存，切换账号可用新的隐私窗口。这版入口认证会占用受限项目的 Authorization 头，依赖自己 Bearer/Basic 头的 API 客户端需进一步适配；通常使用 Cookie 登录的网页不受这个头冲突影响。容器共享网络仍属于个人可信项目环境，不是用于运行敌对租户代码的隔离平台。
+
+`greatsong.online/项目名` 不能解决当前未备案拦截。阿里云拦截的是未备案域名在内地服务器上的网站访问，主域名和其路径同样受影响。依据：[阿里云备案与域名常见问题](https://help.aliyun.com/zh/icp-filing/basic-icp-service/support/for-the-record-domain-faq/)。路径路由需另外适配应用 base path、资源和 Cookie，因此本次继续使用独立预览域名，没有宣称路径访问能绕过备案。
+
+升级入口与界面执行 `python3 deployment/upgrade_workbench.py`，会先备份当前代码、权限及代理，再更新代理文件与 Coolify 中保存的代理配置。只更新工作台代码仍可使用 `install_agent.py`，已有鉴权服务由独立 systemd 单元运行。首次恢复整套服务需再运行升级脚本。
+
+验收：13 项原边界及后台权限测试、8 项预览权限单元测试通过；`access-acceptance.json` 的 12 项真实入口检查通过。`verify_header_boundary.py` 实测私有预览密码不会进入项目，公开项目的应用认证头正常保留。旧主站、两个运行中的示例容器保持可用。

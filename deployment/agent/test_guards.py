@@ -84,5 +84,26 @@ class GuardTests(unittest.TestCase):
         self.assertEqual(result.status_code,202)
         self.assertNotIn('deployment_uuid',agent.load(job['id']))
 
+    def test_accounts_and_policy_require_admin_and_csrf(self):
+        client=agent.app.test_client()
+        self.assertEqual(client.get('/api/accounts').status_code,401)
+        self.assertEqual(client.post('/api/accounts',json={}).status_code,401)
+        logged=client.post('/api/login',json={'email':cfg['email'],'password':'test-password'})
+        self.assertEqual(client.post('/api/accounts',json={}).status_code,403)
+        headers={'X-CSRF-Token':logged.json['csrf']}
+        created=client.post('/api/accounts',json={'username':'viewer-test','password':'long-preview-password'},headers=headers)
+        self.assertEqual(created.status_code,201)
+        self.assertEqual(client.get('/api/accounts').json,['viewer-test'])
+        viewer=agent.app.test_client()
+        self.assertEqual(viewer.post('/api/login',json={'email':'viewer-test','password':'long-preview-password'}).status_code,401)
+        job={'id':'e'*24,'slug':'protected-app','status':'ready'}
+        agent.save(job)
+        endpoint='/api/jobs/'+job['id']+'/access'
+        self.assertEqual(client.post(endpoint,json={'mode':'restricted','accounts':['viewer-test']},headers=headers).status_code,200)
+        agent.save({**job,'status':'deployed'})
+        self.assertEqual(agent.access.policy(job['id'])['mode'],'restricted')
+        self.assertEqual(client.post('/api/accounts/viewer-test/delete',json={},headers=headers).status_code,200)
+        self.assertEqual(agent.access.policy(job['id']),{'mode':'restricted','accounts':[]})
+
 
 if __name__=='__main__':unittest.main()

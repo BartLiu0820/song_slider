@@ -1,9 +1,12 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>宋 · 部署工作台</title><link rel="stylesheet" href="/assets/style.css"><script src="/assets/app.js" defer></script></head>
-<body><header><div class="brand">宋 <span>DEPLOY</span></div><div class="header-right"><span id="model">个人部署工作台</span><button id="logout" hidden>退出</button></div></header>
-<main><section class="intro"><div class="eyebrow">FROM REPOSITORY TO PREVIEW</div><h1>让项目，跑起来。</h1><p>交给 AI 识别项目结构，查看部署方案，再交给服务器构建运行。</p></section>
-<div class="notice">当前通过 SSH 通道访问。服务器域名尚未备案，公网预览和 HTTPS 发布待恢复。</div>
-<p id="message" role="status"></p>
-<section id="login-panel" class="card narrow"><h2>登录工作台</h2><form id="login-form"><label>账号<input name="email" type="email" autocomplete="username" required></label><label>密码<input name="password" type="password" autocomplete="current-password" required></label><button class="primary" type="submit">登录</button></form></section>
-<div id="workspace" hidden><section class="card"><div class="section-head"><h2>新建部署</h2><span>DeepSeek 识别 · Coolify 执行</span></div><form id="repo-form"><label>公开 GitHub 仓库<input name="repository" type="url" placeholder="https://github.com/owner/repository" required></label><div class="fields"><label>分支<input name="branch" placeholder="自动识别默认分支"></label><label>项目名 / 子域名<input name="slug" placeholder="my-project" pattern="[a-z][a-z0-9-]{1,38}[a-z0-9]" required></label><label>应用目录（可选）<input name="directory" value="/" placeholder="/ 或 /apps/web"></label></div><p class="hint">静态网页、已有 Dockerfile，以及常规 Nixpacks 项目可生成方案。数据库、持久化和必需密钥会先标为待配置。仓库清单与选定配置文件会发送至 DeepSeek 进行分析。</p><button class="primary" type="submit">识别项目</button></form></section><section class="projects"><div class="section-head"><h2>部署任务</h2><span>构建任务串行执行</span></div><div id="jobs"><p class="empty">还没有项目。粘贴第一个仓库开始。</p></div></section></div>
-<footer>个人测试环境 · 每个应用独立容器 · 分析结果需查看后部署</footer></main></body></html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>宋 · 部署工作台</title><link rel="stylesheet" href="/assets/style.css"><script src="/assets/app.js" defer></script></head>
+<body>
+<header><a class="brand" href="#/">宋 <span>DEPLOY</span></a><div class="header-right"><span id="identity"></span><button id="logout" class="quiet" hidden>退出</button></div></header>
+<main>
+<p id="message" role="status" hidden></p>
+<section id="login-panel" class="panel login" hidden><span class="eyebrow">YOUR PROJECTS, IN ONE PLACE</span><h1>登录部署工作台</h1><p>从仓库到预览，在这里管理你的项目。</p><form id="login-form"><label>账号<input name="email" type="email" autocomplete="username" required></label><label>密码<input name="password" type="password" autocomplete="current-password" required></label><button class="primary full" type="submit">登录</button></form></section>
+<div id="workspace" hidden></div>
+</main>
+<dialog id="account-dialog"><div class="section-head"><h2>访问账号</h2><button id="close-accounts" aria-label="关闭">关闭</button></div><p class="hint">这些账号仅用于查看你授权的项目，不能管理部署。</p><div id="account-list"></div><form id="account-form"><label>新账号<input name="username" autocomplete="off" pattern="[a-zA-Z0-9][a-zA-Z0-9@._-]{2,79}" placeholder="例如 tester 或邮箱" required></label><label>密码<input name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" placeholder="至少 12 位" required></label><p id="account-message" role="status"></p><button class="primary" type="submit">创建账号</button></form></dialog>
+</body></html>

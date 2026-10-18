@@ -37,7 +37,9 @@
         "--api.dashboard=false",
         "--certificatesresolvers.letsencrypt.acme.httpchallenge=true",
         "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http",
-        "--certificatesresolvers.letsencrypt.acme.storage=/traefik/acme.json"
+        "--certificatesresolvers.letsencrypt.acme.storage=/traefik/acme.json",
+        "--entrypoints.http.http.middlewares=song-access@file",
+        "--entrypoints.https.http.middlewares=song-access@file"
       ],
       "healthcheck": {
         "test": [

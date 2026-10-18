@@ -1,0 +1,27 @@
+[Unit]
+Description=Song preview access gate
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+User=song-deploy
+Group=song-deploy
+WorkingDirectory=/opt/song-deploy/agent
+ExecStart=/opt/song-deploy/venv/bin/gunicorn --bind 172.21.0.1:9101 --workers 1 --threads 4 --timeout 30 access:auth_app
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=SONG_STATE=/var/lib/song-deploy
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadOnlyPaths=/var/lib/song-deploy
+InaccessiblePaths=/etc/song-deploy
+MemoryMax=128M
+CPUQuota=75%
+TasksMax=48
+
+[Install]
+WantedBy=multi-user.target
