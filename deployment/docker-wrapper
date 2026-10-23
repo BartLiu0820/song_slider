@@ -8,4 +8,20 @@ if [ "$#" -eq 2 ] && [ "$1" = pull ] && [ "$2" = nginx:alpine ]; then
   /usr/bin/docker tag public.ecr.aws/docker/library/nginx:alpine nginx:alpine
   exit 0
 fi
+# Nixpacks generates this exact setup instruction. Use the signed upstream cache
+# mirrored by SJTUG, retaining the official cache as fallback. Repository Dockerfiles
+# and all Docker CLI argument boundaries are left to the original CLI.
+if [ "$#" -gt 1 ] && [ "$1" = build ]; then
+  previous=''
+  for argument in "$@"; do
+    if [ "$previous" = -f ]; then
+      case "$argument" in
+        /artifacts/*/.nixpacks/Dockerfile)
+          sed -i "s|^RUN nix-env -if \\.nixpacks/|RUN nix-env --option substituters 'https://mirror.sjtu.edu.cn/nix-channels/store?priority=10 https://cache.nixos.org' -if .nixpacks/|" "$argument"
+          ;;
+      esac
+    fi
+    previous="$argument"
+  done
+fi
 exec /usr/bin/docker "$@"

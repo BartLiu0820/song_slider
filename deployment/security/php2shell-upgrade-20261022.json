@@ -1,0 +1,25 @@
+{
+  "success": true,
+  "started_at": "2026-10-22T12:19:20.634710+00:00",
+  "completed_at": "2026-10-22T12:20:02.045770+00:00",
+  "backup": "/var/backups/song-deploy/php2shell-20261022T120151Z",
+  "coolify_version": "4.4.7",
+  "php_cli": "PHP 8.4.27 (cli) (built: Oct 21 2026 13:55:17) (NTS)",
+  "php_fpm": "PHP 8.4.27 (fpm-fcgi) (built: Oct 21 2026 13:55:17) (NTS)",
+  "image_id": "sha256:57fe2c8501e85ac5490b406a0f0c58dc89d0f6990295aba82cf4043f88e8b90f",
+  "image_digest": [
+    "ghcr.io/coollabsio/coolify@sha256:57fe2c8501e85ac5490b406a0f0c58dc89d0f6990295aba82cf4043f88e8b90f"
+  ],
+  "health": "healthy",
+  "other_container_ids_unchanged": {
+    "/vnuq3dmhxputqxwziyuiygic-20261022T101318": true,
+    "/coolify-sentinel": true,
+    "/roraq4jjvanxqhzkwk5wgumo-20261021T093426": true,
+    "/coolify-proxy": true,
+    "/song-slider": true,
+    "/coolify-db": true,
+    "/coolify-redis": true
+  },
+  "loopback_ports_preserved": true,
+  "custom_configuration_preserved": true
+}

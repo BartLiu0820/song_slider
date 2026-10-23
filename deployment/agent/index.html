@@ -1,11 +1,16 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>宋 · 部署工作台</title><link rel="stylesheet" href="/assets/style.css"><script src="/assets/app.js" defer></script></head>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>宋 · 部署工作台</title><style>
+/* BOOT_STYLE */
+html{background:#f6f7f3;color:#233c32;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif}body{margin:0}body>header{height:70px;padding:0 30px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e3e8e2}a{color:#315d47;text-decoration:none}[hidden]{display:none!important}.boot-panel{min-height:65vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;box-sizing:border-box}.boot-panel h1{font-size:22px;margin:22px 0 12px}.boot-panel p{font-size:13px;color:#7c8981;line-height:1.8;max-width:340px}.boot-spinner{width:30px;height:30px;border:3px solid #dce5d6;border-top-color:#315d47;border-radius:50%;animation:boot-spin 1s linear infinite}.boot-retry{margin-top:16px;font-size:13px;padding:8px 18px;border:1px solid #d5dfce;border-radius:8px}.boot-panel[data-state=error] .boot-spinner{animation:none;border-color:#b68866}.boot-panel[data-state=error] h1{color:#8a6448}@keyframes boot-spin{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.boot-spinner{animation:none}}
+</style><script src="/assets/boot.js" defer></script></head>
 <body>
-<header><a class="brand" href="#/">宋 <span>DEPLOY</span></a><div class="header-right"><span id="identity"></span><button id="logout" class="quiet" hidden>退出</button></div></header>
+<header><a class="brand" href="#/">宋 <span>DEPLOY</span></a><div class="header-right"><span id="identity"></span><a id="server-resources" href="#/resources" hidden>服务器空间</a><button id="logout" class="quiet" hidden>退出</button></div></header>
 <main>
+<section id="boot-panel" class="boot-panel" role="status" aria-live="polite" aria-busy="true"><span class="boot-spinner" aria-hidden="true"></span><h1 id="boot-title">正在打开部署工作台</h1><p id="boot-detail">正在加载界面与连接服务，请稍候…</p><a class="boot-retry" href="">重新加载</a></section>
+<noscript>部署工作台需要启用 JavaScript。请启用后重新加载页面。</noscript>
 <p id="message" role="status" hidden></p>
-<section id="login-panel" class="panel login" hidden><span class="eyebrow">YOUR PROJECTS, IN ONE PLACE</span><h1>登录部署工作台</h1><p>从仓库到预览，在这里管理你的项目。</p><form id="login-form"><label>账号<input name="email" type="email" autocomplete="username" required></label><label>密码<input name="password" type="password" autocomplete="current-password" required></label><button class="primary full" type="submit">登录</button></form></section>
+<section id="login-panel" class="panel login" hidden><span class="eyebrow">YOUR PROJECTS, IN ONE PLACE</span><h1>登录部署工作台</h1><p>从仓库到预览，在这里管理你的项目。</p><form id="login-form"><label>账号<input name="email" type="text" autocomplete="username" required></label><label>密码<input name="password" type="password" autocomplete="current-password" required></label><button class="primary full" type="submit">登录</button></form></section>
 <div id="workspace" hidden></div>
 </main>
 <dialog id="account-dialog"><div class="section-head"><h2>访问账号</h2><button id="close-accounts" aria-label="关闭">关闭</button></div><p class="hint">这些账号仅用于查看你授权的项目，不能管理部署。</p><div id="account-list"></div><form id="account-form"><label>新账号<input name="username" autocomplete="off" pattern="[a-zA-Z0-9][a-zA-Z0-9@._-]{2,79}" placeholder="例如 tester 或邮箱" required></label><label>密码<input name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" placeholder="至少 12 位" required></label><p id="account-message" role="status"></p><button class="primary" type="submit">创建账号</button></form></dialog>

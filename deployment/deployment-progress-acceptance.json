@@ -1,0 +1,553 @@
+{
+  "deployed": true,
+  "stage_updates": [
+    "构建任务已提交，正在等待引擎输出日志…"
+  ],
+  "log_versions": 3,
+  "workbench_errors": [],
+  "preview_status": 200,
+  "preview_title": "绿色循环圈外传 H5",
+  "preview_errors": [],
+  "asset_failures": [
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/bandit/bandit.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/scarab/scarab.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/militia/militia.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/spiderblack/spiderblack.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/murlocmutant/murlocmutant_v1.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/critters/skink/skink.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/footman/footman.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/spiderblue/spiderblue.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/priest/priest.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/centaurarcher/centaurarcher.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/orc/shaman/shaman.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/critters/bloodelfpeasant/bloodelfpeasant.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/rockgolem/rockgolem.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/dragonspawnblue/dragonspawnblue.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/orc/grunt/grunt.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/sorceress/sorceress.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/orc/kotobeast/kotobeast.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/shade/shade.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/unbroken/unbroken.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/other/dranaiwhite/dranaiwhite.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/spidergreen/spidergreen.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/bloodelfspellthief/bloodelfspellthief.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/knight/knight.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/rifleman/rifleman.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/other/dranai/dranai.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/orc/witchdoctor/witchdoctor.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/revenantofthewaves/revenantofthewaves.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/orcwarlockred/orcwarlockred.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/nerubian/nerubian.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/mortarteam/mortarteam.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/orc/wolfrider/wolfrider.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/warwagon/warwagon.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/naga/nagasummoner/nagasummoner.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/direwolf/direwolf.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/whitewolf/whitewolf.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/orc/headhunter/headhunter.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/orc/tauren/tauren.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/demon/eredarwarlock/eredarwarlock.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/centaur/centaur.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/nightelf/owlscout/owlscout.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/medivh/medivh.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/demon/chaospeon/chaospeon.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/thecaptain/thecaptain.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/sasquatch/sasquatch.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/demon/chaoswolfrider/chaoswolfrider.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/zombie/zombie.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/bristleback/bristleback.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/corruptedent/corruptedent.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/skeletonarcher/skeletonarcher.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/cryptfiend/cryptfiend.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/satyrhellcaller/satyrhellcaller.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/orc/spiritwalker/spiritwalker.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/murlocflesheater/murlocflesheater.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/murlocwarrior/murlocwarrior.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/other/dalaranreject/dalaranreject.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/archnathid/archnathid.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/banshee/banshee.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/necromancer/necromancer.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/skeleton/skeleton.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/demon/felhound/felhound.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/stormpandarenbrewmaster/stormpandarenbrewmaster.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/skeletonorc/skeletonorc.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/skeletonmage/skeletonmage.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/mammothblack/mammothblack.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/earthpandarenbrewmaster/earthpandarenbrewmaster.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/ogremagi/ogremagi.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/bronzedragon/bronzedragon.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/ghoul/ghoul.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/demon/demoness/demoness.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/demon/demonessblue/demonessblue.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/abomination/abomination.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/golemstatue/golemstatue.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/meatwagon/meatwagon.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/assassin/assassin.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/lobstrokkred/lobstrokkred.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/lobstrokkgreen/lobstrokkgreen.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/critters/hydralisk/hydralisk.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/nightelf/mountaingiant/mountaingiant.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/orc/battroll/battroll.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/revenant/revenant.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/kobold/kobold.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/irongolem/irongolem.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/nightelf/shandris/shandris.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/nightelf/huntress/huntress.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/hydra/hydra.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/nightelf/ballista/ballista.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/infernalcannoncannon/infernalcannoncannon.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/nightelf/druidoftheclaw/druidoftheclaw.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/quillbeast/quillbeast.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/nightelf/ent/ent.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/firepandarenbrewmaster/firepandarenbrewmaster.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/nightelf/vengeance/vengeance.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/banditlord/banditlord.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/gyrocopter/gyrocopter.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/humanbattleship/humanbattleship.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/seagiant/seagiant.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/human/waterelemental/waterelemental.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/dragonseaturtle/dragonseaturtle.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/naga/snapdragon/snapdragon.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/demon/chaosorcrange/chaosorcrange.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/frostwyrm/frostwyrm.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/spidercrabcreep/spidercrabcreep.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/demon/felgaurdblue/felgaurdblue.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/icons/item-I00S.svg",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/orc/spiritwyvern/spiritwyvern.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/voidwalker/voidwalker.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/ogrelord/ogrelord.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/tichondrius/tichondrius.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/icetroll/icetroll.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/darktrolltrapper/darktrolltrapper.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/pandarenbrewmaster/pandarenbrewmaster.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/nightelf/faeriedragon/faeriedragon.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/nightelf/druidofthetalon/druidofthetalon.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/undead/undeadairbarge/undeadairbarge.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/naga/windserpent/windserpent.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/greendragon/greendragon.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/buildings/nightelf/ancientofwar/ancientofwar.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/nightelf/riddenhippogryph/riddenhippogryph.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/reddragon/reddragon.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/azuredragon/azuredragon.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/doodads/cinematic/rockinarthas/rockinarthas.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/critters/villagerkid/villagerkid.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/polarfurbolg/polarfurbolg.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/polarfurbolgtracker/polarfurbolgtracker.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/demon/felgaurd/felgaurd.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/owlbear/owlbear.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/demon/infernal/infernal.mdx",
+      "status": 404
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3/units/creeps/bronzedragonwelp/bronzedragonwelp.mdx",
+      "status": 404
+    }
+  ],
+  "gameplay": {
+    "access_path": "SSH tunnel to deployed server",
+    "runtime_errors": [],
+    "assets_loaded": 228,
+    "sprite_assets_loaded": 10,
+    "main_files": [
+      "/style.css",
+      "/assets/manifest.js",
+      "/assets/war3_icons.js",
+      "/assets/w3missiles.js",
+      "/assets/w3portraits.js",
+      "/assets/sprites.js",
+      "/assets/w3terrain.js",
+      "/data.js",
+      "/terrain.js",
+      "/fx.js",
+      "/units3d.js",
+      "/vendor/mdx-m3-viewer-5.12.0.min.js",
+      "/game.js"
+    ],
+    "game_text": "任务(F9)\n暂停(P)\n速度 1x\n立即开始\n60000\n10\n0/20\n5\n演示\n准备阶段\n00:22\n当前怪数: 0（最大 40）\nPerfect 0\n准备阶段：选中守卫者，在出怪口附近建塔！\n+\n−\n500000 / 500000\n10 / 10\n循环圈守卫者\n不死族\n攻击力：\n1 - 1\n护甲：\n无敌的\n移动速度：500\n状态：待命\nM\nS\nF\nT\nB\nR\nU"
+  },
+  "asset_note": "当前源提交没有 MDX 文件；部分模型和一个图标请求 404，预生成精灵资源已加载。",
+  "public_recheck": {
+    "http_status": 200,
+    "seconds": 2.405196,
+    "browser_retries": "Two independent headless browser navigations timed out; initial HTTPS screenshot succeeded; gameplay checked through SSH tunnel."
+  }
+}

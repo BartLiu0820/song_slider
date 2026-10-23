@@ -1,0 +1,14 @@
+{
+  "source": "https://ghcr.io/v2/coollabsio/coolify-helper/manifests/1.0.18",
+  "index_digest": "sha256:dc088de51b3e676aef14131ba6a6e3d988b7f7f72b6eff75fd21f0bb51939f1e",
+  "platform_manifest_digest": "sha256:b395f5a483449a28e6b4d5c3d679c5993460500a480b322032c862ec54c78340",
+  "image_config_digest": "sha256:6416193e5ee619b3ae5a7874e9bd371d3d1aa5225399d90ee3fab10173d0d25b",
+  "platform": "linux/amd64",
+  "all_layer_digests_verified": true,
+  "all_uncompressed_diff_ids_verified": true,
+  "archive_sha256": "d5aad895a71152d98c25b38923eb04390610cd6362cbaae8c22b076596a34d9f",
+  "archive_bytes": 209600713,
+  "loaded_manifest_digest": "sha256:f6da33b7c390ded98ed34ef7535c41a0a1b8d97da5e2b208a623573fa567c6d7",
+  "loaded_config_verified": true,
+  "loaded_diff_ids_verified": true
+}

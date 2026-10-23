@@ -1,0 +1,398 @@
+{
+  "checked_at": "2026-10-22T12:20:44.348741+00:00",
+  "login": true,
+  "secure_cookie": true,
+  "real_deployment": {
+    "id": "9a9e802910b63dd1afe88442",
+    "slug": "greencircle",
+    "status": "deployed",
+    "deployed_commit": "28c4703cbc6a9bc10a59e2aa9540821685073035",
+    "deployment_uuid": "odim2ngnz3mkef1st3wqlwjr",
+    "verification": "部署与健康检查通过，预览首页可访问。"
+  },
+  "deployment_logs_readable": true,
+  "web_checks": [
+    {
+      "url": "https://greatsong.online/",
+      "status": 200,
+      "sha256": "eb62a58e315a3d04bd758322f0f7518596a545f5c65dd8fc1e80b5d6f573bb27",
+      "unchanged": true,
+      "bytes": 39802
+    },
+    {
+      "url": "https://deploy.greatsong.online/",
+      "status": 200,
+      "sha256": "d54fdc1d228bf0e02ba3392d59b82e01aceaf72f094c112d45e1e8d8564c444d",
+      "unchanged": true,
+      "bytes": 3345
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/",
+      "status": 200,
+      "sha256": "037a57b05d438ed3452643b132cd3587928a70f5d06f9304f0fe491a2b1277de",
+      "unchanged": true,
+      "bytes": 293527
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/",
+      "status": 200,
+      "sha256": "c3caa409c1b2475ff812b4a5b243f61fa457d8ab29dedb098e3318dc0734adca",
+      "unchanged": true,
+      "bytes": 3180
+    },
+    {
+      "url": "https://greatsong.online/frames/preview-01.jpg",
+      "status": 200,
+      "sha256": "b91e652b091ba4e4153011152e60ed5d0ac7b429a3b0ef059cfc7d0630c2392d",
+      "unchanged": true,
+      "bytes": 21394
+    },
+    {
+      "url": "https://deploy.greatsong.online/assets/boot.js",
+      "status": 200,
+      "sha256": "7cf0ecbaa98110944e1c5b5095cbef9b09429536fdf71e4010d8bfe53ad78e0c",
+      "unchanged": true,
+      "bytes": 1113
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/wire-loop.css",
+      "status": 200,
+      "sha256": "0d8b1470186886654b3ece7ea8f6a766d241b8b43d2b29b7d171e66fc69e3a5f",
+      "unchanged": true,
+      "bytes": 4522
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/brand/little-tail-team-mark.png",
+      "status": 200,
+      "sha256": "acb2eddfb9a099da8c6c3f299d2cb708ff7f37fa58ac1a3b4c1aff9a89afe09c",
+      "unchanged": true,
+      "bytes": 231505
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/buttons/icon-4.png",
+      "status": 200,
+      "sha256": "08590c50680b01d34d961423ccedc8d2cbfb8ed8b62f572bc2b4fd8b9e82e597",
+      "unchanged": true,
+      "bytes": 90610
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/buttons/icon-5.png",
+      "status": 200,
+      "sha256": "25a5aeef1433edf05e7ad860c38aac5c1a034fb896328c57a093b28bcf5f0463",
+      "unchanged": true,
+      "bytes": 86681
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/control-icons/parent-control.png",
+      "status": 200,
+      "sha256": "0464a66d64e876669c45c0331f359b81f2082e3ff0b2501af285a88f63e0c75f",
+      "unchanged": true,
+      "bytes": 86014
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/buttons/icon-1.png",
+      "status": 200,
+      "sha256": "79ffaf1c3bcb0fb8a4878ee274809da5b35b591ba751ff3a8fe61f42fa7e0ab0",
+      "unchanged": true,
+      "bytes": 86048
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/control-icons/back-control.png",
+      "status": 200,
+      "sha256": "3137ce55debdd9e07c1080878dbc16fc2f013103d00a0651df6f56fbe0f0d4bb",
+      "unchanged": true,
+      "bytes": 1229051
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/instruction-icons/find-hand.png",
+      "status": 200,
+      "sha256": "32176bbcf07161f166e1071ed4e57346cf36a517bc027cf0748b35f0e5f2960b",
+      "unchanged": true,
+      "bytes": 149863
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/characters/bluey/idle/idle-1.png",
+      "status": 200,
+      "sha256": "e571130a94864158ab3bb132481c0789dfbea258f020c6530506898a82e5bb0b",
+      "unchanged": true,
+      "bytes": 19464
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/characters/bingo/idle/idle-1.png",
+      "status": 200,
+      "sha256": "ecbd723db51eefe7aca71658dc3186b7c5628285ee8720b36f3c787b148c3e83",
+      "unchanged": true,
+      "bytes": 23091
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/characters/grey-puppy/idle/idle-1.png",
+      "status": 200,
+      "sha256": "42e4545aa54082563a6d149782da2a4ba0be0cdde38c0b1e2864872f97ce6f79",
+      "unchanged": true,
+      "bytes": 29596
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/characters/blue-heeler-dad/idle/idle-1.png",
+      "status": 200,
+      "sha256": "714d37e989e5344b99cc596e0d5da43c8ec284125dabaf62b07afbb98d98e861",
+      "unchanged": true,
+      "bytes": 26100
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/characters/garden-girl/idle/idle-1.png",
+      "status": 200,
+      "sha256": "301a6cc08f08311948da57337f445e5feb5482bccf319ffc95588149fa35edae",
+      "unchanged": true,
+      "bytes": 22681
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/characters/lilac-girl/idle/idle-1.png",
+      "status": 200,
+      "sha256": "01f7238fe04914d17749cb22760af17e9663fc51cb7802073d121ba3d857390a",
+      "unchanged": true,
+      "bytes": 26176
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/level-icons/creek-jump.png",
+      "status": 200,
+      "sha256": "89639571c4edbfe1ed8d96f4ee7341e644f1485163a1a15589e9e17509756ad5",
+      "unchanged": true,
+      "bytes": 196680
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/characters/bluey/jump/jump-3.png",
+      "status": 200,
+      "sha256": "446bcde80a37013bb6bca2c92c4546ff972927ab9b4354a3d3e0299458747abf",
+      "unchanged": true,
+      "bytes": 20677
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/level-icons/firefly-dodge.png",
+      "status": 200,
+      "sha256": "1b51218242b5d78d928b3e13163c009a11cc0058f00c2bcb385ed8900f712977",
+      "unchanged": true,
+      "bytes": 223305
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/characters/bluey/hover/hover-2.png",
+      "status": 200,
+      "sha256": "5632215ffdd558e4b86a78c2662739b619659ba2fb645c50976513e579698b4f",
+      "unchanged": true,
+      "bytes": 18927
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/level-icons/treetop-bounce.png",
+      "status": 200,
+      "sha256": "a7661b6fa02eb41f8a299b62b6db84118d291348df6b067eefa0dd5085e14956",
+      "unchanged": true,
+      "bytes": 150474
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/characters/bluey/jump/jump-2.png",
+      "status": 200,
+      "sha256": "c862fadfb77cb3474263932e4ea93eccd5c84c9ac2af939ad52c4b1139cca7d2",
+      "unchanged": true,
+      "bytes": 20025
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/wire-loop/mode-icon/mode-icon.png",
+      "status": 200,
+      "sha256": "cc5a1d0896ce85fc33c6017524055da787d44e83b1c5dcfff886d852681c38b3",
+      "unchanged": true,
+      "bytes": 132527
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/instruction-icons/pose-transition.png",
+      "status": 200,
+      "sha256": "c08c1923480ed50d531f415eea62956cab4dff4f087b4c8ee47b6f070d44a120",
+      "unchanged": true,
+      "bytes": 103569
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/characters/bluey/celebrate/celebrate-1.png",
+      "status": 200,
+      "sha256": "7bf953d63822418aeafce29e479372e3b6f27c4456de8c47af8f441635b75329",
+      "unchanged": true,
+      "bytes": 18651
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/buttons/medium/button-1.png",
+      "status": 200,
+      "sha256": "1db701856763454e96a155026f910c0f83d4d3daea4562ec2c44a17466b0e9e7",
+      "unchanged": true,
+      "bytes": 183200
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/buttons/medium/button-3.png",
+      "status": 200,
+      "sha256": "bd2e71e31461d4b6667c6f950f80ff6df75186dcd24e6bfc47c73d8c77b71930",
+      "unchanged": true,
+      "bytes": 194989
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/milestones/creek/badge.png",
+      "status": 200,
+      "sha256": "22eb31f8a648839f5dd736f08991c3d18fd314f7ad5662e369826f82819588b6",
+      "unchanged": true,
+      "bytes": 1083774
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/buttons/icon-6.png",
+      "status": 200,
+      "sha256": "f254dd7c7cf9076f9996f478eb004b120941ad0470f2023b68ed01929d59e015",
+      "unchanged": true,
+      "bytes": 83820
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/instruction-icons/fist-hold.png",
+      "status": 200,
+      "sha256": "84d928d6fc2e2b8c89b0d6851b9a72c3f0959c682f00e3bf31ad11c114b290c1",
+      "unchanged": true,
+      "bytes": 104174
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/characters/bingo/celebrate/celebrate-3.png",
+      "status": 200,
+      "sha256": "3423d745ff60ba1e0b5523029022a834d04dc58f6ce44609739d6a2a2f52a376",
+      "unchanged": true,
+      "bytes": 25056
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/assets/ui/buttons/medium/button-2.png",
+      "status": 200,
+      "sha256": "3ea4590267cc97f03f21e12fd5d0315f8df5e9fe4791198214a43a447bab9d77",
+      "unchanged": true,
+      "bytes": 195307
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/style.css?v=20261022f",
+      "status": 200,
+      "sha256": "9c0a9a129b9f5032da0b67d02275bb869ebcfd1f66f51f20f06617fe16949de6",
+      "unchanged": true,
+      "bytes": 25368
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/manifest.js?v=20261020b",
+      "status": 200,
+      "sha256": "2fc56cec8cb56d03419ac54d3de1cb50bf2f138a94a85f12c335c9e8435dbaa6",
+      "unchanged": true,
+      "bytes": 1185
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/war3_icons.js?v=20261022a",
+      "status": 200,
+      "sha256": "c585bb9c15fe93a7644b1cc17ca3744a8325a7e940c017116035d43cdc3cc799",
+      "unchanged": true,
+      "bytes": 24521
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/sprites.js?v=20261022a",
+      "status": 200,
+      "sha256": "7a039be1a68115569376b9365be58d21b296bf997f168b2a015ba334a9d6f708",
+      "unchanged": true,
+      "bytes": 309916
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3missiles.js?v=20261020b",
+      "status": 200,
+      "sha256": "669a8408f0fdf8c853887342c9f605958e1b79590dc9349b161dd6aba54a56fb",
+      "unchanged": true,
+      "bytes": 16528
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3portraits.js?v=20261020b",
+      "status": 200,
+      "sha256": "8893ca01669b8b2aae2d5361c4ab522eecd80361dfc6fb123eb5efaff3f5c1d0",
+      "unchanged": true,
+      "bytes": 35933
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/data.js?v=20261022b",
+      "status": 200,
+      "sha256": "40fd4c14d80e483de521d1bb335801c58454c87c5882e296945ce745224ebe54",
+      "unchanged": true,
+      "bytes": 106644
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/waves.js?v=20261022a",
+      "status": 200,
+      "sha256": "16c674470985fa4af2669951774082f463dc1a886b16b98890f4688ae6009459",
+      "unchanged": true,
+      "bytes": 106722
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3terrain.js?v=20261022a",
+      "status": 200,
+      "sha256": "7a1191935741c09ae85374de06ae60307f33aeaeb00217b9849a2d0013dc8d2b",
+      "unchanged": true,
+      "bytes": 1822
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/terrain.js?v=20261022c",
+      "status": 200,
+      "sha256": "b1c504947948168a99a5d9fdea2151a9298454fa6416e0e81bdb146d71825461",
+      "unchanged": true,
+      "bytes": 15979
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/fx.js?v=20261022b",
+      "status": 200,
+      "sha256": "9a0d1504ba842d775cc8f1b8cb487ff7c87064cd8f789ffa4d33f5fe793e1aec",
+      "unchanged": true,
+      "bytes": 42228
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/vendor/mdx-m3-viewer-5.12.0.min.js",
+      "status": 200,
+      "sha256": "fa7666a7221e48944f6f7f3b45b1d70d7797db5a99da03a2c822d70cb7c2f64c",
+      "unchanged": true,
+      "bytes": 950601
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/assets/w3sounds.js?v=20261021a",
+      "status": 200,
+      "sha256": "def9dfc08627e9e36b48f543eab30b677ca8347d36db3d2b9beed755a7b09422",
+      "unchanged": true,
+      "bytes": 45862
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/sound.js?v=20261021a",
+      "status": 200,
+      "sha256": "073158e203f67319008beeec8d666c6c4f2ecfc59886834bd1bdbb527e046691",
+      "unchanged": true,
+      "bytes": 5391
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/units3d.js?v=20261022d",
+      "status": 200,
+      "sha256": "e78618a3d77688104a58cba0eba6c76d416a8dd42e3c0e76bead55088689124d",
+      "unchanged": true,
+      "bytes": 18903
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/game.js?v=20261022p",
+      "status": 200,
+      "sha256": "f74539790568f15756f5ea6f2ec352577290e97800471c1a76471af8796dcbd2",
+      "unchanged": true,
+      "bytes": 238275
+    }
+  ],
+  "all_web_checks_pass": true,
+  "resource_api_readable": true,
+  "jobs_after": [
+    {
+      "id": "9a9e802910b63dd1afe88442",
+      "slug": "greencircle",
+      "status": "deployed",
+      "deployed_commit": "28c4703cbc6a9bc10a59e2aa9540821685073035",
+      "deployment_uuid": "odim2ngnz3mkef1st3wqlwjr"
+    },
+    {
+      "id": "d1f9f7853423aa45b37086cc",
+      "slug": "bluey",
+      "status": "deployed",
+      "deployed_commit": "0951fb6f0feed0f10829e1d4166e7cd23a0f19de",
+      "deployment_uuid": "ubwcwcgderrjadbs9w7vxzf5"
+    }
+  ]
+}

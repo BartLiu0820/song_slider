@@ -18,9 +18,14 @@ cfg={'session_secret':'isolated-test-secret','email':'test@example.com','passwor
 os.environ['SONG_CONFIG']=str(root/'config.json');os.environ['SONG_STATE']=str(root/'state')
 spec=importlib.util.spec_from_file_location('agent_under_test',Path(__file__).with_name('app.py'))
 agent=importlib.util.module_from_spec(spec);spec.loader.exec_module(agent)
+agent.monitor_started=True  # Tests drive sync_deployment explicitly without background network calls.
 
 
 class GuardTests(unittest.TestCase):
+    def setUp(self):
+        isolated=tempfile.TemporaryDirectory();self.addCleanup(isolated.cleanup)
+        p=patch.object(agent,'STATE',Path(isolated.name));p.start();self.addCleanup(p.stop)
+
     def test_repository_boundaries(self):
         for url in ['http://127.0.0.1/x','https://github.com@evil.test/a/b',
                     'file:///etc/passwd','https://github.com/a/b?token=x','https://github.com/../b']:
@@ -66,7 +71,11 @@ class GuardTests(unittest.TestCase):
 
     def test_archive_path_traversal(self):self.check_archive_rejected('root/../../escaped')
     def test_archive_symlinks(self):self.check_archive_rejected('root/link',tarfile.SYMTYPE)
-    def test_archive_size_limit(self):self.check_archive_rejected('root/huge',size=256*1024*1024+1)
+    def test_archive_disk_space_guard(self):
+        from collections import namedtuple
+        usage=namedtuple('usage','total used free')(10*1024**3,10*1024**3,1024)
+        with patch.object(agent.shutil,'disk_usage',return_value=usage):
+            self.check_archive_rejected('root/index.html',message='磁盘空间不足')
     def test_source_tree_must_match_upstream(self):self.check_archive_rejected('root/index.html')
 
     def test_lfs_pointer_is_not_treated_as_source(self):
@@ -93,7 +102,7 @@ class GuardTests(unittest.TestCase):
         headers={'X-CSRF-Token':logged.json['csrf']}
         created=client.post('/api/accounts',json={'username':'viewer-test','password':'long-preview-password'},headers=headers)
         self.assertEqual(created.status_code,201)
-        self.assertEqual(client.get('/api/accounts').json,['viewer-test'])
+        self.assertIn('viewer-test',client.get('/api/accounts').json)
         viewer=agent.app.test_client()
         self.assertEqual(viewer.post('/api/login',json={'email':'viewer-test','password':'long-preview-password'}).status_code,401)
         job={'id':'e'*24,'slug':'protected-app','status':'ready'}

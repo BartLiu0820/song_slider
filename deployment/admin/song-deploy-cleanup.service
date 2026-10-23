@@ -1,0 +1,25 @@
+[Unit]
+Description=Song preview and confirm cleanup broker
+After=docker.service network-online.target
+Requires=docker.service
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/song-deploy/admin/cleanup.py
+Environment=DOCKER_CONFIG=/run/song-deploy-cleanup/docker
+Restart=on-failure
+RestartSec=3
+RuntimeDirectory=song-deploy-cleanup
+RuntimeDirectoryMode=0750
+RuntimeDirectoryPreserve=yes
+StateDirectory=song-deploy-cleanup
+StateDirectoryMode=0700
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/run/song-deploy-cleanup /var/lib/song-deploy-cleanup
+# Docker commands only; no shell, no user-provided paths or commands.
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

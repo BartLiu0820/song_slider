@@ -44,7 +44,7 @@ proxy = {
         'healthcheck': {'test': ['CMD', 'traefik', 'healthcheck', '--ping'],
                         'interval': '10s', 'timeout': '3s', 'retries': 5},
         'labels': {'coolify.managed': 'true', 'coolify.proxy': 'true'},
-        'mem_limit': '192m', 'cpus': 0.5,
+        'mem_limit': '512m', 'cpus': 0.5,
     }},
 }
 payload = {'credentials': credentials, 'proxy': proxy, 'files': {
@@ -80,7 +80,7 @@ env={
     'PUSHER_APP_ID':secrets.token_hex(32),'PUSHER_APP_KEY':secrets.token_hex(32),
     'PUSHER_APP_SECRET':secrets.token_hex(32),'PUSHER_BACKEND_PORT':'6001',
     'ROOT_USERNAME':cred['name'],'ROOT_USER_EMAIL':cred['email'],'ROOT_USER_PASSWORD':cred['password'],
-    'REGISTRY_URL':'ghcr.io','LATEST_IMAGE':'4.4.6','AUTOUPDATE':'false',
+    'REGISTRY_URL':'ghcr.io','LATEST_IMAGE':'4.4.7','AUTOUPDATE':'false',
     'PHP_FPM_PM_MAX_CHILDREN':'5','PHP_FPM_PM_MAX_SPARE_SERVERS':'2',
 }
 f=root/'source/.env'
@@ -102,7 +102,7 @@ f.write_text(json.dumps(p['proxy'],indent=2));os.chown(f,9999,0);f.chmod(0o600)
 network=subprocess.run(['docker','network','inspect','coolify'],capture_output=True)
 if network.returncode:
     subprocess.run(['docker','network','create','--attachable','coolify'],check=True,capture_output=True)
-print('Prepared Coolify 4.4.6. Ports are loopback-only. Credentials not printed.')
+print('Prepared Coolify 4.4.7. Ports are loopback-only. Credentials not printed.')
 '''
 result = subprocess.run(['ssh', '-o', 'BatchMode=yes', 'songhuang-server',
     'sudo -n python3 -c ' + shlex.quote(remote)], input=json.dumps(payload),

@@ -119,6 +119,7 @@ def check():
             job = item
             break
     if not job: return 'Unknown deployment', 403
+    if job.get('status') in ['deleting','delete_failed']:return 'Deployment removed or pending removal',403
     data = read_security()
     access = data['policies'].get(job['id'], {'mode': 'public', 'accounts': []})
     if access['mode'] == 'public': return allow(True)

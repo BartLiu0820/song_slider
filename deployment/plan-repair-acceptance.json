@@ -1,0 +1,88 @@
+{
+  "analysis": {
+    "id": "d1f9f7853423aa45b37086cc",
+    "status": "ready",
+    "plan": {
+      "base_directory": "/",
+      "build_command": "",
+      "build_pack": "nixpacks",
+      "databases": [],
+      "dockerfile_location": "",
+      "dockerfile_target_build": "",
+      "install_command": "npm ci --omit=dev",
+      "is_static": true,
+      "missing_env": [],
+      "notes": [
+        "仓库无 Dockerfile，根目录为静态 HTML 原型，start.sh 仅用 python3 -m http.server 暴露当前目录，属于静态站点。",
+        "package.json 中 dependencies 为 three 与 @mediapipe/tasks-vision，被 wire-loop-renderer.mjs、gesture-recognizer-runtime.mjs 等浏览器模块直接引用 node_modules 路径，必须安装生产依赖，不能当作纯开发工具忽略。",
+        "devDependencies 仅 playwright，用于 QA 测试，不属于运行时依赖，故使用 npm ci --omit=dev。",
+        "package.json 无 build 脚本，静态文件已存在于仓库中，build_command 留空，不编造构建步骤。",
+        "入口依据 README 与 start.sh 的 ENTRY_FILE 默认值确定为 04B-prototype-手势小狗探险MVP.html，而非 reviews 下的评审页或 assets 下的预览页。",
+        "发布目录为仓库根目录，以保留 HTML 对 assets/、node_modules/ 等相对路径资源的引用。",
+        "游戏需浏览器摄像头权限与 WebGL，属客户端能力，不需要服务端环境变量或数据库。",
+        "start.sh 绑定 127.0.0.1 且随机端口，不适用于部署；部署由 nginx 在 80 端口提供静态服务。",
+        "assets/models/gesture_recognizer.task 与 wasm 资源需随静态目录一并发布，否则手势识别不可用。"
+      ],
+      "port": 80,
+      "publish_directory": "/",
+      "ready": true,
+      "start_command": "",
+      "static_entry": "04B-prototype-手势小狗探险MVP.html",
+      "summary": "这是一个以静态 HTML 为主的手势控制儿童横版游戏原型仓库，主入口为根目录的 04B-prototype-手势小狗探险MVP.html，通过 start.sh 以静态 HTTP 服务发布。游戏运行时通过浏览器 ES 模块引用 node_modules 中的 three 与 @mediapipe/tasks-vision，因此需要安装 dependencies 后由 nginx 发布静态文件，使用 nixpacks + is_static。"
+    },
+    "analysis_attempts": [
+      {
+        "attempt": 1,
+        "valid": true
+      }
+    ],
+    "error": null,
+    "commit": "0951fb6f0feed0f10829e1d4166e7cd23a0f19de"
+  },
+  "deployment": {
+    "id": "d1f9f7853423aa45b37086cc",
+    "status": "deployed",
+    "commit": "0951fb6f0feed0f10829e1d4166e7cd23a0f19de",
+    "deployed_commit": "0951fb6f0feed0f10829e1d4166e7cd23a0f19de",
+    "verification": "部署与健康检查通过，预览首页可访问。",
+    "error": null,
+    "deployment_uuid": "ubwcwcgderrjadbs9w7vxzf5"
+  },
+  "checks": {
+    "backend_tests": 64,
+    "workbench_interactions": true,
+    "loading_regressions": true,
+    "generated_nix_setup_only": true,
+    "network_wrapper_idempotent": true,
+    "official_image_layers_sha256_verified": true,
+    "sjtu_signed_package_download_bytes": 6540540,
+    "sjtu_signed_package_download_seconds": 0.298
+  },
+  "code_sha256": {
+    "app.py": "cbf9cf5974c29ac3d1530428c64673bfb9a377c4ae4202448abebce288c11698",
+    "app.js": "9ac66d0c65eca8c2c86017a7285416be2f386bd00f31701acbd322db80e51a69"
+  },
+  "browser": {
+    "url": "https://bluey.preview.greatsong.online/?verify=1792575748435",
+    "title": "WL-01｜小尾巴探险队",
+    "status": 200,
+    "modules": [
+      {
+        "path": "/gesture-recognizer-runtime.mjs",
+        "loaded": true
+      },
+      {
+        "path": "/wire-loop-renderer.mjs",
+        "loaded": true
+      },
+      {
+        "path": "/wire-loop-runtime.mjs",
+        "loaded": true
+      }
+    ],
+    "keyboard_flow": true,
+    "wire_entry": "‹ 返回\n火线冲击\n暂停\n让圆环穿过去\n\n别碰到银蓝色的线。松手会停住，时间还会走。\n\n握住 · 移动\n轻轻转向\n松手 · 停住\n先练一练\n按住空格 + 方向键移动 · A / D 转向 · 松开空格停住\n已进入 WL-01",
+    "errors": [],
+    "failed": []
+  }
+}

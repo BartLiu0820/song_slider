@@ -1,0 +1,25 @@
+{
+  "date": "2026-10-21",
+  "backend_tests_passed": 41,
+  "ui_checks": [
+    "desktop split view",
+    "mobile containment",
+    "draft persistence on project switch",
+    "conversation persistence on reload",
+    "name confirmation for deletion",
+    "logs in conversation",
+    "new project form preserved during polling"
+  ],
+  "live_checks": [
+    "HTTPS administrator login",
+    "real DeepSeek response acknowledges removed fixed source limits",
+    "isolated application deleted through workbench API",
+    "Coolify confirms deleted application with HTTP 404",
+    "original four projects retained"
+  ],
+  "large_source_test": {
+    "compressed_mib_over": 64,
+    "extracted_mib": 265
+  },
+  "greencircle_redeployed": false
+}

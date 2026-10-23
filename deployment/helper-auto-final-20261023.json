@@ -1,0 +1,83 @@
+{
+  "status": "ready",
+  "phase": "ready",
+  "message": "构建工具已就绪",
+  "updated_at": 1792760173,
+  "version": "1.0.18",
+  "image_id": "sha256:b93aa65afdbd38ea3c84c3ffc1aa84a47a3efe6faaa07dbf01495279646f6df5",
+  "cached": true,
+  "services": {
+    "song-deploy-helper": "active",
+    "song-deploy-agent": "active"
+  },
+  "boot_order": "[Unit]\nWants=song-deploy-helper.service\nAfter=song-deploy-helper.service\n",
+  "server_download": {
+    "official_index_digest": "sha256:dc088de51b3e676aef14131ba6a6e3d988b7f7f72b6eff75fd21f0bb51939f1e",
+    "official_manifest_digest": "sha256:b395f5a483449a28e6b4d5c3d679c5993460500a480b322032c862ec54c78340",
+    "config_digest": "sha256:6416193e5ee619b3ae5a7874e9bd371d3d1aa5225399d90ee3fab10173d0d25b",
+    "diff_ids": [
+      "sha256:1073f425247ed24670458429c13a67afbd36f83d2004dade046ddbd6519b1839",
+      "sha256:fa3638db9774b2dcdac9693b9232d6080d7779d2339b498e3244f79057fc05f0",
+      "sha256:00fe61bdda5073b767c97bbbf3ba6533ceebb187aa6c56a0b034a5033b7d9e28",
+      "sha256:5d9c0c291d43810ba01c4c0d94db55ade48b9d4c209a8c8ad9e34618fdb5ab4b",
+      "sha256:3311410dec61b27fe693935d27cbc52b97ef614dc6c5f165ecb2092e118e97b5",
+      "sha256:6b775081dad3f51b6833a6e974d952bac722a7f9fc353a8cd0c7751c4b8fcd6a",
+      "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+      "sha256:f9d5824f5e7f15c9b09302f4560197ff9947e5d5d230f8ab849c05b8052e37b3",
+      "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
+    ],
+    "elapsed_seconds": 74.33,
+    "archive_bytes": 209601423,
+    "server_side_download": true
+  },
+  "job": {
+    "status": "deployed",
+    "commit": "6531ae61df1738973aeb458070ea79edaed3f4e5",
+    "deployment_uuid": "50xqmhetouvvcygn7qgzucgp",
+    "helper_preflight": {
+      "cached": false,
+      "image_id": "sha256:b93aa65afdbd38ea3c84c3ffc1aa84a47a3efe6faaa07dbf01495279646f6df5",
+      "message": "构建工具已就绪",
+      "phase": "ready",
+      "status": "ready",
+      "updated_at": 1792759490,
+      "version": "1.0.18"
+    }
+  },
+  "management_js_matches": true,
+  "sites": [
+    {
+      "url": "https://greatsong.online/",
+      "status": 200
+    },
+    {
+      "url": "https://deploy.greatsong.online/",
+      "status": 200
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/",
+      "status": 200
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/",
+      "status": 200
+    }
+  ],
+  "after_final_install": {
+    "checked_at": 1792760257.906262,
+    "helper": {
+      "status": "ready",
+      "phase": "ready",
+      "message": "构建工具已就绪",
+      "updated_at": 1792760256,
+      "version": "1.0.18",
+      "image_id": "sha256:b93aa65afdbd38ea3c84c3ffc1aa84a47a3efe6faaa07dbf01495279646f6df5",
+      "cached": true
+    },
+    "install": {
+      "backup": "/var/backups/song-deploy/helper-preflight-20261023T125659Z",
+      "helper_preflight_enabled": true,
+      "installed_at": "20261023T125659Z"
+    }
+  }
+}

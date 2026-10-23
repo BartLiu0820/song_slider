@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-22",
+  "project": "greencircle",
+  "deployment_finished_beijing": "2026-10-22 16:42:47",
+  "original_ai_reply_beijing": "2026-10-22 16:43:31",
+  "finding": "Engine and state recorded success; browser DOM contained reply but expanded trailing log occupied visible conversation area.",
+  "backend_tests": 91,
+  "ui_checks": [
+    "fixed pending/completed status",
+    "no new output warning",
+    "long logs outside conversation",
+    "new-message jump",
+    "sent message scrolls to latest reply",
+    "390x844 layout",
+    "live resource page",
+    "live immediate status reply",
+    "no browser errors"
+  ],
+  "live_https": {
+    "workbench": 200,
+    "greencircle": 200,
+    "bluey": 200
+  },
+  "guest_resources_http": 401,
+  "resource_collection_errors": [],
+  "projects": 2,
+  "containers": 8,
+  "backup": "/var/backups/song-deploy/status-resources-20261022-165622",
+  "disk_bytes": {
+    "total": 52448063488,
+    "used": 13547208704,
+    "available": 36535631872,
+    "reserved": 2365222912
+  },
+  "screenshots": [
+    "screenshots/server-resources-live.jpg",
+    "screenshots/status-reply-live.jpg"
+  ]
+}

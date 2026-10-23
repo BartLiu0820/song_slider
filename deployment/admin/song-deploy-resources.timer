@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh Song server resource snapshot every minute
+
+[Timer]
+OnBootSec=20
+OnUnitInactiveSec=60
+Unit=song-deploy-resources.service
+
+[Install]
+WantedBy=timers.target

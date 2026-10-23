@@ -1,0 +1,89 @@
+{
+  "commit": "6531ae61df1738973aeb458070ea79edaed3f4e5",
+  "checked_at": 1792758615.310622,
+  "files": [
+    {
+      "path": "index.html",
+      "status": 200,
+      "sha256": "62b730064c34de8abb70ecc81d3a7f13d5892886fcdf5c6845262f58d08b5e4a",
+      "matches_source": true,
+      "bytes": 3232
+    },
+    {
+      "path": "style.css",
+      "status": 200,
+      "sha256": "62f33cdcc6bfe31e899bf78d99d951d2412e1234cb4258324ffeeb4301794382",
+      "matches_source": true,
+      "bytes": 25750
+    },
+    {
+      "path": "game.js",
+      "status": 200,
+      "sha256": "36d596eaafded4c369087ea939ce143e4fe39705259b5cf2051d476971ef8f43",
+      "matches_source": true,
+      "bytes": 329987
+    },
+    {
+      "path": "data.js",
+      "status": 200,
+      "sha256": "8ed3dca6106b57d47d4094a45036d3ff78f0788c5f2a53980eb6022560af9843",
+      "matches_source": true,
+      "bytes": 134530
+    },
+    {
+      "path": "waves.js",
+      "status": 200,
+      "sha256": "eff073dc858542e1f70b508a72067243e6bce6c028101be503a18cdb83b09049",
+      "matches_source": true,
+      "bytes": 601844
+    },
+    {
+      "path": "sound.js",
+      "status": 200,
+      "sha256": "073158e203f67319008beeec8d666c6c4f2ecfc59886834bd1bdbb527e046691",
+      "matches_source": true,
+      "bytes": 5391
+    },
+    {
+      "path": "terrain.js",
+      "status": 200,
+      "sha256": "040facea40134b8e0d5b6518641fcb42548a5d533a713d4f78b77be35c78eb68",
+      "matches_source": true,
+      "bytes": 16870
+    },
+    {
+      "path": "units3d.js",
+      "status": 200,
+      "sha256": "e78618a3d77688104a58cba0eba6c76d416a8dd42e3c0e76bead55088689124d",
+      "matches_source": true,
+      "bytes": 18903
+    },
+    {
+      "path": "fx.js",
+      "status": 200,
+      "sha256": "9a0d1504ba842d775cc8f1b8cb487ff7c87064cd8f789ffa4d33f5fe793e1aec",
+      "matches_source": true,
+      "bytes": 42228
+    }
+  ],
+  "other_sites": [
+    {
+      "url": "https://greatsong.online/",
+      "status": 200
+    },
+    {
+      "url": "https://deploy.greatsong.online/",
+      "status": 200
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/",
+      "status": 200
+    }
+  ],
+  "browser_check": {
+    "url": "https://greencircle.preview.greatsong.online/?deployment=cnposdsedd9y6mwcef81jlgj",
+    "visible_heading": "输入玩家名称",
+    "visible_notice": "英雄塔要 10 点当局成就才能建",
+    "scope": "加载新版入口，未执行完整游戏流程"
+  }
+}

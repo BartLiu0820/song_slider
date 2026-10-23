@@ -1,4 +1,5 @@
-FROM ghcr.io/coollabsio/coolify-helper:1.0.17
+ARG HELPER_VERSION=1.0.18
+FROM ghcr.io/coollabsio/coolify-helper:${HELPER_VERSION}
 # The default Singapore GitHub endpoint times out from this server. This is a
 # verified GitHub endpoint, with HTTPS hostname/certificate validation retained.
 # Remove/refresh this route when connectivity changes; do not disable TLS checks.

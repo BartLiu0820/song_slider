@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-22",
+  "backend_tests": 108,
+  "greencircle": {
+    "approved_local_commits_pushed": 10,
+    "deployed_commit": "28c4703cbc6a9bc10a59e2aa9540821685073035",
+    "deployment_uuid": "5skwibblnfxkwxvjoypyifwh",
+    "old_url_new_menu_verified": true,
+    "single_player_entry_verified": true,
+    "public_hashes_match_local": {
+      "index.html": true,
+      "game.js": true,
+      "data.js": true
+    }
+  },
+  "cleanup": {
+    "eligible_count": 7,
+    "estimated_gib": 2.11,
+    "protected_count": 54,
+    "production_deletion_executed": false,
+    "live_scan_verified": true,
+    "confirm_disabled_without_confirmation": true,
+    "simulated_confirm_flow_verified": true,
+    "buildx_filters_verified_read_only": true,
+    "guest_http": 401,
+    "missing_csrf_http": 403
+  },
+  "ai_live_reply": "Remote main and deployed commit both 28c4703; no deployment executed",
+  "backup": "/var/backups/song-deploy/cleanup-chat-20261022-182559",
+  "screenshots": [
+    "screenshots/cleanup-preview-live.jpg",
+    "screenshots/greencircle-updated-menu.jpg"
+  ],
+  "server_code_hashes_match": {
+    "agent/app.py": true,
+    "admin/cleanup.py": true,
+    "admin/song-deploy-cleanup.service": true
+  }
+}

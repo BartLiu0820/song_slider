@@ -1,0 +1,13 @@
+{
+  "selected": {
+    "version": "1.0.18",
+    "image": "song-deploy/coolify-helper"
+  },
+  "image_id": "sha256:637388b8d2bf6cc49e058edabb90503097d09145dc12bf805d6027143ee33c29",
+  "backup": "/var/backups/song-deploy/helper-sync-20261023T122726Z",
+  "smoke": "git version 2.47.3\nDocker version 29.7.2, build a7dcaa6\ngithub.com/docker/buildx v0.36.1 1d8dde89b8aba914e05e45366770736fea1fd690\nd26ca291ff065ff781148c40590223ffe94773092f0a9df8c51b7df12edf56c8  /usr/local/bin/git\n172f5aeea6569e64a563596254248dab81565e63750a09d2c6f747303ce223e7  /usr/local/bin/docker\n",
+  "checked_at": "2026-10-23T12:27:31.817708+00:00",
+  "loaded_base_repo_digests": [
+    "ghcr.io/coollabsio/coolify-helper@sha256:f6da33b7c390ded98ed34ef7535c41a0a1b8d97da5e2b208a623573fa567c6d7"
+  ]
+}

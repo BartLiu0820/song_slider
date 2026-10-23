@@ -35,6 +35,8 @@ cfg=Path('/etc/song-deploy');cfg.mkdir(exist_ok=True);os.chown(cfg,0,user.pw_gid
 f=cfg/'agent.json'
 if f.exists():
  old=json.loads(f.read_text());p['config']['session_secret']=old['session_secret']
+ if old.get('cleanup_enabled'):p['config']['cleanup_enabled']=True
+ if old.get('helper_preflight_enabled'):p['config']['helper_preflight_enabled']=True
 f.write_text(json.dumps(p['config']));os.chown(f,0,user.pw_gid);f.chmod(0o640)
 key=cfg/'deepseek-key';os.chown(key,0,user.pw_gid);key.chmod(0o640)
 if not (root/'venv/bin/pip').exists():subprocess.run(['python3','-m','venv',str(root/'venv')],check=True)

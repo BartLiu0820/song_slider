@@ -1,0 +1,49 @@
+{
+  "checked_at": "2026-10-22T12:00:53.568355+00:00",
+  "login": true,
+  "secure_cookie": true,
+  "jobs": [
+    {
+      "id": "9a9e802910b63dd1afe88442",
+      "slug": "greencircle",
+      "status": "deployed",
+      "application_uuid": "vnuq3dmhxputqxwziyuiygic",
+      "deployed_commit": "28c4703cbc6a9bc10a59e2aa9540821685073035",
+      "deployment_uuid": "5skwibblnfxkwxvjoypyifwh"
+    },
+    {
+      "id": "d1f9f7853423aa45b37086cc",
+      "slug": "bluey",
+      "status": "deployed",
+      "application_uuid": "roraq4jjvanxqhzkwk5wgumo",
+      "deployed_commit": "0951fb6f0feed0f10829e1d4166e7cd23a0f19de",
+      "deployment_uuid": "ubwcwcgderrjadbs9w7vxzf5"
+    }
+  ],
+  "sites": [
+    {
+      "url": "https://greatsong.online/",
+      "status": 200,
+      "bytes": 39802,
+      "sha256": "eb62a58e315a3d04bd758322f0f7518596a545f5c65dd8fc1e80b5d6f573bb27"
+    },
+    {
+      "url": "https://deploy.greatsong.online/",
+      "status": 200,
+      "bytes": 3345,
+      "sha256": "d54fdc1d228bf0e02ba3392d59b82e01aceaf72f094c112d45e1e8d8564c444d"
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/",
+      "status": 200,
+      "bytes": 293527,
+      "sha256": "037a57b05d438ed3452643b132cd3587928a70f5d06f9304f0fe491a2b1277de"
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/",
+      "status": 200,
+      "bytes": 3180,
+      "sha256": "c3caa409c1b2475ff812b4a5b243f61fa457d8ab29dedb098e3318dc0734adca"
+    }
+  ]
+}

@@ -1,0 +1,357 @@
+{
+  "completed_at": 1792578012,
+  "backend_tests": 85,
+  "ui": {
+    "public_https": true,
+    "console_errors": [],
+    "actions": [
+      "deploy",
+      "refresh",
+      "repair",
+      "pause"
+    ]
+  },
+  "integration": {
+    "job_id": "8f1293326c70ba9e72b20547",
+    "application_uuid": "kgbfdzyljzumtzxomveccduj",
+    "status": "deployed",
+    "deployment_uuid": "pphagblci7thgkcqre85nneh",
+    "commit": "bc89e7c1b5fe17ecb4ebd31293d87a17fac140c9",
+    "snapshot_commit": "0e0743269e64bb008730db6d414375d247808e86",
+    "build_snapshot_commit": "0f6aa42d0bc9e2a18887f1165e9c0fc5ed07ef98",
+    "source_tree_unchanged": true,
+    "changed_files": [
+      ".song-deploy/Dockerfile"
+    ],
+    "verification": "部署与健康检查通过，服务端点 /index.html可访问。",
+    "repair_attempts": [
+      {
+        "number": 1,
+        "started_at": 1792577796,
+        "failed_deployment": "gskyivx9xjoovnc8qjek2ccs",
+        "previous_plan": {
+          "summary": "《绿色循环圈外传》H5 复刻为纯前端静态游戏，运行时文件全部位于 h5/（index.html、style.css、game.js、data.js、assets/、vendor/）。仓库根目录无 Dockerfile/package.json/服务端入口，tools/ 与 art/ 仅为离线素材生成工具与 3D 源文件，不参与运行。使用生成的 Dockerfile 基于 nginx:alpine，仅把 h5/ 复制到站点根目录，端口 80 提供静态服务。",
+          "build_pack": "dockerfile",
+          "base_directory": "/",
+          "is_static": true,
+          "publish_directory": "/",
+          "port": 80,
+          "dockerfile_location": "/.song-deploy/Dockerfile",
+          "dockerfile_target_build": "",
+          "install_command": "",
+          "build_command": "",
+          "start_command": "",
+          "static_entry": "index.html",
+          "missing_env": [],
+          "databases": [],
+          "notes": [
+            "h5/index.html 为真实入口，引用同目录 style.css、data.js、game.js、assets/*.js 与 vendor/mdx-m3-viewer-5.12.0.min.js，全部为仓库中已存在的文件，无需 npm 构建。",
+            "生成的 Dockerfile 以 base_directory=/ 为构建上下文，只 COPY h5/ 到 nginx 的 /usr/share/nginx/html，避免把 art/ 下数百 MB 的 .blend/.glb 与 analysis/raw 打包进镜像。",
+            "tools/ 下 Python 脚本依赖魔兽地图与 Blender，属离线工具，部署时不执行。",
+            "纯前端单机游戏，无数据库、无持久卷、无外部密钥。",
+            "健康检查使用真实存在的 /index.html，不再使用不存在的路径。",
+            "nginx 默认监听 80 并对外提供服务，无需额外启动命令。"
+          ],
+          "health_check_path": "/__autonomous_test_missing__",
+          "memory_mb": 256,
+          "generated_files": {
+            ".song-deploy/Dockerfile": "FROM nginx:alpine\n\nRUN rm -rf /usr/share/nginx/html/*\n\nCOPY h5/ /usr/share/nginx/html/\n\nEXPOSE 80\n\nCMD [\"nginx\", \"-g\", \"daemon off;\"]\n"
+          },
+          "ready": true
+        },
+        "error": "构建未成功，详细日志已显示在对话中。",
+        "action": "revise",
+        "reason": "日志显示 Coolify 在 .song-deploy/Dockerfile 构建成功后，又用自动生成的包装 Dockerfile 执行 `COPY --from=<build镜像> /app .`，而我们的镜像里没有 /app 目录（内容在 /usr/share/nginx/html），因此报 \"/app: not found\"。同时上一版 health_check_path 指向不存在的 /__autonomous_test_missing__。修正方案：改用 nixpacks 静态发布（is_static=true），由 nixpacks 生成 nginx 镜像并把 h5/ 作为发布目录，避免自定义 Dockerfile 与 Coolify 包装层冲突；健康检查改为真实存在的 /index.html。",
+        "plan": {
+          "summary": "《绿色循环圈外传》H5 复刻是纯前端静态游戏，运行文件全部在 h5/（index.html、style.css、game.js、data.js、assets/、vendor/）。仓库无 package.json、无服务端入口，tools/ 与 art/ 为离线素材工具与 3D 源文件，不参与运行。改用 nixpacks 静态发布：以 h5 为发布目录，由 nginx 在 80 端口提供静态文件，无需安装/构建/启动命令。",
+          "build_pack": "nixpacks",
+          "base_directory": "/",
+          "is_static": true,
+          "publish_directory": "/h5",
+          "port": 80,
+          "dockerfile_location": "",
+          "dockerfile_target_build": "",
+          "install_command": "",
+          "build_command": "",
+          "start_command": "",
+          "static_entry": "index.html",
+          "missing_env": [],
+          "databases": [],
+          "notes": [
+            "h5/index.html 为真实入口，引用同目录 style.css、data.js、game.js、assets/*.js 与 vendor/mdx-m3-viewer-5.12.0.min.js，均为仓库中已存在文件，无需 npm 构建。",
+            "仓库无 package.json，无 Node/Python 运行时依赖，纯静态发布即可。",
+            "发布目录设为 /h5，保留 index.html 对 style.css、data.js、game.js、assets/、vendor/ 的相对路径引用。",
+            "tools/ 下 Python 脚本依赖魔兽地图与 Blender，属离线工具，部署时不执行。",
+            "纯前端单机游戏，无数据库、无持久卷、无外部密钥。",
+            "健康检查使用真实存在的 /index.html。",
+            "上一版自定义 Dockerfile 因 Coolify 包装层 COPY /app 失败，本次改用 nixpacks 静态发布规避该问题。"
+          ],
+          "health_check_path": "/index.html",
+          "memory_mb": 256,
+          "generated_files": {},
+          "ready": true
+        },
+        "submitted": true
+      },
+      {
+        "number": 2,
+        "started_at": 1792577832,
+        "failed_deployment": "rbznnabtsi1ezveimtdjby5k",
+        "previous_plan": {
+          "summary": "《绿色循环圈外传》H5 复刻是纯前端静态游戏，运行文件全部在 h5/（index.html、style.css、game.js、data.js、assets/、vendor/）。仓库无 package.json、无服务端入口，tools/ 与 art/ 为离线素材工具与 3D 源文件，不参与运行。改用 nixpacks 静态发布：以 h5 为发布目录，由 nginx 在 80 端口提供静态文件，无需安装/构建/启动命令。",
+          "build_pack": "nixpacks",
+          "base_directory": "/",
+          "is_static": true,
+          "publish_directory": "/h5",
+          "port": 80,
+          "dockerfile_location": "",
+          "dockerfile_target_build": "",
+          "install_command": "",
+          "build_command": "",
+          "start_command": "",
+          "static_entry": "index.html",
+          "missing_env": [],
+          "databases": [],
+          "notes": [
+            "h5/index.html 为真实入口，引用同目录 style.css、data.js、game.js、assets/*.js 与 vendor/mdx-m3-viewer-5.12.0.min.js，均为仓库中已存在文件，无需 npm 构建。",
+            "仓库无 package.json，无 Node/Python 运行时依赖，纯静态发布即可。",
+            "发布目录设为 /h5，保留 index.html 对 style.css、data.js、game.js、assets/、vendor/ 的相对路径引用。",
+            "tools/ 下 Python 脚本依赖魔兽地图与 Blender，属离线工具，部署时不执行。",
+            "纯前端单机游戏，无数据库、无持久卷、无外部密钥。",
+            "健康检查使用真实存在的 /index.html。",
+            "上一版自定义 Dockerfile 因 Coolify 包装层 COPY /app 失败，本次改用 nixpacks 静态发布规避该问题。"
+          ],
+          "health_check_path": "/index.html",
+          "memory_mb": 256,
+          "generated_files": {},
+          "ready": true
+        },
+        "error": "构建未成功，详细日志已显示在对话中。",
+        "action": "revise",
+        "reason": "日志显示 nixpacks plan 返回 providers 为空、phases 为空，报错“Nixpacks failed to detect the application type”：仓库根目录没有 package.json、index.html 等可识别文件，nixpacks 无法自动识别静态站点，因此 nixpacks 静态方案不可行。上一版自定义 Dockerfile 失败原因是 Coolify 包装层执行 `COPY --from=<build镜像> /app .`，而镜像内容在 /usr/share/nginx/html，缺少 /app。本次改为生成专用 Dockerfile：仍用 nginx:alpine，但把 h5/ 内容复制到 /app（满足 Coolify 包装层 COPY /app），同时复制到 /usr/share/nginx/html 供 nginx 直接服务，避免再次出现 /app not found。",
+        "plan": {
+          "summary": "《绿色循环圈外传》H5 复刻是纯前端静态游戏，运行文件全部在 h5/（index.html、style.css、game.js、data.js、assets/、vendor/）。仓库根目录无 package.json、无 index.html、无服务端入口，nixpacks 无法识别应用类型，故改用生成的 Dockerfile：基于 nginx:alpine，把 h5/ 同时复制到 /app（满足 Coolify 包装层 COPY /app）与 /usr/share/nginx/html（nginx 站点根），端口 80 提供静态服务。",
+          "build_pack": "dockerfile",
+          "base_directory": "/",
+          "is_static": true,
+          "publish_directory": "/",
+          "port": 80,
+          "dockerfile_location": "/.song-deploy/Dockerfile",
+          "dockerfile_target_build": "",
+          "install_command": "",
+          "build_command": "",
+          "start_command": "",
+          "static_entry": "index.html",
+          "missing_env": [],
+          "databases": [],
+          "notes": [
+            "h5/index.html 为真实入口，引用同目录 style.css、data.js、game.js、assets/*.js 与 vendor/mdx-m3-viewer-5.12.0.min.js，均为仓库中已存在文件，无需 npm 构建。",
+            "仓库根目录无 package.json、无 index.html，nixpacks 无法识别应用类型（日志 providers 为空），因此必须使用生成的 Dockerfile。",
+            "生成的 Dockerfile 以 base_directory=/ 为构建上下文，只 COPY h5/，避免把 art/ 下数百 MB 的 .blend/.glb 与 analysis/raw 打包进镜像。",
+            "为兼容 Coolify 包装层 `COPY --from=<build镜像> /app .`，Dockerfile 把 h5/ 内容同时放到 /app 与 /usr/share/nginx/html，两处内容一致。",
+            "tools/ 下 Python 脚本依赖魔兽地图与 Blender，属离线工具，部署时不执行。",
+            "纯前端单机游戏，无数据库、无持久卷、无外部密钥。",
+            "健康检查使用真实存在的 /index.html。",
+            "nginx 默认监听 80 并对外提供服务，无需额外启动命令。"
+          ],
+          "health_check_path": "/index.html",
+          "memory_mb": 256,
+          "generated_files": {
+            ".song-deploy/Dockerfile": "FROM nginx:alpine\n\nRUN rm -rf /usr/share/nginx/html/*\n\nCOPY h5/ /usr/share/nginx/html/\nCOPY h5/ /app/\n\nEXPOSE 80\n\nCMD [\"nginx\", \"-g\", \"daemon off;\"]\n"
+          },
+          "ready": true
+        },
+        "submitted": true
+      }
+    ],
+    "earlier_validation_attempts": [
+      {
+        "number": 1,
+        "started_at": 1792577263,
+        "failed_deployment": "0rqivm1ydjirce3rirsikuhb",
+        "previous_plan": {
+          "summary": "魔兽争霸3塔防地图《绿色循环圈外传》的 H5 复刻项目，游戏本体是 h5/ 目录下的纯静态页面（index.html + game.js + 大量预生成素材），无需构建或后端。仓库根目录没有 Dockerfile，也没有 Node/Python 服务端入口，因此按静态站点发布 h5/ 目录。",
+          "build_pack": "static",
+          "base_directory": "/",
+          "publish_directory": "/h5",
+          "port": 80,
+          "dockerfile_location": "",
+          "dockerfile_target_build": "",
+          "install_command": "",
+          "build_command": "",
+          "start_command": "",
+          "missing_env": [],
+          "databases": [],
+          "notes": [
+            "仓库根目录无 Dockerfile、package.json、requirements.txt 或 go.mod，不存在可构建的服务端；README 明确说明直接用浏览器打开 h5/index.html，无需服务器。",
+            "h5/index.html 存在，h5/ 下含 style.css、game.js、data.js、assets/ 等全部静态资源，可直接作为发布目录。",
+            "tools/ 下的 Python 脚本（mpq.py、gen_data.py、blender 相关）是离线素材/数据生成工具，依赖魔兽地图文件与 Blender，不应在部署时执行。",
+            "art/ 下为 .blend、.glb 等 3D 源文件与截图，体积大且非运行时资源，无需发布。",
+            "h5/vendor/mdx-m3-viewer-5.12.0.min.js 为前端库，随静态资源一起发布即可。",
+            "游戏为纯前端单机，无数据库、无持久卷、无外部密钥需求。",
+            "若希望根路径直接访问，可将 publish_directory 设为 /h5 并在 Coolify 中配置对应静态站点根目录。"
+          ],
+          "ready": true,
+          "health_check_path": "/__autonomous_test_missing__",
+          "is_static": true,
+          "generated_files": {},
+          "memory_mb": 512,
+          "static_entry": "index.html"
+        },
+        "error": "构建未成功，详细日志已显示在对话中。",
+        "action": "revise",
+        "reason": "上一轮 static 方案构建失败，且方案本身存在自相矛盾：health_check_path 被设为不存在的 /__autonomous_test_missing__，静态站点健康检查必然失败；同时仓库根目录含大量 .blend/.glb/MPQ 原始文件（file_count 1770），static 打包整仓再取 /h5 容易因体积/路径处理失败。改用生成的 Dockerfile 以 nginx 只发布 h5/ 目录，健康检查回到真实存在的 /index.html。",
+        "plan": {
+          "summary": "《绿色循环圈外传》H5 复刻为纯前端静态游戏，运行时文件全部位于 h5/（index.html、style.css、game.js、data.js、assets/、vendor/）。仓库根目录无 Dockerfile/package.json/服务端入口，tools/ 与 art/ 仅为离线素材生成工具与 3D 源文件，不参与运行。使用生成的 Dockerfile 基于 nginx:alpine，仅把 h5/ 复制到站点根目录，端口 80 提供静态服务。",
+          "build_pack": "dockerfile",
+          "base_directory": "/",
+          "is_static": true,
+          "publish_directory": "/",
+          "port": 80,
+          "dockerfile_location": "/.song-deploy/Dockerfile",
+          "dockerfile_target_build": "",
+          "install_command": "",
+          "build_command": "",
+          "start_command": "",
+          "static_entry": "index.html",
+          "missing_env": [],
+          "databases": [],
+          "notes": [
+            "h5/index.html 为真实入口，引用同目录 style.css、data.js、game.js、assets/*.js 与 vendor/mdx-m3-viewer-5.12.0.min.js，全部为仓库中已存在的文件，无需 npm 构建。",
+            "生成的 Dockerfile 以 base_directory=/ 为构建上下文，只 COPY h5/ 到 nginx 的 /usr/share/nginx/html，避免把 art/ 下数百 MB 的 .blend/.glb 与 analysis/raw 打包进镜像。",
+            "tools/ 下 Python 脚本依赖魔兽地图与 Blender，属离线工具，部署时不执行。",
+            "纯前端单机游戏，无数据库、无持久卷、无外部密钥。",
+            "健康检查使用真实存在的 /index.html，不再使用不存在的路径。",
+            "nginx 默认监听 80 并对外提供服务，无需额外启动命令。"
+          ],
+          "health_check_path": "/index.html",
+          "memory_mb": 256,
+          "generated_files": {
+            ".song-deploy/Dockerfile": "FROM nginx:alpine\n\nRUN rm -rf /usr/share/nginx/html/*\n\nCOPY h5/ /usr/share/nginx/html/\n\nEXPOSE 80\n\nCMD [\"nginx\", \"-g\", \"daemon off;\"]\n"
+          },
+          "ready": true
+        },
+        "submitted": true
+      },
+      {
+        "number": 2,
+        "started_at": 1792577361,
+        "failed_deployment": null,
+        "previous_plan": {
+          "summary": "《绿色循环圈外传》H5 复刻为纯前端静态游戏，运行时文件全部位于 h5/（index.html、style.css、game.js、data.js、assets/、vendor/）。仓库根目录无 Dockerfile/package.json/服务端入口，tools/ 与 art/ 仅为离线素材生成工具与 3D 源文件，不参与运行。使用生成的 Dockerfile 基于 nginx:alpine，仅把 h5/ 复制到站点根目录，端口 80 提供静态服务。",
+          "build_pack": "dockerfile",
+          "base_directory": "/",
+          "is_static": true,
+          "publish_directory": "/",
+          "port": 80,
+          "dockerfile_location": "/.song-deploy/Dockerfile",
+          "dockerfile_target_build": "",
+          "install_command": "",
+          "build_command": "",
+          "start_command": "",
+          "static_entry": "index.html",
+          "missing_env": [],
+          "databases": [],
+          "notes": [
+            "h5/index.html 为真实入口，引用同目录 style.css、data.js、game.js、assets/*.js 与 vendor/mdx-m3-viewer-5.12.0.min.js，全部为仓库中已存在的文件，无需 npm 构建。",
+            "生成的 Dockerfile 以 base_directory=/ 为构建上下文，只 COPY h5/ 到 nginx 的 /usr/share/nginx/html，避免把 art/ 下数百 MB 的 .blend/.glb 与 analysis/raw 打包进镜像。",
+            "tools/ 下 Python 脚本依赖魔兽地图与 Blender，属离线工具，部署时不执行。",
+            "纯前端单机游戏，无数据库、无持久卷、无外部密钥。",
+            "健康检查使用真实存在的 /index.html，不再使用不存在的路径。",
+            "nginx 默认监听 80 并对外提供服务，无需额外启动命令。"
+          ],
+          "health_check_path": "/index.html",
+          "memory_mb": 256,
+          "generated_files": {
+            ".song-deploy/Dockerfile": "FROM nginx:alpine\n\nRUN rm -rf /usr/share/nginx/html/*\n\nCOPY h5/ /usr/share/nginx/html/\n\nEXPOSE 80\n\nCMD [\"nginx\", \"-g\", \"daemon off;\"]\n"
+          },
+          "ready": true
+        },
+        "error": "Command '['git', '-c', 'core.hooksPath=/dev/null', '-c', 'core.autocrlf=false', 'clone', '--no-hardlinks', '/var/lib/song-deploy/repos/8f1293326c70ba9e72b20547-bc89e7c1b5fe.git', '/var/lib/song-deploy/derived-jy_jh1li/source']' timed out after 90 seconds",
+        "action": "retry",
+        "reason": "两轮失败日志均为同一错误：本地 git clone 在 90 秒内超时（'git clone --no-hardlinks ... timed out after 90 seconds'），发生在构建快照准备阶段，尚未进入 Dockerfile 构建或静态发布逻辑，属于引擎/磁盘 IO 瞬时故障，而非方案本身不可执行。仓库 file_count 1770 且含大量 .blend/.glb 大文件，克隆耗时较长，重试一次原方案（nginx 只发布 h5/，健康检查 /index.html）。",
+        "plan": {
+          "summary": "《绿色循环圈外传》H5 复刻为纯前端静态游戏，运行时文件全部位于 h5/（index.html、style.css、game.js、data.js、assets/、vendor/）。仓库根目录无 Dockerfile/package.json/服务端入口，tools/ 与 art/ 仅为离线素材生成工具与 3D 源文件，不参与运行。使用生成的 Dockerfile 基于 nginx:alpine，仅把 h5/ 复制到站点根目录，端口 80 提供静态服务。",
+          "build_pack": "dockerfile",
+          "base_directory": "/",
+          "is_static": true,
+          "publish_directory": "/",
+          "port": 80,
+          "dockerfile_location": "/.song-deploy/Dockerfile",
+          "dockerfile_target_build": "",
+          "install_command": "",
+          "build_command": "",
+          "start_command": "",
+          "static_entry": "index.html",
+          "missing_env": [],
+          "databases": [],
+          "notes": [
+            "h5/index.html 为真实入口，引用同目录 style.css、data.js、game.js、assets/*.js 与 vendor/mdx-m3-viewer-5.12.0.min.js，全部为仓库中已存在的文件，无需 npm 构建。",
+            "生成的 Dockerfile 以 base_directory=/ 为构建上下文，只 COPY h5/ 到 nginx 的 /usr/share/nginx/html，避免把 art/ 下数百 MB 的 .blend/.glb 与 analysis/raw 打包进镜像。",
+            "tools/ 下 Python 脚本依赖魔兽地图与 Blender，属离线工具，部署时不执行。",
+            "纯前端单机游戏，无数据库、无持久卷、无外部密钥。",
+            "健康检查使用真实存在的 /index.html，不再使用不存在的路径。",
+            "nginx 默认监听 80 并对外提供服务，无需额外启动命令。"
+          ],
+          "health_check_path": "/index.html",
+          "memory_mb": 256,
+          "generated_files": {
+            ".song-deploy/Dockerfile": "FROM nginx:alpine\n\nRUN rm -rf /usr/share/nginx/html/*\n\nCOPY h5/ /usr/share/nginx/html/\n\nEXPOSE 80\n\nCMD [\"nginx\", \"-g\", \"daemon off;\"]\n"
+          },
+          "ready": true
+        },
+        "submitted": true
+      }
+    ]
+  },
+  "http_checks": [
+    {
+      "url": "https://deploy.greatsong.online/",
+      "status": 200,
+      "not_default_nginx": true
+    },
+    {
+      "url": "https://bluey.preview.greatsong.online/",
+      "status": 200,
+      "not_default_nginx": true
+    },
+    {
+      "url": "https://greencircle.preview.greatsong.online/",
+      "status": 200,
+      "not_default_nginx": true
+    },
+    {
+      "url": "https://ai-repair-check-1021.preview.greatsong.online/index.html",
+      "status": 200,
+      "not_default_nginx": true
+    }
+  ],
+  "proxy_memory_mb": 512,
+  "existing_projects": [
+    {
+      "id": "d1f9f7853423aa45b37086cc",
+      "slug": "bluey",
+      "status": "deployed",
+      "deployed_commit": "0951fb6f0feed0f10829e1d4166e7cd23a0f19de",
+      "auto_deploy": true
+    },
+    {
+      "id": "9a9e802910b63dd1afe88442",
+      "slug": "greencircle",
+      "status": "deployed",
+      "deployed_commit": "bc89e7c1b5fe17ecb4ebd31293d87a17fac140c9",
+      "auto_deploy": true
+    }
+  ],
+  "cleanup": {
+    "job_removed": true,
+    "fixture_containers_remaining": []
+  },
+  "final_release": {
+    "service": "active",
+    "https_status": 200,
+    "app_sha256": "011405f66db55181abfc7ff959d18f1444071a5e4af078139455b8378d72376b",
+    "js_sha256": "9f65849ca8a9b955d08683ac5fef368798a556227d8a81be60103601016bba24",
+    "backup": "/var/backups/song-deploy/autonomous-deployment-20261021-182051"
+  }
+}

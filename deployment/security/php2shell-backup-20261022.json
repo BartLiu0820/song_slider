@@ -1,0 +1,28 @@
+{
+  "complete": true,
+  "created_at": "20261022T120151Z",
+  "database_restore_verified": true,
+  "restored_tables": 76,
+  "old_image": "sha256:7c54f42d64c0d20fed4a8f4561df9018a561fecba9931ed3f64a4f3e0d34a3be",
+  "old_version": "4.4.6",
+  "target_version": "4.4.7",
+  "files": {
+    "coolify.sql": {
+      "bytes": 1605359,
+      "sha256": "a5fcda3ddd29655aab26a20f6e86c6fccca1ccb326008ffdcca66cd9f50f19aa"
+    },
+    "configuration-and-sites.tar.gz": {
+      "bytes": 1114840947,
+      "sha256": "ae6ea67f264526142505f576f687d5711029d93f4a49686f087ea33a489e58b5"
+    },
+    "coolify-4.4.6-image.tar.gz": {
+      "bytes": 191072717,
+      "sha256": "f2dc3b1ccc3b11d0ebd9c21dc3151a740d69386046fbaaa74ed41af4bfe5b153"
+    },
+    "containers-private.json": {
+      "bytes": 96651,
+      "sha256": "9c02b8c9b56ec92f8a68896ef731c36357d3c9cb68045528c5b761d7340fa813"
+    }
+  },
+  "scope": "Coolify logical database, engine and workbench configs/state/source snapshots, website files, TLS material and previous Coolify image. Live PostgreSQL/Redis volume files excluded; PostgreSQL has a restore-tested logical dump. Application containers have no persistent mounts."
+}

@@ -1,0 +1,26 @@
+[Unit]
+Description=Song automatic deployment helper preparation
+After=docker.service network-online.target song-deploy-cleanup.service
+Requires=docker.service song-deploy-cleanup.service
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/song-deploy/admin/helper_manager.py
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=DOCKER_CONFIG=/run/song-deploy-helper/docker
+Restart=on-failure
+RestartSec=3
+RuntimeDirectory=song-deploy-helper
+RuntimeDirectoryMode=0750
+StateDirectory=song-deploy-helper
+StateDirectoryMode=0700
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/run/song-deploy-helper /var/lib/song-deploy-helper
+UMask=0077
+MemoryMax=768M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target
